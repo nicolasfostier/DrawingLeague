@@ -1,2 +1,2 @@
-# drawingleague
-An online pictionnary in C++ inspired from iSketch.net
+# Drawing League
+An online pictionnary inspired from iSketch.net
