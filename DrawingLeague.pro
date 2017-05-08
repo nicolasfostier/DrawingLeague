@@ -1,21 +1,38 @@
+TARGET = DrawingLeague
+
+win32{
+    QMAKE_TARGET_PRODUCT = "Drawing League"
+    QMAKE_TARGET_DESCRIPTION = "Drawing League"
+    QMAKE_TARGET_COMPANY = "Nicolas Fostier"
+    QMAKE_TARGET_COPYRIGHT = "Nicolas Fostier"
+    #RC_ICONS += res/images/app.ico
+}
+
+macx{
+    QMAKE_FRAMEWORK_BUNDLE_NAME = "Drawing League"
+    #ICON = res/images/app.icns
+}
+
+TEMPLATE = app
+
+VERSION = 0.0.1
+
+
+
 QT  +=  core gui \
         widgets \
         network
 
-SOURCES +=  src/main.cpp
+SOURCES +=  src/main.cpp \
+            src/windows/mainwindow.cpp \
+    src/checkforupdate.cpp
 
-HEADERS += 
+HEADERS +=  include/windows/mainwindow.h \
+    include/checkforupdate.h
 
+RESOURCES +=    res/lang.qrc \
+                res/images.qrc
 
-
-TARGET = DrawingLeague
-TEMPLATE = app
-VERSION = 0.0.1
-RC_ICONS += res/images/app.ico
-QMAKE_TARGET_PRODUCT = "Drawing League"
-QMAKE_TARGET_COMPANY = "Nicolas Fostier"
-QMAKE_TARGET_COPYRIGHT = "Nicolas Fostier"
-QMAKE_TARGET_DESCRIPTION = "Drawing League"
 TRANSLATIONS = res/lang/drawingleague_fr.ts
 
 

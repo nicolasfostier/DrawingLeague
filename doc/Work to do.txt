@@ -1,0 +1,45 @@
+Class to do (totaly not ):
+	[ ] Main Window
+		[ ]
+	[ ] Setting Window
+	[X] Check for update (Need its own thread)
+	[ ]	Server : host a room (Need QTCPServer and its own thread)
+	[ ] Client ()
+
+Other thing to do :
+	[ ] Find great and free sounds
+		[ ] When someone enter the game
+		[ ] When an other user find the word
+		[ ] When you find the word
+		[ ] End of the game
+		[ ] When it's your turn to draw
+	[ ] Create the icon of the game
+
+Features to implement for the first release :
+	[ ] Connect to a room or host one
+	[X] Check at launch if there is an update available
+	[ ] User can import their own dictionnary when they want to host their own room
+	[ ] 2 chat in each room : 1 for talking and 1 for guessing the word
+	[ ] Basic drawing features :
+		[ ] Pen
+		[ ] Line
+		[ ] Frame
+		[ ] Changing the color
+		[ ] Changing the size of the pen
+		[ ] Reset the canvas
+	[ ] Basics dictionnary in english and french ("English / French Easy")
+	[ ] 
+
+Extra features for the futur :
+	[ ] Show the ping of each users
+	[ ] Account system in a database
+	[ ] Avatar
+	[ ] System of XP
+	[ ] System of Achievement
+	[ ] Possibility to completely customize the settings of rooms
+		[ ] Number of rounds
+		[ ] Maximum time for each round
+		[ ] Time remaining when someone find
+	[ ] More and more dictionnary base on diffrents themes
+	[ ] Change the setting of the room at the end of the game or during the game but restart the game
+	[ ] A standalone app to host rooms
