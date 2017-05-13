@@ -167,6 +167,7 @@ MainWindow::MainWindow() : QMainWindow()
 
             // The canvas, where the artist can draw
             canvasLabel = new Canvas(PEN, Qt::red, penWidthSlider->value(), 600,600, this);
+            canvasLabel->setFixedSize(canvasLabel->sizeHint());
             QObject::connect(resetAction, SIGNAL(triggered(bool)), this, SLOT(resetCanvas()));
             this->updateDrawingTools();
 
