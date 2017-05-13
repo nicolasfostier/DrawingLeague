@@ -27,13 +27,8 @@ int main(int argc, char *argv[])
     app.installTranslator(&translator);
 
     // Check if there is an update available on github
-    // (It's executed on its own thread)
-    QThread* threadCFU = new QThread();
-    QObject::connect(threadCFU, SIGNAL(finished()), threadCFU, SLOT(deleteLater()));
-    CheckForUpdate* cfu = new CheckForUpdate(app.applicationVersion());
-    cfu->moveToThread(threadCFU);
-    QObject::connect(threadCFU, SIGNAL(started()), cfu, SLOT(askGithub()));
-    threadCFU->start();
+    // (It's executed on its own thread and will delete himself when its task is over)
+    new CheckForUpdate(app.applicationVersion());
 
     // Create the main window of the program and open it
     MainWindow mainWindow;

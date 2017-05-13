@@ -5,6 +5,10 @@
 // Constructor
 MainWindow::MainWindow() : QMainWindow()
 {
+    // Socket to discuss with the server hosting the room
+    socket = new QTcpSocket(this);
+
+
     // Initialization of the settings variable
     settings = new QSettings(this);
 
@@ -12,7 +16,9 @@ MainWindow::MainWindow() : QMainWindow()
     // Room menu
     menuRoom = menuBar()->addMenu(tr("Room"));
         actionJoin = menuRoom->addAction(QIcon(), tr("Join a room"));
+        QObject::connect(actionJoin, SIGNAL(triggered(bool)), this, SLOT(joinRoom()));
         actionCreate = menuRoom->addAction(QIcon(), tr("Create a room"));
+        QObject::connect(actionCreate, SIGNAL(triggered(bool)), this, SLOT(createRoom()));
         actionQuit = menuRoom->addAction(QIcon(), tr("Quit"));
         QObject::connect(actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
 
@@ -23,6 +29,7 @@ MainWindow::MainWindow() : QMainWindow()
     // Help menu
     menuHelp = menuBar()->addMenu(tr("?"));
         actionAbout = menuHelp->addAction(QIcon(), tr("About"));
+
 
     // The main widget which contains everything else
     mainWidget = new QWidget(this);
@@ -83,29 +90,86 @@ MainWindow::MainWindow() : QMainWindow()
             // Toolbar which contains all the tool to draw on the canvas for the artist
             drawToolsBar = new QToolBar(mainWidget);
             drawToolsBar->setOrientation(Qt::Vertical);
+            drawToolsBar->setStyleSheet("QToolBar{spacing:2px;}");
             mainLayout->addWidget(drawToolsBar, 1, 0, 1, 1);
 
+                // Represent the pen
+                penLabel = new QLabel(this);
+                penLabel->setStyleSheet("background: white; border: 1px solid grey;");
+                penLabelPixmap = new QPixmap(36,36);
+                penLabelPixmap->fill(Qt::transparent);
+                penLabelBrush.setColor(Qt::black);
+                penLabelBrush.setStyle(Qt::SolidPattern);
+                QPen penPen;
+                penPen.setColor(QColor(50,50,50));
+                penPen.setWidth(1);
+                penPen.setStyle(Qt::SolidLine);
+                penPen.setCapStyle(Qt::RoundCap);
+                penPen.setJoinStyle(Qt::RoundJoin);
+                penLabelPainter = new QPainter(penLabelPixmap);
+                penLabelPainter->setPen(penPen);
+                penLabelPainter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+                drawToolsBar->addWidget(penLabel);
+                drawToolsBar->addSeparator();
+
+                // Regroup the drawing tool the artist can use
                 drawToolsActionGroup = new QActionGroup(drawToolsBar);
+                QObject::connect(drawToolsActionGroup, SIGNAL(triggered(QAction*)), this, SLOT(updateDrawingTools()));
 
                     // Pen
-                    penAction = drawToolsActionGroup->addAction(QIcon(), tr("Free line"));
+                    penAction = drawToolsActionGroup->addAction(QIcon(":/images/drawingtools/pen.ico"), tr("Pen"));
                     penAction->setCheckable(true);
                     penAction->setChecked(true);
 
                     // Eraser
-                    eraserAction = drawToolsActionGroup->addAction(QIcon(), tr("Eraser"));
+                    eraserAction = drawToolsActionGroup->addAction(QIcon(":/images/drawingtools/eraser.ico"), tr("Eraser"));
                     eraserAction->setCheckable(true);
 
                 drawToolsBar->addActions(drawToolsActionGroup->actions());
                 drawToolsBar->addSeparator();
 
+                // Spinbox
+                penWidthSpinBox = new QSpinBox(this);
+                penWidthSpinBox->setRange(2,30);
+                penWidthSpinBox->setValue(4);
+                penWidthSpinBox->setToolTip(tr("Width of the pen"));
+                penWidthSpinBox->setStyleSheet("margin: 0 0 2px 0;");
+                drawToolsBar->addWidget(penWidthSpinBox);
+
+                // Slider
+                penWidthSlider = new QSlider(Qt::Vertical, drawToolsBar);
+                penWidthSlider->setToolTip(tr("Width of the pen"));
+                penWidthSlider->setRange(2,30);
+                penWidthSlider->setValue(4);
+                penWidthSlider->setMaximumHeight(50);
+                QObject::connect(penWidthSlider, SIGNAL(valueChanged(int)), this, SLOT(updateDrawingTools()));
+                QObject::connect(penWidthSlider, SIGNAL(valueChanged(int)), penWidthSpinBox, SLOT(setValue(int)));
+                QObject::connect(penWidthSpinBox, SIGNAL(valueChanged(int)), penWidthSlider, SLOT(setValue(int)));
+                drawToolsBar->addWidget(penWidthSlider);
+
+                // Pick the color of the pen
+                actionColor = drawToolsBar->addAction(QIcon(":/images/drawingtools/color.ico"), tr("Pick the color of the pen"));
+                QObject::connect(actionColor, SIGNAL(triggered(bool)), this, SLOT(changeColor()));
+                    selectedColor = Qt::black;
+                drawToolsBar->addSeparator();
+
+
                 // Reset
-                resetAction = drawToolsBar->addAction(QIcon(), tr("Reset the canvas"));
+                resetAction = drawToolsBar->addAction(QIcon(":/images/drawingtools/reset.ico"), tr("Reset the canvas"));
                 resetAction->setCheckable(false);
 
+            QLayout* layoutDrawToolsBar = drawToolsBar->layout();
+            for(int i = 0; i < layoutDrawToolsBar->count(); i++){
+                if(i != 1 && i != 4 && i != 8){
+                    layoutDrawToolsBar->itemAt(i)->setAlignment(Qt::AlignCenter);
+                }
+            }
+
             // The canvas, where the artist can draw
-            canvasLabel = new QLabel(mainWidget);
-            canvasLabel->setPixmap(QPixmap(600,600));
+            canvasLabel = new Canvas(PEN, Qt::red, penWidthSlider->value(), 600,600, this);
+            QObject::connect(resetAction, SIGNAL(triggered(bool)), this, SLOT(resetCanvas()));
+            this->updateDrawingTools();
+
             mainLayout->addWidget(canvasLabel, 1, 1, 1, 1);
 
             // Splitter which connects the chat with the players and the answers
@@ -193,5 +257,88 @@ MainWindow::MainWindow() : QMainWindow()
             lineHandleSplitter->setFrameShadow(QFrame::Raised);
             lineHandleSplitter->setFixedWidth(200);
             layoutHandleSplitter->addWidget(lineHandleSplitter);
+}
 
+
+
+// Methods
+
+// Return the selected draw tool type
+DrawToolType MainWindow::selectedDrawToolType(){
+    if(penAction->isChecked()){
+        return PEN;
+    }
+    else{
+        return ERASER;
+    }
+}
+
+// Refresh the representation of the current pen
+void MainWindow::refreshCurrentPenLabel(){
+    QPoint centre((penLabelPixmap->rect().width() / 2) -1, (penLabelPixmap->rect().height() / 2)-1);
+    penLabelPixmap->fill(Qt::transparent);
+
+    switch(selectedDrawToolType()){
+        case PEN : {
+            penLabelPainter->setBrush(penLabelBrush);
+        break;
+        }
+
+        case ERASER : {
+            penLabelPainter->setBrush(QBrush(Qt::white));
+        }
+    }
+
+    QRect rect = QRect(0, 0, penWidthSlider->value(), penWidthSlider->value());
+    rect.moveCenter(centre);
+    penLabelPainter->drawEllipse(rect);
+    this->penLabel->setPixmap(*penLabelPixmap);
+}
+
+
+
+// Qt slots
+
+// Open a window to enter the information of the room the player want to join
+void MainWindow::joinRoom(){
+    //
+    JoinRoomWindow* jrw = new JoinRoomWindow(socket);
+
+    // If the player has been successfully connected to the room
+    if(jrw->exec() == JoinRoomWindow::Accepted){
+
+    }
+}
+
+// Open a window to set up a server
+void MainWindow::createRoom(){
+    //
+    CreateRoomWindow* crw = new CreateRoomWindow();
+
+    // If the player has successfully created his room
+    if(crw->exec() == CreateRoomWindow::Accepted){
+
+    }
+}
+
+
+// Update the tools set for the canvas
+void MainWindow::updateDrawingTools(){
+    this->refreshCurrentPenLabel();
+    this->canvasLabel->setTools(selectedDrawToolType(), penWidthSlider->value(), selectedColor, penLabelPixmap);
+}
+
+// Open a dialog to change the color of the drawing tools
+void MainWindow::changeColor(){
+    selectedColor = QColorDialog::getColor(selectedColor, this, tr("Pick a color"));
+    this->penLabelBrush.setColor(selectedColor);
+    this->updateDrawingTools();
+}
+
+// Ask if the artist really want to reset the canvas
+void MainWindow::resetCanvas(){
+    int response = QMessageBox::question(this, tr("Reset the canvas"), tr("Do you really want to reset the canvas ?"), QMessageBox::No|QMessageBox::Yes, QMessageBox::No);
+    if(response == QMessageBox::Yes){
+        this->canvasLabel->reset();
+    }
 }

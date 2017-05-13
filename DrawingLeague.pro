@@ -25,10 +25,26 @@ QT  +=  core gui \
 
 SOURCES +=  src/main.cpp \
             src/windows/mainwindow.cpp \
-    src/checkforupdate.cpp
+            src/checkforupdate.cpp \
+            src/widgets/canvas.cpp \
+            src/shapes/polyline.cpp \
+            src/shapes/shape.cpp \
+    src/room.cpp \
+    src/server.cpp \
+    src/windows/joinroomwindow.cpp \
+    src/windows/createroomwindow.cpp
 
 HEADERS +=  include/windows/mainwindow.h \
-    include/checkforupdate.h
+            include/checkforupdate.h \
+            include/widgets/canvas.h \
+            include/shapes/polyline.h \
+            include/shapes/shape.h \
+    include/drawtooltype.h \
+    include/room.h \
+    include/server.h \
+    include/windows/joinroomwindow.h \
+    include/windows/createroomwindow.h \
+    include/datasenttype.h
 
 RESOURCES +=    res/lang.qrc \
                 res/images.qrc

@@ -1,1 +1,8 @@
-<RCC/>
+<RCC>
+    <qresource prefix="/">
+        <file>images/drawingtools/color.ico</file>
+        <file>images/drawingtools/eraser.ico</file>
+        <file>images/drawingtools/pen.ico</file>
+        <file>images/drawingtools/reset.ico</file>
+    </qresource>
+</RCC>

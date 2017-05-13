@@ -6,6 +6,13 @@
 CheckForUpdate::CheckForUpdate(QString currentVersion)
 {
     this->currentVersion = currentVersion;
+
+    // Move the object to another thread and start its execution
+    QThread* threadCFU = new QThread();
+    QObject::connect(threadCFU, SIGNAL(finished()), threadCFU, SLOT(deleteLater()));
+    this->moveToThread(threadCFU);
+    QObject::connect(threadCFU, SIGNAL(started()), this, SLOT(askGithub()));
+    threadCFU->start();
 }
 
 
@@ -14,6 +21,8 @@ CheckForUpdate::CheckForUpdate(QString currentVersion)
 CheckForUpdate::~CheckForUpdate()
 {
     delete manager;
+
+    // Delete its thread with it
     this->thread()->quit();
 }
 
@@ -49,6 +58,6 @@ void CheckForUpdate::processReply()
         }
     }
 
-    // The class have finish
+    // The task of this object is over, we can delete it
     this->deleteLater();
 }

@@ -13,7 +13,7 @@
 
 
 // Check if there is an update available on github
-// (It's executed on its own thread)
+// (It's executed on its own thread and will delete himself when its task is over)
 class CheckForUpdate : public QObject
 {
     Q_OBJECT
