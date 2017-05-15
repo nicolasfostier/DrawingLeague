@@ -9,9 +9,10 @@
 
 //
 enum class DataBlockType : quint16 {NOTYPE,
-                                    QSTRING_PSEUDO,
-                                    QSTRING_CHAT,
-                                    QSTRING_ANSWER};
+                                    NEW_PLAYER,
+                                    NEW_MSG_CHAT,
+                                    NEW_ANSWER,
+                                    ROOM_INFO};
 
 //
 Q_DECLARE_METATYPE(DataBlockType)

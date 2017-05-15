@@ -28,6 +28,10 @@
 #include "include/windows/joinroomwindow.h"
 //
 #include "include/windows/createroomwindow.h"
+//
+#include "include/gameinfo/room.h"
+//
+#include "include/gameinfo/chatmessage.h"
 
 
 
@@ -40,6 +44,7 @@ class MainWindow : public QMainWindow
     private :
         //
         Server* server;
+
         // Socket to discuss with the server hosting the room
         QTcpSocket* socket;
         //
@@ -49,6 +54,11 @@ class MainWindow : public QMainWindow
         //
         DataBlockType nextDataBlockType;
 
+        //
+        Room* room;
+        //
+        QString* pseudo;
+
         // Settings
         QSettings* settings;
 
@@ -56,6 +66,7 @@ class MainWindow : public QMainWindow
         QMenu* menuRoom;
             QAction* actionJoin;
             QAction* actionCreate;
+            QAction* actionDisconnect;
             QAction* actionQuit;
         QMenu* menuTools;
             QAction* actionSettings;
@@ -148,6 +159,10 @@ class MainWindow : public QMainWindow
     public :
         MainWindow();
 
+    // Destructor
+    public :
+        ~MainWindow();
+
     // Methods
     public :
         // Return the selected draw tool type
@@ -161,6 +176,8 @@ class MainWindow : public QMainWindow
         void joinRoom();
         // Open a window to set up a server
         void createRoom();
+        //
+        void disconnectRoom();
 
         // Update the tools set for the canvas
         void updateDrawingTools();
@@ -173,9 +190,9 @@ class MainWindow : public QMainWindow
         void readFromServer();
 
         //
-        void sendMsgChat();
-        //
         void sendMsgAnswer();
+        //
+        void sendMsgChat();
 };
 
 #endif // MAINWINDOW_H

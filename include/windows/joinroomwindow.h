@@ -68,10 +68,6 @@ class JoinRoomWindow : public QDialog
         void connectOk();
         //
         void connectError();
-
-    // Qt signals
-    signals :
-        void connected();
 };
 
 

@@ -9,7 +9,7 @@
 
 
 //
-#include "include/room.h"
+#include "include/gameinfo/room.h"
 //
 #include "include/datablock.h"
 
@@ -29,7 +29,7 @@ class ServerThread : public QObject
         //
         QDataStream* socketStream;
         //
-        quint32 nextSizeToRead;
+        int nextSizeToRead;
         //
         DataBlockType nextDataBlockType;
 
@@ -39,12 +39,10 @@ class ServerThread : public QObject
         int score;
         //
         Room* room;
-        //
-        QList<ServerThread*>* serverThreads;
 
     // Constructeur
     public :
-        ServerThread(QTcpSocket* socket, Room* room, QList<ServerThread*>* serverThreads);
+        ServerThread(QTcpSocket* socket, Room* room);
 
     // Destructor
     public :
@@ -58,11 +56,20 @@ class ServerThread : public QObject
         void readFromClient();
 
         //
-        void sendNewPlayerInfo(QString msg);
+        void sendNewPlayerInfo(QString pseudo);
         //
         void sendMsgChat(QString msg);
         //
         void sendMsgAnswer(QString msg);
+
+    // Qt signals
+    signals :
+        //
+        void sendNewPlayerInfoSignal(QString pseudo);
+        //
+        void sendMsgChatSignal(QString msg);
+        //
+        void sendMsgAnswerSignal(QString msg);
 };
 
 

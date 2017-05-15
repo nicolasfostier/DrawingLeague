@@ -7,9 +7,9 @@
 #include <QThread>
 
 //
-#include "include/room.h"
+#include "include/gameinfo/room.h"
 //
-#include "include/serverthread.h"
+#include "include/server/serverthread.h"
 
 
 

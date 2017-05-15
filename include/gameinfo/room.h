@@ -4,6 +4,8 @@
 
 
 #include <QString>
+#include <QTimer>
+#include <QDataStream>
 
 
 
@@ -23,9 +25,22 @@ class Room
         int timeAfterFirstGoodAnswer;
 
     // Constructeur
-    public:
+    public :
         Room(QString roomName = "Default", int maxRounds = 10, int maxPlayers = 10, int timeByRound = 120, int timeAfterFirstGoodAnswer = 30);
+
+    // Operators
+    public :
+        friend QDataStream& operator<<(QDataStream& dataStream, Room room);
+        friend QDataStream& operator>>(QDataStream& dataStream, Room& room);
 };
+
+
+
+//
+QDataStream& operator<<(QDataStream& dataStream, Room room);
+//
+QDataStream& operator>>(QDataStream& dataStream, Room& room);
+
 
 
 
