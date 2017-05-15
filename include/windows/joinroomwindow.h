@@ -12,6 +12,11 @@
 #include <QTcpSocket>
 #include <QHostAddress>
 #include <QMessageBox>
+#include <QDataStream>
+
+
+//
+#include "include/datablock.h"
 
 
 
@@ -26,6 +31,11 @@ class JoinRoomWindow : public QDialog
 
         //
         QGridLayout* layout;
+
+        //
+        QLabel* pseudoLabel;
+        //
+        QLineEdit* pseudoLineEdit;
 
         //
         QLabel* ipLabel;

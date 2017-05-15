@@ -153,7 +153,9 @@ void Canvas::refresh(){
     // If the timer isn't active, we refresh the canvas
     if(!FPSLimiterTimer->isActive()){
         this->setPixmap(*pixmap);
-        FPSLimiterTimer->start(16);
+
+        // 1000 / 6 = 166.67FPS
+        FPSLimiterTimer->start(6);
 
         // When the timer is over, we don't necessarily need to refresh the canvas
         // (prevent an infinite loop with our timer which would want to refresh the canvas even if there isn't new stuff to show)

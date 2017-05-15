@@ -7,6 +7,8 @@ MainWindow::MainWindow() : QMainWindow()
 {
     // Socket to discuss with the server hosting the room
     socket = new QTcpSocket(this);
+    //
+    socketStream = new QDataStream(socket);
 
 
     // Initialization of the settings variable
@@ -197,6 +199,7 @@ MainWindow::MainWindow() : QMainWindow()
 
                             // Where players can enter their answers
                             newAnswersLineEdit = new QLineEdit(answersWidget);
+                            QObject::connect(newAnswersLineEdit, SIGNAL(returnPressed()), this, SLOT(sendMsgAnswer()));
                             answersLayout->addWidget(newAnswersLineEdit);
 
                     // Players
@@ -244,6 +247,7 @@ MainWindow::MainWindow() : QMainWindow()
 
                         // Where players can enter their messages to chat with the others players
                         newMessageLineEdit = new QLineEdit(answersPlayersChatSplitter);
+                        QObject::connect(newMessageLineEdit, SIGNAL(returnPressed()), this, SLOT(sendMsgChat()));
                         chatLayout->addWidget(newMessageLineEdit);
 
             // Customize the handle
@@ -275,8 +279,8 @@ DrawToolType MainWindow::selectedDrawToolType(){
 }
 
 // Refresh the representation of the current pen
-void MainWindow::refreshCurrentPenLabel(){
-    QPoint centre((penLabelPixmap->rect().width() / 2) -1, (penLabelPixmap->rect().height() / 2)-1);
+void MainWindow::refreshPenLabel(){
+    QPoint centre((penLabelPixmap->rect().width() / 2) - 1, (penLabelPixmap->rect().height() / 2) - 1);
     penLabelPixmap->fill(Qt::transparent);
 
     switch(selectedDrawToolType()){
@@ -314,18 +318,18 @@ void MainWindow::joinRoom(){
 // Open a window to set up a server
 void MainWindow::createRoom(){
     //
-    CreateRoomWindow* crw = new CreateRoomWindow();
+    CreateRoomWindow* crw = new CreateRoomWindow(socket, server);
 
     // If the player has successfully created his room
     if(crw->exec() == CreateRoomWindow::Accepted){
-
+        QObject::connect(socket, SIGNAL(readyRead()), this, SLOT(readFromServer()));
     }
 }
 
 
 // Update the tools set for the canvas
 void MainWindow::updateDrawingTools(){
-    this->refreshCurrentPenLabel();
+    this->refreshPenLabel();
     this->canvasLabel->setTools(selectedDrawToolType(), penWidthSlider->value(), selectedColor, penLabelPixmap);
 }
 
@@ -343,3 +347,83 @@ void MainWindow::resetCanvas(){
         this->canvasLabel->reset();
     }
 }
+
+
+//
+void MainWindow::readFromServer(){
+    qDebug() << "readFromServer()";
+
+    //
+    while(1){
+        //
+        if(nextSizeToRead == 0){
+            //
+            if(socket->bytesAvailable() < sizeof(quint32)){
+                break;
+            }
+            *socketStream >> nextSizeToRead;
+        }
+
+        //
+        if(nextDataBlockType == DataBlockType::NOTYPE){
+            //
+            if(socket->bytesAvailable() < sizeof(quint16)){
+                break;
+            }
+            *socketStream >> nextDataBlockType;
+        }
+
+        switch (nextDataBlockType){
+            case DataBlockType::QSTRING_CHAT : {
+                QString msg;
+                *socketStream >> msg;
+
+                this->chatTextEdit->append(msg);
+            break;
+            }
+
+            case DataBlockType::QSTRING_ANSWER : {            
+                QByteArray blockReceived;
+                QDataStream blockReceivedStream(&blockReceived, QIODevice::ReadWrite);
+                QString msg;
+                *socketStream >> blockReceived;
+                blockReceivedStream >> msg;
+
+                this->answersTextEdit->append(msg);
+            break;
+            }
+        }
+
+        nextSizeToRead = 0;
+        nextDataBlockType = DataBlockType::NOTYPE;
+    }
+}
+
+
+//
+void MainWindow::sendMsgAnswer(){
+    // Send to the client a new message of the chat
+    QByteArray blockToSend;
+    QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
+    blockToSendStream << this->newAnswersLineEdit->text();
+    QDataStream socketStream(socket);
+    socketStream << quint32(blockToSend.size()) << DataBlockType::QSTRING_ANSWER << blockToSend;
+
+    this->newAnswersLineEdit->clear();
+}
+
+//
+void MainWindow::sendMsgChat(){
+    // Send to the client a new message of the chat
+    QByteArray blockToSend;
+    QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
+    blockToSendStream << this->newMessageLineEdit->text();
+    QDataStream socketStream(socket);
+    socketStream << quint32(blockToSend.size()) << DataBlockType::QSTRING_CHAT << blockToSend;
+
+    this->newMessageLineEdit->clear();
+}
+
+
+
+

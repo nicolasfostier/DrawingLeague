@@ -24,7 +24,7 @@ class Room
 
     // Constructeur
     public:
-        Room();
+        Room(QString roomName = "Default", int maxRounds = 10, int maxPlayers = 10, int timeByRound = 120, int timeAfterFirstGoodAnswer = 30);
 };
 
 

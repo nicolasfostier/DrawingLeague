@@ -13,27 +13,37 @@ JoinRoomWindow::JoinRoomWindow(QTcpSocket* socket) : QDialog()
     layout = new QGridLayout(this);
     layout->setVerticalSpacing(10);
 
+
+        //
+        pseudoLabel = new QLabel("<b>" + tr("Your pseudo :") + "</b>", this);
+        layout->addWidget(pseudoLabel, 0, 0, 1, 1, Qt::AlignLeft);
+
+        //
+        pseudoLineEdit = new QLineEdit(this);
+        layout->addWidget(pseudoLineEdit, 0, 1, 1, 1, Qt::AlignRight);
+
+
         //
         ipLabel = new QLabel("<b>" + tr("Server IP :") + "</b>", this);
-        layout->addWidget(ipLabel, 0, 0, 1, 1, Qt::AlignLeft);
+        layout->addWidget(ipLabel, 1, 0, 1, 1, Qt::AlignLeft);
 
         //
         ipLineEdit = new QLineEdit(this);
-        layout->addWidget(ipLineEdit, 0, 1, 1, 1, Qt::AlignRight);
+        layout->addWidget(ipLineEdit, 1, 1, 1, 1, Qt::AlignRight);
 
 
         //
         portLabel = new QLabel("<b>" + tr("Server port :") + "</b>", this);
-        layout->addWidget(portLabel, 1, 0, 1, 1, Qt::AlignLeft);
+        layout->addWidget(portLabel, 2, 0, 1, 1, Qt::AlignLeft);
 
         //
         portLineEdit = new QLineEdit(this);
-        layout->addWidget(portLineEdit, 1, 1, 1, 1, Qt::AlignRight);
+        layout->addWidget(portLineEdit, 2, 1, 1, 1, Qt::AlignRight);
 
 
         //
         connectOrCancel = new QWidget(this);
-        layout->addWidget(connectOrCancel, 2, 0, 1, 2, Qt::AlignHCenter);
+        layout->addWidget(connectOrCancel, 3, 0, 1, 2, Qt::AlignHCenter);
 
             //
             layoutConnectOrCancel = new QHBoxLayout(connectOrCancel);
@@ -63,12 +73,25 @@ JoinRoomWindow::JoinRoomWindow(QTcpSocket* socket) : QDialog()
 
 //
 void JoinRoomWindow::connectToTheServeur(){
-    socket->connectToHost(ipLabel->text(), portLabel->text().toInt());
+    socket->connectToHost(ipLineEdit->text(), portLineEdit->text().toInt());
 }
 
 //
 void JoinRoomWindow::connectOk(){
+    //
     this->accept();
+
+    // Send the pseudo of the player
+    QByteArray blockToSend;
+    QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
+    blockToSendStream << pseudoLineEdit->text();
+    QDataStream socketStream(socket);
+    socketStream << quint32(blockToSend.size()) << DataBlockType::QSTRING_PSEUDO << blockToSend;
+
+    //
+    emit connected();
+
+    //
     this->close();
 }
 

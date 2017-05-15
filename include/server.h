@@ -4,15 +4,44 @@
 
 
 #include <QTcpServer>
+#include <QThread>
+
+//
+#include "include/room.h"
+//
+#include "include/serverthread.h"
 
 
 
-// Host
-class Server : QTcpServer
+// Host a room
+class Server : public QTcpServer
 {
+    Q_OBJECT
+
+    // Variables
+    private :
+        //
+        Room room;
+        //
+        int port;
+        //
+        QList<ServerThread*> serverThreads;
+
     // Constructor
     public:
-        Server();
+        Server(Room room, int port);
+
+    // Destructor
+    public :
+        ~Server();
+
+    // Qt slots
+    public slots :
+        //
+        void addClient();
+
+        //
+        void sendPlayersInfo();
 };
 
 #endif // SERVER_H

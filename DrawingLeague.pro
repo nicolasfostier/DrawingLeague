@@ -29,22 +29,25 @@ SOURCES +=  src/main.cpp \
             src/widgets/canvas.cpp \
             src/shapes/polyline.cpp \
             src/shapes/shape.cpp \
-    src/room.cpp \
-    src/server.cpp \
-    src/windows/joinroomwindow.cpp \
-    src/windows/createroomwindow.cpp
+            src/room.cpp \
+            src/server.cpp \
+            src/windows/joinroomwindow.cpp \
+            src/windows/createroomwindow.cpp \
+    src/datablock.cpp \
+    src/serverthread.cpp
 
 HEADERS +=  include/windows/mainwindow.h \
             include/checkforupdate.h \
             include/widgets/canvas.h \
             include/shapes/polyline.h \
             include/shapes/shape.h \
-    include/drawtooltype.h \
-    include/room.h \
-    include/server.h \
-    include/windows/joinroomwindow.h \
-    include/windows/createroomwindow.h \
-    include/datasenttype.h
+            include/drawtooltype.h\
+            include/room.h \
+            include/server.h \
+            include/windows/joinroomwindow.h \
+            include/windows/createroomwindow.h \
+    include/datablock.h \
+    include/serverthread.h
 
 RESOURCES +=    res/lang.qrc \
                 res/images.qrc

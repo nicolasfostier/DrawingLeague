@@ -38,8 +38,16 @@ class MainWindow : public QMainWindow
 
     // Variables
     private :
+        //
+        Server* server;
         // Socket to discuss with the server hosting the room
         QTcpSocket* socket;
+        //
+        QDataStream* socketStream;
+        //
+        quint32 nextSizeToRead;
+        //
+        DataBlockType nextDataBlockType;
 
         // Settings
         QSettings* settings;
@@ -145,7 +153,7 @@ class MainWindow : public QMainWindow
         // Return the selected draw tool type
         DrawToolType selectedDrawToolType();
         // Refresh the representation of the current pen
-        void refreshCurrentPenLabel();
+        void refreshPenLabel();
 
     // Qt slots
     public slots :
@@ -160,6 +168,14 @@ class MainWindow : public QMainWindow
         void changeColor();
         // Ask if the artist really want to reset the canvas
         void resetCanvas();
+
+        //
+        void readFromServer();
+
+        //
+        void sendMsgChat();
+        //
+        void sendMsgAnswer();
 };
 
 #endif // MAINWINDOW_H
