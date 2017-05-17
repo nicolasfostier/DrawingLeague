@@ -1,0 +1,4 @@
+#ifndef DATABLOCKTYPE_H
+#define DATABLOCKTYPE_H
+
+#endif // DATABLOCKTYPE_H

@@ -1,0 +1,11 @@
+#ifndef INCLUDEDATABLOCKDATABLOCKWRITER_H
+#define INCLUDEDATABLOCKDATABLOCKWRITER_H
+
+
+class datablockwriter
+{
+public:
+    datablockwriter();
+};
+
+#endif // INCLUDEDATABLOCKDATABLOCKWRITER_H
