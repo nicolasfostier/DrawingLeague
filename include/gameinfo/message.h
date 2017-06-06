@@ -2,34 +2,52 @@
 #define CHATMESSAGE_H
 
 
-#include <QTime>
+
+#include <QObject>
+#include <QDateTime>
 
 
 
 //
-class ChatMessage
+class Message
 {
     // Variables
     private :
         QString pseudo;
         QString message;
-        QTime timestamp;
+        QDateTime timestamp;
+
+    // Getter
+    public :
+        QString getPseudo();
+        QString getMessage();
 
     // Constructor
     public :
-        ChatMessage(QString pseudo, QString message, QTime timestamp = QTime());
+        Message(QString pseudo = "Default", QString message = QString(), QDateTime timestamp = QDateTime::currentDateTimeUtc());
+        Message(const Message& msg);
 
-    // Operators:
+    // Destructor
     public :
-        friend QDataStream& operator<<(QDataStream& dataStream, ChatMessage chatMessage);
-        friend QDataStream& operator>>(QDataStream& dataStream, ChatMessage& chatMessage);
+        ~Message();
+
+    // Methods
+    public :
+        //
+        QString toString(bool includeDate);
+
+    // Operators
+    public :
+        friend QDataStream& operator<<(QDataStream& dataStream, Message chatMessage);
+        friend QDataStream& operator>>(QDataStream& dataStream, Message& chatMessage);
 };
 
+Q_DECLARE_METATYPE(Message)
 
 //
-QDataStream& operator<<(QDataStream& dataStream, ChatMessage chatMessage);
+QDataStream& operator<<(QDataStream& dataStream, Message chatMessage);
 //
-QDataStream& operator>>(QDataStream& dataStream, ChatMessage& chatMessage);
+QDataStream& operator>>(QDataStream& dataStream, Message& chatMessage);
 
 
 

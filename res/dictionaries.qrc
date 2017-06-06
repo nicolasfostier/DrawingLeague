@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>dictionaries/easy_english.txt</file>
+        <file>dictionaries/easy_french.txt</file>
+    </qresource>
+</RCC>

@@ -16,7 +16,7 @@
 
 
 //
-#include "include/datablock.h"
+#include "include/datablock/datablocktype.h"
 
 
 
@@ -58,7 +58,7 @@ class JoinRoomWindow : public QDialog
 
     // Constructor
     public :
-        JoinRoomWindow(QTcpSocket* socket);
+        JoinRoomWindow();
 
     // Qt slots
     public slots:
@@ -68,6 +68,10 @@ class JoinRoomWindow : public QDialog
         void connectOk();
         //
         void connectError();
+
+    // Signals
+    signals :
+        void roomJoined(QTcpSocket* socket, QString pseudo);
 };
 
 

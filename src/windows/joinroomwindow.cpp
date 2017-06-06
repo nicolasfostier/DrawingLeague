@@ -3,9 +3,9 @@
 
 
 // Constructor
-JoinRoomWindow::JoinRoomWindow(QTcpSocket* socket) : QDialog()
+JoinRoomWindow::JoinRoomWindow() : QDialog()
 {
-    this->socket = socket;
+    this->socket = new QTcpSocket();
     QObject::connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectError()));
     QObject::connect(socket, SIGNAL(connected()), this, SLOT(connectOk()));
 
@@ -13,37 +13,37 @@ JoinRoomWindow::JoinRoomWindow(QTcpSocket* socket) : QDialog()
     layout = new QGridLayout(this);
     layout->setVerticalSpacing(10);
 
-
         //
         pseudoLabel = new QLabel("<b>" + tr("Your pseudo :") + "</b>", this);
-        layout->addWidget(pseudoLabel, 0, 0, 1, 1, Qt::AlignLeft);
+        layout->addWidget(pseudoLabel, 0, 0, 1, 1);
 
         //
         pseudoLineEdit = new QLineEdit(this);
-        layout->addWidget(pseudoLineEdit, 0, 1, 1, 1, Qt::AlignRight);
+        layout->addWidget(pseudoLineEdit, 0, 1, 1, 1);
 
 
         //
         ipLabel = new QLabel("<b>" + tr("Server IP :") + "</b>", this);
-        layout->addWidget(ipLabel, 1, 0, 1, 1, Qt::AlignLeft);
+        layout->addWidget(ipLabel, 2, 0, 1, 1);
 
         //
         ipLineEdit = new QLineEdit(this);
-        layout->addWidget(ipLineEdit, 1, 1, 1, 1, Qt::AlignRight);
+        layout->addWidget(ipLineEdit, 2, 1, 1, 1);
 
 
         //
         portLabel = new QLabel("<b>" + tr("Server port :") + "</b>", this);
-        layout->addWidget(portLabel, 2, 0, 1, 1, Qt::AlignLeft);
+        layout->addWidget(portLabel, 3, 0, 1, 1);
 
         //
         portLineEdit = new QLineEdit(this);
-        layout->addWidget(portLineEdit, 2, 1, 1, 1, Qt::AlignRight);
+        portLineEdit->setText("23232");
+        layout->addWidget(portLineEdit, 3, 1, 1, 1);
 
 
         //
         connectOrCancel = new QWidget(this);
-        layout->addWidget(connectOrCancel, 3, 0, 1, 2, Qt::AlignHCenter);
+        layout->addWidget(connectOrCancel, 4, 0, 1, 2);
 
             //
             layoutConnectOrCancel = new QHBoxLayout(connectOrCancel);
@@ -73,23 +73,18 @@ JoinRoomWindow::JoinRoomWindow(QTcpSocket* socket) : QDialog()
 
 //
 void JoinRoomWindow::connectToTheServeur(){
-    socket->connectToHost(ipLineEdit->text(), portLineEdit->text().toInt());
+    if(pseudoLineEdit->text().size() < 3)
+    {
+        QMessageBox::critical(this, tr("Forbidden pseudo"), tr("Your pseudo must be at least 3 characters long."));
+    }
+    else{
+        socket->connectToHost(ipLineEdit->text(), portLineEdit->text().toInt());
+    }
 }
 
 //
 void JoinRoomWindow::connectOk(){
-    //
-    this->accept();
-
-    // Send the pseudo of the player
-    QByteArray blockToSend;
-    QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
-    blockToSendStream << pseudoLineEdit->text();
-    QDataStream socketStream(socket);
-    socketStream << quint32(blockToSend.size()) << DataBlockType::QSTRING_PSEUDO << blockToSend;
-
-    //
-    emit connected();
+    emit roomJoined(socket, this->pseudoLineEdit->text());
 
     //
     this->close();

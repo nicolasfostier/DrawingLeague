@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>sound/after_first_answer.mp3</file>
+        <file>sound/answer_found_other.mp3</file>
+        <file>sound/answer_found_you.mp3</file>
+        <file>sound/end_game.mp3</file>
+        <file>sound/new_round.mp3</file>
+        <file>sound/player_entering.mp3</file>
+        <file>sound/player_leaving.mp3</file>
+        <file>sound/you_are_the_artist.mp3</file>
+    </qresource>
+</RCC>

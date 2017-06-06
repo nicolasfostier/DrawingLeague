@@ -11,7 +11,13 @@
 //
 #include "include/gameinfo/room.h"
 //
-#include "include/datablock.h"
+#include "include/datablock/datablockreader.h"
+//
+#include "include/datablock/datablockwriter.h"
+//
+#include "include/gameinfo/message.h"
+//
+#include "include/gameinfo/player.h"
 
 
 
@@ -27,22 +33,22 @@ class ServerThread : public QObject
         //
         QTcpSocket* socket;
         //
-        QDataStream* socketStream;
+        DataBlockReader* dataBlockReader;
         //
-        int nextSizeToRead;
-        //
-        DataBlockType nextDataBlockType;
+        DataBlockWriter* dataBlockWriter;
 
         //
-        QString pseudo;
-        //
-        int score;
-        //
-        Room* room;
+        Player* player;
+
+    // Getter
+    public :
+        Player* getPlayer();
+        DataBlockReader* getDataBlockReader();
+        DataBlockWriter* getDataBlockWriter();
 
     // Constructeur
     public :
-        ServerThread(QTcpSocket* socket, Room* room);
+        ServerThread(QTcpSocket* socket);
 
     // Destructor
     public :
@@ -52,24 +58,21 @@ class ServerThread : public QObject
     public slots :
         //
         void launch();
-        //
-        void readFromClient();
 
         //
-        void sendNewPlayerInfo(QString pseudo);
-        //
-        void sendMsgChat(QString msg);
-        //
-        void sendMsgAnswer(QString msg);
+        void setPlayer(Player player);
 
     // Qt signals
     signals :
         //
-        void sendNewPlayerInfoSignal(QString pseudo);
+        void readyToReceive(ServerThread* serverThread);
+
         //
-        void sendMsgChatSignal(QString msg);
-        //
-        void sendMsgAnswerSignal(QString msg);
+        void playerLeaving(QString pseudo);
+
+    // Operators
+    public :
+        bool operator!=(ServerThread serverThread);
 };
 
 

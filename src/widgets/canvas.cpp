@@ -3,21 +3,26 @@
 
 
 // Setter
-void Canvas::setTools(DrawToolType drawToolType, int penWidth, QColor penBrushColor, QPixmap *cursorPixmap){
-    this->currentDrawTool = drawToolType;
-    this->drawPen.setWidth(penWidth);
-    this->drawPen.setColor(penBrushColor);
+void Canvas::setTools(DrawingToolType drawingToolType, int penWidth, QColor penBrushColor, QPixmap *cursorPixmap){
+    this->currentDrawingTool = drawingToolType;
+    this->drawingPen.setWidth(penWidth);
+    this->drawingPen.setColor(penBrushColor);
     this->erasePen.setWidth(penWidth);
-    this->drawBrush.setColor(penBrushColor);
+    this->drawingBrush.setColor(penBrushColor);
     this->setCursor(QCursor(*cursorPixmap, (cursorPixmap->width() / 2) - 1, (cursorPixmap->width() / 2) - 1));
+}
+void Canvas::setIsArtist(bool isArtist){
+    this->isArtist = isArtist;
 }
 
 
 
 // Constructor
-Canvas::Canvas(DrawToolType currentDrawTool, QColor penBrushColor, int penWidth, int width, int height, QWidget* parent) : QLabel(parent)
+Canvas::Canvas(DrawingToolType currentDrawingTool, QColor penBrushColor, int penWidth, int width, int height, QWidget* parent) : QLabel(parent)
 {
-    this->currentDrawTool = currentDrawTool;
+    this->isArtist = true;
+
+    this->currentDrawingTool = currentDrawingTool;
     this->width = width;
     this->height = height;
 
@@ -29,15 +34,15 @@ Canvas::Canvas(DrawToolType currentDrawTool, QColor penBrushColor, int penWidth,
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
     // Pen to draw on the canvas
-    drawPen.setColor(penBrushColor);
-    drawPen.setWidth(penWidth);
-    drawPen.setStyle(Qt::SolidLine);
-    drawPen.setCapStyle(Qt::RoundCap);
-    drawPen.setJoinStyle(Qt::RoundJoin);
+    drawingPen.setColor(penBrushColor);
+    drawingPen.setWidth(penWidth);
+    drawingPen.setStyle(Qt::SolidLine);
+    drawingPen.setCapStyle(Qt::RoundCap);
+    drawingPen.setJoinStyle(Qt::RoundJoin);
 
     // Brush
-    drawBrush.setColor(penBrushColor);
-    drawBrush.setStyle(Qt::SolidPattern);
+    drawingBrush.setColor(penBrushColor);
+    drawingBrush.setStyle(Qt::SolidPattern);
 
     // Pen to erase (just a white pen)
     erasePen.setColor(Qt::white);
@@ -56,8 +61,10 @@ Canvas::Canvas(DrawToolType currentDrawTool, QColor penBrushColor, int penWidth,
     this->setStyleSheet("border: 1px solid grey");
 
     // Timer to prevent the methods refresh() to be called more than 60 times per second
-    FPSLimiterTimer = new QTimer(this);
-    FPSLimiterTimer->setSingleShot(true);
+    TickrateLimiterTimer = new QTimer(this);
+    TickrateLimiterTimer->setSingleShot(true);
+    // 1000 / 6 = 166.67 of tickrate
+    TickrateLimiterTimer->setInterval(6);
 }
 
 
@@ -76,93 +83,143 @@ Canvas::~Canvas(){
 void Canvas::reset(){
     pixmap->fill(Qt::white);
     this->setPixmap(*pixmap);
-
-    shapesList.clear();
 }
+
 
 // When one click of the mouse is pressed
 void Canvas::mousePressEvent(QMouseEvent* event){
-    event->accept();
+    if(isArtist || event->screenPos() == QPoint(-232323,-232323)){
+        event->accept();
 
-    switch(currentDrawTool){
-        case PEN :{
-            Polyline* newPolyline = new Polyline(drawPen, event->pos());
-            shapesList.append(newPolyline);
+        switch(currentDrawingTool){
+            case PEN :{
+                painter->setPen(drawingPen);
+                painter->drawPoint(event->pos());
+            break;
+            }
 
-            painter->setPen(drawPen);
-            painter->drawPoint(event->pos());
-
-            this->refresh();
-        break;
+            case ERASER :{
+                painter->setPen(erasePen);
+                painter->drawPoint(event->pos());
+            break;
+            }
         }
 
-        case ERASER :{
-            Polyline* newPolyline = new Polyline(drawPen, event->pos());
-            shapesList.append(newPolyline);
+        lastMousePositionDrawn = event->pos();
 
-            painter->setPen(erasePen);
-            painter->drawPoint(event->pos());
+        this->setPixmap(*pixmap);
 
-            this->refresh();
-        break;
+        if(event->screenPos() != QPoint(-232323,-232323)){
+            emit mousePressEventToSend(event->pos());
         }
     }
-}
-
-// When the mouse move and if there is one click pressed
-void Canvas::mouseMoveEvent(QMouseEvent* event){
-    event->accept();
-
-    switch(currentDrawTool){
-        case PEN :{
-            Polyline* currentPolyline = static_cast<Polyline*>(shapesList.last());
-
-            painter->drawLine(currentPolyline->getLastPoint(), event->pos());
-            this->refresh();
-
-            currentPolyline->addPoint(event->pos());
-        break;
-        }
-
-        case ERASER :{
-            Polyline* currentPolyline = static_cast<Polyline*>(shapesList.last());
-
-            painter->drawLine(currentPolyline->getLastPoint(), event->pos());
-            this->refresh();
-
-            currentPolyline->addPoint(event->pos());
-        break;
-        }
+    else{
+        event->ignore();
     }
 }
 
 // When the click of the mouse is released
 void Canvas::mouseReleaseEvent(QMouseEvent* event){
-   event->accept();
+    if(isArtist || event->screenPos() == QPoint(-232323,-232323)){
+        event->accept();
 
-//   switch(currentDrawTool){
-//   }
+        if(event->screenPos() != QPoint(-232323,-232323)){
+            emit mouseReleaseEventToSend(event->pos());
+        }
+    }
+    else{
+        event->ignore();
+    }
 }
 
 
 
 // Qt slots
 
-// Refresh the pixmap of the canvas
-void Canvas::refresh(){
-    // If the timer isn't active, we refresh the canvas
-    if(!FPSLimiterTimer->isActive()){
-        this->setPixmap(*pixmap);
+// When the mouse move and if there is one click pressed
+void Canvas::mouseMoveEvent(QMouseEvent* event){
+    if(isArtist || event->screenPos() == QPoint(-232323,-232323)){
+        event->accept();
 
-        // 1000 / 6 = 166.67FPS
-        FPSLimiterTimer->start(6);
+        if(event->screenPos() == QPoint(-232323,-232323)){
+            switch(currentDrawingTool){
+                case PEN :{
+                    painter->drawLine(lastMousePositionDrawn, event->pos());
+                break;
+                }
 
-        // When the timer is over, we don't necessarily need to refresh the canvas
-        // (prevent an infinite loop with our timer which would want to refresh the canvas even if there isn't new stuff to show)
-        QObject::disconnect(FPSLimiterTimer, SIGNAL(timeout()), this, SLOT(refresh()));
+                case ERASER :{
+                    painter->drawLine(lastMousePositionDrawn, event->pos());
+                break;
+                }
+            }
+
+            lastMousePositionDrawn = event->pos();
+
+            this->setPixmap(*pixmap);
+        }
+        else{
+            //
+            if(!TickrateLimiterTimer->isActive()){
+
+                switch(currentDrawingTool){
+                    case PEN :{
+                        painter->drawLine(lastMousePositionDrawn, event->pos());
+                    break;
+                    }
+
+                    case ERASER :{
+                        painter->drawLine(lastMousePositionDrawn, event->pos());
+                    break;
+                    }
+                }
+
+                lastMousePositionDrawn = event->pos();
+
+                this->setPixmap(*pixmap);
+
+                emit mouseMoveEventToSend(event->pos());
+
+                TickrateLimiterTimer->start();
+
+                // Prevent an infinite loop with our timer
+                QObject::disconnect(TickrateLimiterTimer, SIGNAL(timeout()), this, SLOT(mapTimeoutSignal()));
+            }
+            // If the timer is active we wait for the timer to finished to refresh the canvas
+            else{
+                lastMousePositionNotDrawn = event->pos();
+
+                QObject::connect(TickrateLimiterTimer, SIGNAL(timeout()), this, SLOT(mapTimeoutSignal()));
+            }
+        }
     }
-    // If the timer is active we wait for the timer to finished to refresh the canvas
     else{
-        QObject::connect(FPSLimiterTimer, SIGNAL(timeout()), this, SLOT(refresh()));
+        event->ignore();
     }
+}
+
+
+//
+void Canvas::mousePressEventFromServer(QPoint pos){
+    QMouseEvent fakeMousePressEvent(QEvent::MouseButtonPress, pos, QPoint(-232323,-232323), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    this->mousePressEvent(&fakeMousePressEvent);
+}
+
+//
+void Canvas::mouseMoveEventFromServer(QPoint pos){
+    QMouseEvent fakeMouseMoveEvent(QEvent::MouseMove, pos, QPoint(-232323,-232323), Qt::NoButton, Qt::LeftButton, Qt::NoModifier);
+    this->mouseMoveEvent(&fakeMouseMoveEvent);
+}
+
+//
+void Canvas::mouseReleaseEventFromServer(QPoint pos){
+    QMouseEvent fakeMouseReleaseEvent(QEvent::MouseButtonRelease, pos, QPoint(-232323,-232323), Qt::LeftButton, Qt::NoButton, Qt::NoModifier);
+    this->mouseReleaseEvent(&fakeMouseReleaseEvent);
+}
+
+
+//
+void Canvas::mapTimeoutSignal(){
+    QMouseEvent fakeMouseMoveEvent(QEvent::MouseMove, lastMousePositionNotDrawn, Qt::LeftButton, Qt::NoButton, Qt::NoModifier);
+    mouseMoveEvent(&fakeMouseMoveEvent);
 }

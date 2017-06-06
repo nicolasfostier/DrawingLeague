@@ -1,45 +1,47 @@
-Class to do (totaly not ):
-	[ ] Main Window
-		[ ]
-	[ ] Setting Window
-	[X] Check for update (Need its own thread)
-	[ ]	Server : host a room (Need QTCPServer and its own thread)
-	[ ] Client ()
-
-Other thing to do :
-	[ ] Find great and free sounds
-		[ ] When someone enter the game
-		[ ] When an other user find the word
-		[ ] When you find the word
-		[ ] End of the game
-		[ ] When it's your turn to draw
-	[ ] Create the icon of the game
-
-Features to implement for the first release :
-	[ ] Connect to a room or host one
-	[X] Check at launch if there is an update available
-	[ ] User can import their own dictionnary when they want to host their own room
-	[ ] 2 chat in each room : 1 for talking and 1 for guessing the word
-	[ ] Basic drawing features :
-		[ ] Pen
-		[ ] Line
-		[ ] Frame
-		[ ] Changing the color
-		[ ] Changing the size of the pen
-		[ ] Reset the canvas
-	[ ] Basics dictionnary in english and french ("English / French Easy")
-	[ ] 
+Tâches avant la sortie de la première version :
+	[ ] Trouver des sons gratuis pour :
+		[ ] Joueur qui entre dans le salon
+		[ ] Joueur qui trouve la réponse
+		[ ] Quand le joueur actif trouve la réponse
+		[ ] Fin du round
+		[ ] Fin de la partie
+		[ ] Quand c'est au tour du joueur actif de dessiner
+	[ ] Créer des dictionnaires standards
+		[ ] Français
+		[ ] Anglais
+	[ ] Gérer l'artiste
+		[ ] Choix de l'artiste de manière aléatoire, côté serveur
+		[ ] Notifier le choix de l'artiste à tout les clients
+		[ ] Gérer le choix de l'artiste côté client
+	[ ] Gérer le temps des rounds
+		[ ] Lancer un timer côté serveur
+		[ ] Lancer un timer côté client
+		[ ] Lorsque le timer du serveur finit, notifier le client (le timer client est juste artificiel)
+	[ ] Gérer le dictionnaire
+		[ ] Charger tout les mots contenus dans le dictionnaire dans un tableau
+		[ ] Créer un générateur aleatoire de mot à partir de ce dictionnaire
+	[ ] Gérer les réponses des joueurs
+		[ ] Comparer les réponses des joueurs avec le mot à faire deviner
+		[ ] Si c'est le bon mot, faire gagner des points à celui qui a deviner
+	[ ] Systeme de vote
+		[ ] Démarrer le match : !ready
+		[ ] Redémarrer le match : !restart
 
 Extra features for the futur :
+	[ ] Extra drawing tools :
+		[ ] Line
+		[ ] Frame
 	[ ] Show the ping of each users
 	[ ] Account system in a database
 	[ ] Avatar
 	[ ] System of XP
 	[ ] System of Achievement
-	[ ] Possibility to completely customize the settings of rooms
-		[ ] Number of rounds
-		[ ] Maximum time for each round
-		[ ] Time remaining when someone find
 	[ ] More and more dictionnary base on diffrents themes
-	[ ] Change the setting of the room at the end of the game or during the game but restart the game
+	[ ] Change the setting of the room at the end of the game or during the game
 	[ ] A standalone app to host rooms
+	[ ] Possibility to save your piece of art and the one of others
+
+Possible hack / bug to fix after the release :
+	[ ] Players can have the same pseudo
+	[ ] The score of the player is reset if he has a disconnection from the server and reconnect himself after
+	[ ] If the player arrive in the room when a round has already started, he will don't have what the artist has drawn before his connection

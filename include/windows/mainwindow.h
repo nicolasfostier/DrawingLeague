@@ -20,6 +20,10 @@
 #include <QMessageBox>
 #include <QSpinBox>
 #include <QTcpSocket>
+#include <QHeaderView>
+#include <QHash>
+#include <QMediaPlayer>
+
 
 
 // Canvas where the artist can draw
@@ -29,9 +33,17 @@
 //
 #include "include/windows/createroomwindow.h"
 //
+#include "include/datablock/datablockreader.h"
+//
+#include "include/datablock/datablockwriter.h"
+//
 #include "include/gameinfo/room.h"
 //
-#include "include/gameinfo/chatmessage.h"
+#include "include/gameinfo/message.h"
+//
+#include "include/widgets/roominfo.h"
+//
+#include "include/gameinfo/player.h"
 
 
 
@@ -42,31 +54,36 @@ class MainWindow : public QMainWindow
 
     // Variables
     private :
+        // Settings
+        QSettings* settings;
+
+        //
+        QMediaPlayer* mpShortSound;
+        //
+        QMediaPlayer* mpTicTac;
+
         //
         Server* server;
 
-        // Socket to discuss with the server hosting the room
+        //
         QTcpSocket* socket;
         //
-        QDataStream* socketStream;
+        DataBlockReader* dataBlockReader;
         //
-        quint32 nextSizeToRead;
-        //
-        DataBlockType nextDataBlockType;
+        DataBlockWriter* dataBlockWriter;
 
         //
-        Room* room;
+        QString pseudo;
         //
-        QString* pseudo;
-
-        // Settings
-        QSettings* settings;
+        Room room;
+        //
+        QHash<QString, Player*> players;
 
         // Menu
         QMenu* menuRoom;
             QAction* actionJoin;
             QAction* actionCreate;
-            QAction* actionDisconnect;
+            QAction* actionLeave;
             QAction* actionQuit;
         QMenu* menuTools;
             QAction* actionSettings;
@@ -78,25 +95,9 @@ class MainWindow : public QMainWindow
             // Its layout
             QGridLayout* mainLayout;
                 // Display all the info about the current game
-                QWidget* gameInfoWidget;
-                    // Its layout
-                    QGridLayout* gameInfoLayout;
-                        // Contain the name of the room
-                        QLabel* roomNameLabel;
-                        // Display the progress of the game
-                        QLabel* roundLabel;
-                         // Display the artist name
-                        QLabel* artistLabel;
-                        // Display the word to guess or some hint about this word
-                        QLabel* wordToGuessHintLabel;
-                        // Point to win during the current round
-                        QLabel* pointToWinLabel;
-                        // Time remaining before the round ends
-                        QLabel* timeTextLabel;
-                        // Time remaining before the round ends represented with a circle
-                        QLabel* timeCircleLabel;
+                RoomInfo* roomInfo;
                 // Toolbar which contains all the tool to draw on the canvas for the artist
-                QToolBar* drawToolsBar;
+                QToolBar* drawingToolsBar;
                     // Represent the pen
                     QLabel* penLabel;
                         // Pixmap to represent the pen
@@ -105,9 +106,8 @@ class MainWindow : public QMainWindow
                         QPainter* penLabelPainter;
                         // Brush to draw the pen
                         QBrush penLabelBrush;
-
                     // Regroup the drawing tool the artist can use
-                    QActionGroup* drawToolsActionGroup;
+                    QActionGroup* drawingToolsActionGroup;
                         // Pen
                         QAction* penAction;
                         // Eraser
@@ -119,9 +119,8 @@ class MainWindow : public QMainWindow
                     // Pick the color of the pen
                     QAction* actionColor;
                         QColor selectedColor;
-
                     // Reset
-                    QAction* resetAction;
+                    QAction* actionReset;
                 // The canvas, where the artist can draw
                 Canvas* canvasLabel;
                 // Splitter which connects the chat with the players and the answers
@@ -136,14 +135,14 @@ class MainWindow : public QMainWindow
                                 // All the answers
                                 QTextEdit* answersTextEdit;
                                 // Where players can enter their answers
-                                QLineEdit* newAnswersLineEdit;
+                                QLineEdit* answerLineEdit;
                         // Players
                         QWidget* playersWidget;
                             QVBoxLayout* playersLayout;
                                 // Title
                                 QLabel* playersTitle;
                                 // List of all players connected to the room
-                                QTableWidget* playersTextEdit;
+                                QTableWidget* playersTable;
 
                     // Chat
                     QWidget* chatWidget;
@@ -153,7 +152,7 @@ class MainWindow : public QMainWindow
                             // All the messages sent by players
                             QTextEdit* chatTextEdit;
                             // Where players can enter their messages to chat with the others players
-                            QLineEdit* newMessageLineEdit;
+                            QLineEdit* chatLineEdit;
 
     // Constructor
     public :
@@ -165,34 +164,90 @@ class MainWindow : public QMainWindow
 
     // Methods
     public :
+        //
+        bool isConnected();
+        //
+        bool isHosting();
+
+        //
+        void toggleJoinCreateLeave();
+        //
+        void artistMode(bool isArtist);
+
         // Return the selected draw tool type
-        DrawToolType selectedDrawToolType();
+        DrawingToolType selectedDrawingToolType();
         // Refresh the representation of the current pen
         void refreshPenLabel();
+
+        //
+        void closeEvent(QCloseEvent* event);
 
     // Qt slots
     public slots :
         // Open a window to enter the information of the room the player want to join
         void joinRoom();
+            //
+            void roomJoined(QTcpSocket* socket, QString pseudo);
         // Open a window to set up a server
         void createRoom();
+            //
+            void roomCreated(Server* server, QTcpSocket* socket, QString pseudo);
         //
-        void disconnectRoom();
+        void leaveRoom();
+        //
+        void about();
 
         // Update the tools set for the canvas
         void updateDrawingTools();
         // Open a dialog to change the color of the drawing tools
         void changeColor();
         // Ask if the artist really want to reset the canvas
-        void resetCanvas();
+        void resetCanvas(bool askConfirmation = true);
 
         //
-        void readFromServer();
+        void resetInterface();
 
         //
-        void sendMsgAnswer();
+        void setRoomInfo(Room room);
+
         //
-        void sendMsgChat();
+        void roundStarting(int round, QString artist, QString word, int pointToWin);
+
+        //
+        void answerFound(QString pseudo, int pointWon);
+
+        //
+        void addPlayer(Player player);
+        //
+        void removePlayer(QString pseudo);
+
+        //
+        void addAnswer(Message msg);
+        //
+        void addChat(Message msg);
+
+        //
+        void changeDrawingToolType(DrawingToolType drawingToolType);
+        //
+        void changeDrawingToolColor(QColor color);
+        //
+        void changeDrawingToolWidth(int width);
+
+        //
+        void showServerMsgTypeReady();
+        //
+        void showServerMsgReadyNeeded(int playerNotReadyNeeded);
+
+        //
+        void sendAnswer();
+        //
+        void sendChat();
+
+        //
+        void sendDrawingToolType();
+
+        //
+        void serverClosed();
 };
 
 #endif // MAINWINDOW_H

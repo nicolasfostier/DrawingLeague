@@ -10,6 +10,10 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QStackedLayout>
+#include <QComboBox>
+#include <QFileDialog>
+#include <QStandardPaths>
 
 
 //
@@ -29,12 +33,27 @@ class CreateRoomWindow : public QDialog
         QTcpSocket* socket;
 
         //
+        QString dictionaryPath;
+
+
+        //
         QGridLayout* layout;
 
         //
         QLabel* pseudoLabel;
         //
         QLineEdit* pseudoLineEdit;
+
+        //
+        QLabel* dictionaryTypeLabel;
+        //
+        QComboBox* dictionaryTypeComboBox;
+        //
+        QStackedLayout* dictionaryStackedLayout;
+            //
+            QComboBox* dictionaryStandardComboBox;
+            //
+            QPushButton* browseDictionaryButton;
 
         //
         QLabel* portLabel;
@@ -78,17 +97,29 @@ class CreateRoomWindow : public QDialog
 
     // Constructor
     public :
-        CreateRoomWindow(QTcpSocket* socket, Server* server);
+        CreateRoomWindow();
 
     // Qt slots
     public slots :
         //
+        void browseDictionary();
+
+        //
         void createRoom();
 
+        //
+        void dictionaryError();
+
+        //
+        void connection();
         //
         void connectOk();
         //
         void connectError();
+
+    // Signals
+   signals :
+        void roomCreated(Server* server, QTcpSocket* socket, QString pseudo);
 };
 
 

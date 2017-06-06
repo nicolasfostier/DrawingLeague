@@ -12,13 +12,19 @@
 
 int main(int argc, char *argv[])
 {
+    // Register some meta-type
+    qRegisterMetaType<Room>();
+    qRegisterMetaType<Message>();
+    qRegisterMetaType<Player>();
+    qRegisterMetaType<DrawingToolType>();
+
     // Creation and configuration of the Qt application
     QApplication app(argc, argv);
     app.setApplicationName("Drawing League");
     app.setOrganizationName("Nicolas Fostier");
     app.setOrganizationDomain("nicolasfostier.free.fr");
     app.setApplicationVersion("0.0.1");
-    app.setWindowIcon(QIcon(":/images/app.ico"));
+    app.setWindowIcon(QIcon(":/images/logo.ico"));
 
     // Force the app to use the same language as the system
     QString locale = QLocale::system().name().section('_', 0, 0);
