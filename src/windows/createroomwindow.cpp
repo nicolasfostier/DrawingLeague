@@ -97,7 +97,7 @@ CreateRoomWindow::CreateRoomWindow() : QDialog()
 
         //
         timeByRoundLineEdit = new QLineEdit(this);
-        timeByRoundLineEdit->setText("90");
+        timeByRoundLineEdit->setText("120");
         layout->addWidget(timeByRoundLineEdit, 6, 1, 1, 2);
 
 

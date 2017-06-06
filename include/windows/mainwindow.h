@@ -79,6 +79,11 @@ class MainWindow : public QMainWindow
         //
         QHash<QString, Player*> players;
 
+        //
+        QTimer* timer;
+        //
+        int secondCounter;
+
         // Menu
         QMenu* menuRoom;
             QAction* actionJoin;
@@ -209,6 +214,9 @@ class MainWindow : public QMainWindow
 
         //
         void setRoomInfo(Room room);
+
+        //
+        void oneSecond();
 
         //
         void roundStarting(int round, QString artist, QString word, int pointToWin);

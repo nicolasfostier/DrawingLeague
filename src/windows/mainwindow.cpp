@@ -23,6 +23,13 @@ MainWindow::MainWindow() : QMainWindow()
     //
     socket = NULL;
 
+    //
+    timer = new QTimer(this);
+    timer->setSingleShot(true);
+    timer->setInterval(1000);
+    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(oneSecond()));
+
+
     // Room menu
     menuRoom = menuBar()->addMenu(tr("Room"));
         actionJoin = menuRoom->addAction(QIcon(":/images/menubar/join.ico"), tr("Join a room"));
@@ -526,7 +533,17 @@ void MainWindow::setRoomInfo(Room room){
     this->room = room;
 
     //
-    this->roomInfo->updateRoom(room);
+    this->roomInfo->setRoom(room);
+}
+
+
+//
+void MainWindow::oneSecond(){
+    roomInfo->setTime(secondCounter, mpTicTac->state() == QMediaPlayer::PlayingState);
+    if(secondCounter > 0){
+        secondCounter--;
+    }
+    timer->start();
 }
 
 
@@ -542,10 +559,21 @@ void MainWindow::roundStarting(int round, QString artist, QString word, int poin
     this->room.setPointToWin(pointToWin);
 
     //
-    this->roomInfo->updateRoom(room);
+    this->roomInfo->setRoom(room);
 
     //
     this->canvasLabel->reset();
+
+    //
+    Player* player;
+    foreach(player, players){
+        if(player->getPseudo() == artist){
+            player->colorGreen();
+        }
+        else{
+            player->colorWhite();
+        }
+    }
 
     //
     if(artist == pseudo){
@@ -557,17 +585,12 @@ void MainWindow::roundStarting(int round, QString artist, QString word, int poin
         artistMode(false);
     }
 
-    Player* player;
-    foreach(player, players){
-        if(player->getPseudo() == artist){
-            player->colorGreen();
-        }
-        else{
-            player->colorWhite();
-        }
-    }
-
+    //
     mpShortSound->play();
+
+    //
+    secondCounter = room.getTimeByRound();
+    oneSecond();
 }
 
 
@@ -591,7 +614,9 @@ void MainWindow::answerFound(QString pseudo, int pointWon){
     mpShortSound->play();
 
     if(mpTicTac->state() == QMediaPlayer::StoppedState){
+        secondCounter = room.getTimeAfterFirstGoodAnswer();
         mpTicTac->play();
+        oneSecond();
     }
 }
 

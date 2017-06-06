@@ -3,13 +3,13 @@
 
 
 // Setter
-void RoomInfo::updateRoom(Room room){
+void RoomInfo::setRoom(Room room){
     name->setValue(room.getRoomName());
     round->setValue(QString::number(room.getRound()));
     artist->setValue(room.getArtist());
     word->setValue(room.getWord());
     pointToWin->setValue(QString::number(room.getPointToWin()));
-    time->setValue(" ");
+    setTime(room.getTimeRemaining());
 }
 void RoomInfo::setRound(int round){
     this->round->setValue(QString::number(round));
@@ -22,6 +22,14 @@ void RoomInfo::setWord(QString word){
 }
 void RoomInfo::setPointToWin(int pointToWin){
     this->pointToWin->setValue(QString::number(pointToWin));
+}
+void RoomInfo::setTime(int timeRemaining, bool oneHasFound){
+    if(oneHasFound){
+        time->setValue("<b><span style='color: red'>" + QString::number(timeRemaining) + "</span></b>");
+    }
+    else{
+        time->setValue("<b><span style='color: black'>" + QString::number(timeRemaining) + "</span></b>");
+    }
 }
 
 

@@ -65,7 +65,7 @@ class Room
 
     // Constructeur
     public :
-        Room(QString roomName = " ", int maxRounds = 10, int maxPlayers = 10, int timeByRound = 90, int timeAfterFirstGoodAnswer = 15);
+        Room(QString roomName = " ", int maxRounds = 10, int maxPlayers = 10, int timeByRound = 120, int timeAfterFirstGoodAnswer = 15);
         Room(const Room& room);
 
     // Destructor

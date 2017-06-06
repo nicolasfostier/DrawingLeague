@@ -36,16 +36,20 @@ class RoomInfo : public QWidget
 
     // Setter
     public :
-        void updateRoom(Room room);
+        void setRoom(Room room);
         void setRound(int round);
         void setArtist(QString artist);
         void setWord(QString word);
         void setPointToWin(int pointToWin);
-        void setTime(int timeRemaining);
+        void setTime(int timeRemaining, bool oneHasFound = false);
 
     // Constructor
-    public:
+    public :
         RoomInfo(Room room, QWidget* parent = 0);
+
+    // Methods
+    public :
+        void updateTimeRemaining();
 };
 
 
