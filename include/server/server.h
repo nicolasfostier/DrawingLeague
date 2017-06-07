@@ -119,6 +119,9 @@ class Server : public QTcpServer
         void updateDrawingToolWidth(int width);
 
         //
+        void skipWord();
+
+        //
         void checkAnswer(Message msg);
         //
         void checkChatCommand(Message msg);

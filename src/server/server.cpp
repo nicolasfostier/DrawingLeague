@@ -243,6 +243,10 @@ void Server::addPlayer(){
         QObject::connect(newSvThDBR, SIGNAL(answerReceived(Message)), this, SLOT(checkAnswer(Message)));
 
         //
+        QObject::connect(newSvThDBR, SIGNAL(skipWordReceived()), newSvThDBW, SLOT(sendSkipWord()));
+        QObject::connect(newSvThDBR, SIGNAL(skipWordReceived()), this, SLOT(skipWord()));
+
+        //
         QObject::connect(newSvThDBR, SIGNAL(drawingToolTypeReceived(DrawingToolType)), this, SLOT(updateDrawingToolType(DrawingToolType)));
         QObject::connect(newSvThDBR, SIGNAL(drawingToolColorReceived(QColor)), this, SLOT(updateDrawingToolColor(QColor)));
         QObject::connect(newSvThDBR, SIGNAL(drawingToolWidthReceived(int)), this, SLOT(updateDrawingToolWidth(int)));
@@ -279,6 +283,10 @@ void Server::addPlayer(){
             //
             QObject::connect(svThDBR, SIGNAL(canvasResetReceived()), newSvThDBW, SLOT(sendCanvasReset()));
             QObject::connect(newSvThDBR, SIGNAL(canvasResetReceived()), svThDBW, SLOT(sendCanvasReset()));
+
+            //
+            QObject::connect(svThDBR, SIGNAL(skipWordReceived()), newSvThDBW, SLOT(sendSkipWord()));
+            QObject::connect(newSvThDBR, SIGNAL(skipWordReceived()), svThDBW, SLOT(sendSkipWord()));
 
             //
             QObject::connect(svThDBR, SIGNAL(canvasMousePressEventReceived(QPoint)), newSvThDBW, SLOT(sendCanvasMousePressEvent(QPoint)));
@@ -337,6 +345,14 @@ void Server::updateDrawingToolColor(QColor color){
 //
 void Server::updateDrawingToolWidth(int width){
     this->drawingToolWidth = width;
+}
+
+
+//
+void Server::skipWord(){
+    if(playerFoundAnswer == 0){
+        startRound();
+    }
 }
 
 

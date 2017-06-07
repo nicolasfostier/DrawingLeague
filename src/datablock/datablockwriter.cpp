@@ -116,6 +116,15 @@ void DataBlockWriter::sendCanvasReset(){
 
 
 //
+void DataBlockWriter::sendSkipWord(){
+    QByteArray blockToSend;
+    QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
+    blockToSendStream << quint32(0);
+    *socketStream << quint32(blockToSend.size()) << DataBlockType::SKIP_WORD << blockToSend;
+}
+
+
+//
 void DataBlockWriter::sendCanvasMousePressEvent(QPoint pos){
     QByteArray blockToSend;
     QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);

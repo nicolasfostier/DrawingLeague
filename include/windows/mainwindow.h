@@ -126,6 +126,8 @@ class MainWindow : public QMainWindow
                         QColor selectedColor;
                     // Reset
                     QAction* actionReset;
+                    // Skip the word
+                    QAction* actionSkipWord;
                 // The canvas, where the artist can draw
                 Canvas* canvasLabel;
                 // Splitter which connects the chat with the players and the answers
@@ -233,6 +235,9 @@ class MainWindow : public QMainWindow
         void addAnswer(Message msg);
         //
         void addChat(Message msg);
+
+        //
+        void skipWord();
 
         //
         void changeDrawingToolType(DrawingToolType drawingToolType);

@@ -143,6 +143,11 @@ MainWindow::MainWindow() : QMainWindow()
                 // Reset
                 actionReset = drawingToolsBar->addAction(QIcon(":/images/drawingtools/reset.ico"), tr("Reset the canvas"));
                 actionReset->setCheckable(false);
+                drawingToolsBar->addSeparator();
+
+                // Skip the word
+                actionSkipWord = drawingToolsBar->addAction(QIcon(":/images/drawingtools/skip.ico"), tr("Skip the word"));
+                actionSkipWord->setCheckable(false);
 
             QLayout* layoutDrawingToolsBar = drawingToolsBar->layout();
             for(int i = 0; i < layoutDrawingToolsBar->count(); i++){
@@ -398,6 +403,8 @@ void MainWindow::joinRoom(){
 
         QObject::connect(dataBlockReader, SIGNAL(canvasResetReceived(bool)), this, SLOT(resetCanvas(bool)));
 
+        QObject::connect(dataBlockReader, SIGNAL(skipWordReceived()), this, SLOT(skipWord()));
+
         QObject::connect(dataBlockReader, SIGNAL(canvasMousePressEventReceived(QPoint)), canvasLabel, SLOT(mousePressEventFromServer(QPoint)));
         QObject::connect(dataBlockReader, SIGNAL(canvasMouseMoveEventReceived(QPoint)), canvasLabel, SLOT(mouseMoveEventFromServer(QPoint)));
         QObject::connect(dataBlockReader, SIGNAL(canvasMouseReleaseEventReceived(QPoint)), canvasLabel, SLOT(mouseReleaseEventFromServer(QPoint)));
@@ -413,6 +420,8 @@ void MainWindow::joinRoom(){
         QObject::connect(penWidthSlider, SIGNAL(valueChanged(int)), dataBlockWriter, SLOT(sendDrawingToolWidth(int)));
 
         QObject::connect(actionReset, SIGNAL(triggered(bool)), dataBlockWriter, SLOT(sendCanvasReset()));
+
+        QObject::connect(actionSkipWord, SIGNAL(triggered(bool)), dataBlockWriter, SLOT(sendSkipWord()));
 
         QObject::connect(canvasLabel, SIGNAL(mousePressEventToSend(QPoint)), dataBlockWriter, SLOT(sendCanvasMousePressEvent(QPoint)));
         QObject::connect(canvasLabel, SIGNAL(mouseMoveEventToSend(QPoint)), dataBlockWriter, SLOT(sendCanvasMouseMoveEvent(QPoint)));
@@ -614,6 +623,7 @@ void MainWindow::answerFound(QString pseudo, int pointWon){
     mpShortSound->play();
 
     if(mpTicTac->state() == QMediaPlayer::StoppedState){
+        actionSkipWord->setDisabled(true);
         secondCounter = room.getTimeAfterFirstGoodAnswer();
         mpTicTac->play();
         oneSecond();
@@ -655,6 +665,13 @@ void MainWindow::addAnswer(Message msg){
 //
 void MainWindow::addChat(Message msg){
     this->chatTextEdit->append(msg.toString(true));
+}
+
+
+//
+void MainWindow::skipWord(){
+    Message msg("<b><span style='color:red'>" + tr("Server") + "</span></b>", room.getArtist() + tr(" has skip the word."));
+    addChat(msg);
 }
 
 

@@ -159,6 +159,16 @@ void DataBlockReader::read(){
             }
 
 
+            case DataBlockType::SKIP_WORD : {
+                quint32 useless;
+                *socketStream >> blockReceived;
+                blockReceivedStream >> useless;
+
+                emit skipWordReceived();
+            break;
+            }
+
+
             case DataBlockType::CANVAS_MOUSE_PRESS_EVENT : {
                 QPoint pos;
                 *socketStream >> blockReceived;

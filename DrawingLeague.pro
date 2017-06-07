@@ -15,7 +15,7 @@ macx{
 
 TEMPLATE = app
 
-VERSION = 0.0.1
+VERSION = 0.2
 
 
 
@@ -41,8 +41,8 @@ SOURCES +=  src/main.cpp \
             src/gameinfo/message.cpp \
             src/widgets/roominfo.cpp \
             src/widgets/roominfopart.cpp \
-    src/gameinfo/player.cpp \
-    src/drawingtooltype.cpp
+            src/gameinfo/player.cpp \
+            src/drawingtooltype.cpp
 
 HEADERS +=  include/windows/mainwindow.h \
             include/checkforupdate.h \
@@ -60,13 +60,13 @@ HEADERS +=  include/windows/mainwindow.h \
             include/gameinfo/message.h \
             include/widgets/roominfo.h \
             include/widgets/roominfopart.h \
-    include/gameinfo/player.h \
-    include/drawingtooltype.h
+            include/gameinfo/player.h \
+            include/drawingtooltype.h
 
 RESOURCES +=    res/lang.qrc \
                 res/images.qrc \
                 res/dictionaries.qrc \
-    res/sound.qrc
+                res/sound.qrc
 
 TRANSLATIONS = res/lang/drawingleague_fr.ts
 

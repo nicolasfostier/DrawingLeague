@@ -83,6 +83,9 @@ class DataBlockReader : public QObject
         void canvasResetReceived(bool confirmation = false);
 
         //
+        void skipWordReceived();
+
+        //
         void canvasMousePressEventReceived(QPoint pos);
         //
         void canvasMouseMoveEventReceived(QPoint pos);

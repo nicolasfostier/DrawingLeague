@@ -12,5 +12,6 @@
         <file>images/menubar/about.ico</file>
         <file>images/menubar/create.ico</file>
         <file>images/menubar/settings.ico</file>
+        <file>images/drawingtools/skip.ico</file>
     </qresource>
 </RCC>

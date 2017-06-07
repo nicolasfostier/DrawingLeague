@@ -73,6 +73,9 @@ class DataBlockWriter : public QObject
         void sendCanvasReset();
 
         //
+        void sendSkipWord();
+
+        //
         void sendCanvasMousePressEvent(QPoint pos);
         //
         void sendCanvasMouseMoveEvent(QPoint pos);
