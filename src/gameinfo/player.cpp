@@ -42,6 +42,9 @@ Player::Player(QString pseudo, int score){
     this->isReady = false;
 
     this->answerFound = true;
+
+    hasFoundFont.setBold(true);
+    isArtistFont.setBold(true);
 }
 Player::Player(const Player &player){
     this->pseudo = new QTableWidgetItem(*player.pseudo);
@@ -75,21 +78,24 @@ void Player::addToTableWidget(QTableWidget *playersTable){
 }
 
 //
-void Player::colorRed(){
-    this->pseudo->setBackgroundColor(QColor("#de4d4d"));
-    this->score->setBackgroundColor(QColor("#de4d4d"));
-}
-
-//
-void Player::colorGreen(){
-    this->pseudo->setBackgroundColor(QColor("#87d687"));
-    this->score->setBackgroundColor(QColor("#87d687"));
-}
-
-//
-void Player::colorWhite(){
+void Player::hasntFound(){
     this->pseudo->setBackgroundColor(QColor(Qt::white));
     this->score->setBackgroundColor(QColor(Qt::white));
+    this->pseudo->setFont(hasntFoundFont);
+}
+
+//
+void Player::hasFound(){
+    this->pseudo->setBackgroundColor(QColor("#de4d4d"));
+    this->score->setBackgroundColor(QColor("#de4d4d"));
+    this->pseudo->setFont(hasFoundFont);
+}
+
+//
+void Player::isArtist(){
+    this->pseudo->setBackgroundColor(QColor("#87d687"));
+    this->score->setBackgroundColor(QColor("#87d687"));
+    this->pseudo->setFont(isArtistFont);
 }
 
 

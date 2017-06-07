@@ -80,8 +80,11 @@ MainWindow::MainWindow() : QMainWindow()
 
                 // Represent the pen
                 penLabel = new QLabel(this);
+                penLabel->setFixedSize(56,56);
+                penLabel->setAlignment(Qt::AlignCenter);
                 penLabel->setStyleSheet("background: white; border: 1px solid grey;");
-                penLabelPixmap = new QPixmap(36,36);
+                penLabelPixmap = new QPixmap(106,106);
+                penLabel->setScaledContents(false);
                 penLabelPixmap->fill(Qt::transparent);
                 penLabelBrush.setColor(Qt::black);
                 penLabelBrush.setStyle(Qt::SolidPattern);
@@ -116,8 +119,8 @@ MainWindow::MainWindow() : QMainWindow()
 
                 // Spinbox
                 penWidthSpinBox = new QSpinBox(this);
-                penWidthSpinBox->setRange(2,30);
-                penWidthSpinBox->setValue(4);
+                penWidthSpinBox->setRange(1,100);
+                penWidthSpinBox->setValue(2);
                 penWidthSpinBox->setToolTip(tr("Width of the pen"));
                 penWidthSpinBox->setStyleSheet("margin: 0 0 2px 0;");
                 drawingToolsBar->addWidget(penWidthSpinBox);
@@ -125,9 +128,9 @@ MainWindow::MainWindow() : QMainWindow()
                 // Slider
                 penWidthSlider = new QSlider(Qt::Vertical, drawingToolsBar);
                 penWidthSlider->setToolTip(tr("Width of the pen"));
-                penWidthSlider->setRange(2,30);
-                penWidthSlider->setValue(4);
-                penWidthSlider->setMaximumHeight(50);
+                penWidthSlider->setRange(1,100);
+                penWidthSlider->setValue(2);
+                penWidthSlider->setMinimumHeight(100);
                 QObject::connect(penWidthSlider, SIGNAL(valueChanged(int)), this, SLOT(updateDrawingTools()));
                 QObject::connect(penWidthSlider, SIGNAL(valueChanged(int)), penWidthSpinBox, SLOT(setValue(int)));
                 QObject::connect(penWidthSpinBox, SIGNAL(valueChanged(int)), penWidthSlider, SLOT(setValue(int)));
@@ -577,10 +580,10 @@ void MainWindow::roundStarting(int round, QString artist, QString word, int poin
     Player* player;
     foreach(player, players){
         if(player->getPseudo() == artist){
-            player->colorGreen();
+            player->isArtist();
         }
         else{
-            player->colorWhite();
+            player->hasntFound();
         }
     }
 
@@ -607,11 +610,8 @@ void MainWindow::roundStarting(int round, QString artist, QString word, int poin
 void MainWindow::answerFound(QString pseudo, int pointWon){
     Player* player = players.find(pseudo).value();
     player->setScore(player->getScore() + pointWon);
-    if(player->getPseudo() == room.getArtist()){
-        player->colorGreen();
-    }
-    else{
-        player->colorWhite();
+    if(player->getPseudo() != room.getArtist()){
+        player->hasFound();
     }
 
     if(player->getPseudo() == pseudo){

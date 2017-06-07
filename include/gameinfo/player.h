@@ -21,6 +21,13 @@ class Player
         //
         bool answerFound;
 
+        //
+        QFont hasntFoundFont;
+        //
+        QFont hasFoundFont;
+        //
+        QFont isArtistFont;
+
     // Getter
     public :
         QString getPseudo();
@@ -48,11 +55,11 @@ class Player
         //
         void addToTableWidget(QTableWidget* playersTable);
         //
-        void colorRed();
+        void hasntFound();
         //
-        void colorGreen();
+        void hasFound();
         //
-        void colorWhite();
+        void isArtist();
 
 
     // Operators

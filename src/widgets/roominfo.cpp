@@ -25,10 +25,10 @@ void RoomInfo::setPointToWin(int pointToWin){
 }
 void RoomInfo::setTime(int timeRemaining, bool oneHasFound){
     if(oneHasFound){
-        time->setValue("<b><span style='color: red; font-size: 16em'>" + QString::number(timeRemaining / 60) + ":" + QString::number(timeRemaining % 60) + "</span></b>");
+        time->setValue("<b><span style='color: red; font-size: 16em;'>" + QString::number(timeRemaining / 60) + ":" + QString::number(timeRemaining % 60) + "</span></b>");
     }
     else{
-        time->setValue("<b><span style='color: black; font-size: 16em'>" + QString::number(timeRemaining / 60) + ":" + QString::number(timeRemaining % 60) + "</span></b>");
+        time->setValue("<b><span style='color: black; font-size: 16em;'>" + QString::number(timeRemaining / 60) + ":" + QString::number(timeRemaining % 60) + "</span></b>");
     }
 }
 

@@ -12,7 +12,7 @@ Server::Server(int port, Room room, QString dictionaryPath)
 
     drawingToolType = DrawingToolType::PEN;
     drawingToolColor = QColor(Qt::black);
-    drawingToolWidth = 4;
+    drawingToolWidth = 2;
 
     // Move the object to another thread and start its execution
     QThread* threadCFU = new QThread();
