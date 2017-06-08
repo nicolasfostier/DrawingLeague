@@ -1,28 +1,40 @@
-Other thing to do :
-	[ ] Find great and free sounds
-		[ ] When someone enter the game
-		[ ] When an other user find the word
-		[ ] When you find the word
-		[ ] End of the game
-		[ ] When it's your turn to draw
-	[ ] Create the icon of the game
-
-Features to implement for the first release :
-	[X] Connect to a room or host one
-	[X] Check at launch if there is an update available
-	[ ] User can import their own dictionnary when they want to host their own room
-	[X] 2 chat in each room : 1 for talking and 1 for guessing the word
-	[ ] Basic drawing features :
-		[X] Pen
-		[X] Changing the color
-		[X] Changing the size of the pen
-		[X] Reset the canvas
-		[ ] Make it work online
-	[ ] Possibility to completely customize the settings of rooms
-		[ ] Number of rounds
-		[ ] Maximum time for each round
-		[ ] Time remaining when someone find
-	[ ] Basics dictionnary in english and french ("English / French Easy")
+Tâches avant la sortie de la première version :
+	[X] Trouver des sons gratuis pour :
+		[X] Joueur qui entre dans le salon
+		[X] Joueur qui trouve la réponse
+		[X] Quand le joueur actif trouve la réponse
+		[X] Fin du round
+		[X] Fin de la partie
+		[X] Quand c'est au tour du joueur actif de dessiner
+	[ ] Créer des dictionnaires standards
+		[ ] Français
+		[ ] Anglais
+	[X] Gérer l'artiste
+		[X] Choix de l'artiste de manière aléatoire, côté serveur
+		[X] Notifier le choix de l'artiste à tout les clients
+		[X] Gérer le choix de l'artiste côté client
+	[X] Gérer le temps des rounds
+		[X] Lancer un timer côté serveur
+		[X] Lancer un timer côté client
+		[X] Lorsque le timer du serveur finit, notifier le client (le timer client est juste artificiel)
+	[X] Gérer le dictionnaire
+		[X] Charger tout les mots contenus dans le dictionnaire dans un tableau
+		[X] Créer un générateur aleatoire de mot à partir de ce dictionnaire
+	[X] Gérer les réponses des joueurs
+		[X] Comparer les réponses des joueurs avec le mot à faire deviner
+		[X] Si c'est le bon mot, faire gagner des points à celui qui a deviner
+	[ ] Systeme de vote
+		[X] Démarrer le match : !ready
+		[ ] Redémarrer le match : !restart
+	[ ] Utiliser QFont pour mettre en gras les joueurs qui ont trouvés la réponse
+	[ ] Utiliser QFont pour agrandir le timer
+	[ ] Empêcher les joueurs d'insérer des balises HTMLs dans leur message et pseudo
+	[ ] Indiquez le mot en fin de round
+	[ ] Fin de partie
+		[ ] Nom du vainqueur
+		[ ] Musique de victoire !
+	[X] Affiche la connexion des joueurs dans le chat
+	[X] Ne pas afficher le pinceau quand un non artiste passe la souris au dessus du canvas
 
 Extra features for the futur :
 	[ ] Extra drawing tools :

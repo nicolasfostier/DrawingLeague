@@ -54,8 +54,6 @@ class Server : public QTcpServer
         int playerFoundAnswer;
 
         //
-        QTimer* timerGameNotStarted;
-        //
         QTimer* timerPause;
         //
         QTimer* timerRound;

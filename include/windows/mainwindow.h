@@ -177,9 +177,12 @@ class MainWindow : public QMainWindow
         bool isHosting();
 
         //
+        bool isArtist();
+
+        //
         void toggleJoinCreateLeave();
         //
-        void artistMode(bool isArtist);
+        void updateArtistMode();
 
         // Return the selected draw tool type
         DrawingToolType selectedDrawingToolType();

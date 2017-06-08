@@ -9,7 +9,12 @@ void Canvas::setTools(DrawingToolType drawingToolType, int penWidth, QColor penB
     this->drawingPen.setColor(penBrushColor);
     this->erasePen.setWidth(penWidth);
     this->drawingBrush.setColor(penBrushColor);
-    this->setCursor(QCursor(*cursorPixmap, (cursorPixmap->width() / 2) - 1, (cursorPixmap->width() / 2) - 1));
+    if(cursorPixmap != NULL){
+        this->setCursor(QCursor(*cursorPixmap, (cursorPixmap->width() / 2) - 1, (cursorPixmap->width() / 2) - 1));
+    }
+    else{
+        this->setCursor(QCursor());
+    }
 }
 void Canvas::setIsArtist(bool isArtist){
     this->isArtist = isArtist;

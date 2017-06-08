@@ -27,7 +27,6 @@ MainWindow::MainWindow() : QMainWindow()
     timer = new QTimer(this);
     timer->setSingleShot(true);
     timer->setInterval(1000);
-    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(oneSecond()));
 
 
     // Room menu
@@ -264,7 +263,7 @@ MainWindow::MainWindow() : QMainWindow()
             layoutHandleSplitter->addWidget(lineHandleSplitter);
 
             //
-            this->artistMode(true);
+            this->updateArtistMode();
 }
 
 
@@ -296,6 +295,18 @@ bool MainWindow::isHosting(){
 
 
 //
+bool MainWindow::isArtist(){
+    if(room.getArtist() == pseudo){
+        return true;
+    }
+    if(!isConnected()){
+        return true;
+    }
+    return false;
+}
+
+
+//
 void MainWindow::toggleJoinCreateLeave(){
     this->actionJoin->setVisible(!this->actionJoin->isVisible());
     this->actionCreate->setVisible(!this->actionCreate->isVisible());
@@ -303,10 +314,13 @@ void MainWindow::toggleJoinCreateLeave(){
 }
 
 //
-void MainWindow::artistMode(bool isArtist){
-    canvasLabel->setIsArtist(isArtist);
-    drawingToolsBar->setEnabled(isArtist);
-    answerLineEdit->setDisabled(isArtist);
+void MainWindow::updateArtistMode(){
+    canvasLabel->setIsArtist(isArtist());
+    drawingToolsBar->setEnabled(isArtist());
+    actionSkipWord->setEnabled(isArtist());
+    answerLineEdit->setDisabled(isArtist());
+
+    updateDrawingTools();
 }
 
 
@@ -432,10 +446,13 @@ void MainWindow::joinRoom(){
 
 
         //
+        QObject::connect(timer, SIGNAL(timeout()), this, SLOT(oneSecond()));
+
+        //
         this->toggleJoinCreateLeave();
 
         //
-        this->artistMode(false);
+        this->updateArtistMode();
     }
 
 // Open a window to set up a server
@@ -489,7 +506,12 @@ void MainWindow::about(){
 // Update the tools set for the canvas
 void MainWindow::updateDrawingTools(){
     this->refreshPenLabel();
-    this->canvasLabel->setTools(selectedDrawingToolType(), penWidthSlider->value(), selectedColor, penLabelPixmap);
+    if(isArtist()){
+        this->canvasLabel->setTools(selectedDrawingToolType(), penWidthSlider->value(), selectedColor, penLabelPixmap);
+    }
+    else{
+        this->canvasLabel->setTools(selectedDrawingToolType(), penWidthSlider->value(), selectedColor, NULL);
+    }
 }
 
 // Open a dialog to change the color of the drawing tools
@@ -525,6 +547,9 @@ void MainWindow::resetInterface(){
     this->chatTextEdit->clear();
     this->chatLineEdit->clear();
 
+    QObject::disconnect(timer, SIGNAL(timeout()), this, SLOT(oneSecond()));
+
+    room = Room();
     this->setRoomInfo(Room());
 
     Player* player;
@@ -535,7 +560,7 @@ void MainWindow::resetInterface(){
 
     this->playersTable->setRowCount(0);
 
-    this->artistMode(true);
+    this->updateArtistMode();
 }
 
 
@@ -588,14 +613,17 @@ void MainWindow::roundStarting(int round, QString artist, QString word, int poin
     }
 
     //
-    if(artist == pseudo){
+    if(isArtist()){
         mpShortSound->setMedia(QUrl("qrc:/sound/you_are_the_artist.mp3"));
-        artistMode(true);
     }
     else{
         mpShortSound->setMedia(QUrl("qrc:/sound/new_round.mp3"));
-        artistMode(false);
     }
+
+    //
+    updateArtistMode();
+
+
 
     //
     mpShortSound->play();
@@ -614,7 +642,7 @@ void MainWindow::answerFound(QString pseudo, int pointWon){
         player->hasFound();
     }
 
-    if(player->getPseudo() == pseudo){
+    if(player->getPseudo() == pseudo && !isArtist()){
         mpShortSound->setMedia(QUrl("qrc:/sound/answer_found_you.mp3"));
     }
     else{
@@ -638,6 +666,9 @@ void MainWindow::addPlayer(Player player){
    players.insert(player.getPseudo(), newPlayer);
 
    newPlayer->addToTableWidget(this->playersTable);
+
+   Message msg = Message("<b><span style='color:red'>" + tr("Server") + "</span></b>", player.getPseudo() + tr(" has joined the room."));
+   addChat(msg);
 
    mpShortSound->setMedia(QUrl("qrc:/sound/player_entering.mp3"));
    mpShortSound->play();
@@ -722,7 +753,7 @@ void MainWindow::showServerMsgReadyNeeded(int howManyMoreReadyNeeded){
 void MainWindow::sendAnswer(){
     if(!this->answerLineEdit->text().isEmpty()){
         if(isConnected()){
-            Message msg(pseudo, this->answerLineEdit->text());
+            Message msg(pseudo, this->answerLineEdit->text().toHtmlEscaped());
             dataBlockWriter->sendAnswer(msg);
         }
 
@@ -734,7 +765,7 @@ void MainWindow::sendAnswer(){
 void MainWindow::sendChat(){
     if(!this->chatLineEdit->text().isEmpty()){
         if(isConnected()){
-            Message msg(pseudo, this->chatLineEdit->text());
+            Message msg(pseudo, this->chatLineEdit->text().toHtmlEscaped());
             dataBlockWriter->sendChat(msg);
         }
 
@@ -762,5 +793,7 @@ void MainWindow::serverClosed(){
         delete dataBlockWriter;
         socket->deleteLater();
         socket = NULL;
+
+//        updateArtistMode();
     }
 }

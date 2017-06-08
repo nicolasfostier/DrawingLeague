@@ -26,7 +26,6 @@ Server::Server(int port, Room room, QString dictionaryPath)
 
 // Destructor
 Server::~Server(){
-    delete timerGameNotStarted;
     delete timerPause;
     delete timerRound;
     delete timerRoundAfterFirstAnswer;
@@ -136,12 +135,6 @@ void Server::launch(){
 
     QObject::connect(this, SIGNAL(newConnection()), this, SLOT(addPlayer()));
 
-    timerGameNotStarted = new QTimer();
-    timerGameNotStarted->setSingleShot(true);
-    timerGameNotStarted->setInterval(30000);
-    QObject::connect(timerGameNotStarted, SIGNAL(timeout()), this, SLOT(sendGameNotStarted()));
-    timerGameNotStarted->start();
-
     timerPause = new QTimer();
     timerPause->setSingleShot(true);
     timerPause->setInterval(1000);
@@ -199,7 +192,7 @@ void Server::startRound(){
 
 //
 void Server::endRound(){
-    if(room.getRound() == room.getMaxRounds()){
+    if(playerFoundAnswer > 0 && room.getRound() == room.getMaxRounds()){
         this->endGame();
     }
     else{
@@ -214,7 +207,8 @@ void Server::endRound(){
 
 //
 void Server::endGame(){
-
+    room.setRound(0);
+    sendGameNotStarted();
 }
 
 
@@ -438,7 +432,5 @@ void Server::sendGameNotStarted(){
             int howManyMoreReadyNeededResult = howManyMoreReadyNeeded();
             QMetaObject::invokeMethod(serverThread->getDataBlockWriter(), "sendServerMsgReadyNeeded", Q_ARG(int, howManyMoreReadyNeededResult));
         }
-
-        timerGameNotStarted->start();
     }
 }

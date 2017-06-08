@@ -84,7 +84,7 @@ void JoinRoomWindow::connectToTheServeur(){
 
 //
 void JoinRoomWindow::connectOk(){
-    emit roomJoined(socket, this->pseudoLineEdit->text());
+    emit roomJoined(socket, this->pseudoLineEdit->text().toHtmlEscaped());
 
     //
     this->close();
