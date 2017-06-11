@@ -102,7 +102,7 @@ CreateRoomWindow::CreateRoomWindow() : QDialog()
 
         //
         timeByRoundLineEdit = new QLineEdit(this);
-        timeByRoundLineEdit->setText("120");
+        timeByRoundLineEdit->setText("180");
         layout->addWidget(timeByRoundLineEdit, 6, 1, 1, 2);
 
 
@@ -113,7 +113,7 @@ CreateRoomWindow::CreateRoomWindow() : QDialog()
 
         //
         timeAfterFirstGoodAnswerLineEdit = new QLineEdit(this);
-        timeAfterFirstGoodAnswerLineEdit->setText("15");
+        timeAfterFirstGoodAnswerLineEdit->setText("30");
         layout->addWidget(timeAfterFirstGoodAnswerLineEdit, 7, 1, 1, 2);
 
 

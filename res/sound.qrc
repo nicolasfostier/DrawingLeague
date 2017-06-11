@@ -8,5 +8,6 @@
         <file>sound/player_entering.mp3</file>
         <file>sound/player_leaving.mp3</file>
         <file>sound/you_are_the_artist.mp3</file>
+        <file>sound/artist_has_failed_skipped.mp3</file>
     </qresource>
 </RCC>

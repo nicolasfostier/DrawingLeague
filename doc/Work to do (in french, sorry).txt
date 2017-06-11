@@ -40,6 +40,7 @@ Tâches avant la sortie de la première version :
 	[X] Corriger l'heure des messages du chat
 	[X] Mettre une couleur moins flashy pour les couleurs du serveur
 	[X] Faire la traduction française
+	[X] Perdre 1 point ou plus si on skip le mot ou n'arrive pas à faire deviner 
 
 
 Extra features for the futur :
@@ -60,12 +61,13 @@ Extra features for the futur :
 	[ ] Animation de fin de partie
 	[ ] Empecher les joueurs de se connecter si serveur plein atteint sa capacité maximale de joueur
 	[ ] Temps sous forme d'un cercle
-	[ ] Perdre 1 point ou plus si on skip le mot ou n'arrive pas à faire deviner 
 	[ ] Possibilité de donner des indices
 	[ ] Rajouter des commandes de chat
 		[ ] Redémarrer la game
+	[ ] Menu paramètre
 
 Possible hack / bug to fix after the release :
 	[ ] If the player arrive in the room when a round has already started, he will don't have what the artist has drawn before his connection
 	[ ] The score of the player is reset if he has a disconnection from the server and reconnect himself after
 	[ ] Comportement étrange de tr() dans RoomInfo
+	[ ] Faire confiance uniquement au serveur, plus du tout au client

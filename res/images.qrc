@@ -13,5 +13,6 @@
         <file>images/menubar/create.ico</file>
         <file>images/menubar/settings.ico</file>
         <file>images/drawingtools/skip.ico</file>
+        <file>images/drawingtools/bucket.ico</file>
     </qresource>
 </RCC>

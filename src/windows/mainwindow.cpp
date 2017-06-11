@@ -13,8 +13,8 @@ MainWindow::MainWindow() : QMainWindow()
     mpEnteringLeaving->setVolume(50);
 
     //
-    mpStartEnd = new QMediaPlayer(this);
-    mpStartEnd->setVolume(50);
+    mpStartEndSkip = new QMediaPlayer(this);
+    mpStartEndSkip->setVolume(50);
 
     //
     mpAnswer = new QMediaPlayer(this);
@@ -117,6 +117,10 @@ MainWindow::MainWindow() : QMainWindow()
                     penAction->setCheckable(true);
                     penAction->setChecked(true);
 
+                    // Bucket
+                    bucketAction = drawingToolsActionGroup->addAction(QIcon(":/images/drawingtools/bucket.ico"), tr("Bucket"));
+                    bucketAction->setCheckable(true);
+
                     // Eraser
                     eraserAction = drawingToolsActionGroup->addAction(QIcon(":/images/drawingtools/eraser.ico"), tr("Eraser"));
                     eraserAction->setCheckable(true);
@@ -128,13 +132,13 @@ MainWindow::MainWindow() : QMainWindow()
                 penWidthSpinBox = new QSpinBox(this);
                 penWidthSpinBox->setRange(1,100);
                 penWidthSpinBox->setValue(2);
-                penWidthSpinBox->setToolTip(tr("Width of the pen"));
+                penWidthSpinBox->setToolTip(tr("Width"));
                 penWidthSpinBox->setStyleSheet("margin: 0 0 2px 0;");
                 drawingToolsBar->addWidget(penWidthSpinBox);
 
                 // Slider
                 penWidthSlider = new QSlider(Qt::Vertical, drawingToolsBar);
-                penWidthSlider->setToolTip(tr("Width of the pen"));
+                penWidthSlider->setToolTip(tr("Width"));
                 penWidthSlider->setRange(1,100);
                 penWidthSlider->setValue(2);
                 penWidthSlider->setMinimumHeight(100);
@@ -144,7 +148,7 @@ MainWindow::MainWindow() : QMainWindow()
                 drawingToolsBar->addWidget(penWidthSlider);
 
                 // Pick the color of the pen
-                actionColor = drawingToolsBar->addAction(QIcon(":/images/drawingtools/color.ico"), tr("Pick the color of the pen"));
+                actionColor = drawingToolsBar->addAction(QIcon(":/images/drawingtools/color.ico"), tr("Pick a color"));
                 QObject::connect(actionColor, SIGNAL(triggered(bool)), this, SLOT(changeColor()));
                     selectedColor = Qt::black;
                 drawingToolsBar->addSeparator();
@@ -156,7 +160,7 @@ MainWindow::MainWindow() : QMainWindow()
                 drawingToolsBar->addSeparator();
 
                 // Skip the word
-                actionSkipWord = drawingToolsBar->addAction(QIcon(":/images/drawingtools/skip.ico"), tr("Skip the word"));
+                actionSkipWord = drawingToolsBar->addAction(QIcon(":/images/drawingtools/skip.ico"), tr("Skip the word\n(you will lose 1 point)"));
                 actionSkipWord->setCheckable(false);
 
             QLayout* layoutDrawingToolsBar = drawingToolsBar->layout();
@@ -337,6 +341,9 @@ DrawingToolType MainWindow::selectedDrawingToolType(){
     if(penAction->isChecked()){
         return PEN;
     }
+    else if(bucketAction->isChecked()){
+        return BUCKET;
+    }
     else{
         return ERASER;
     }
@@ -503,11 +510,23 @@ void MainWindow::leaveRoom(){
 //
 void MainWindow::about(){
     QMessageBox::about(this, tr("About"), "<h2><b>Drawing League</b></h2>"
-                                          "<p><b>" + tr("Version :") + "</b> " + qApp->applicationVersion() + " (<a href='https://github.com/nicolasfostier/DrawingLeague/releases'>" + tr("Latest releases") + "</a>)<br/>" +
+                                          "<b>" + tr("Version :") + "</b> " + qApp->applicationVersion() + " (<a href='https://github.com/nicolasfostier/DrawingLeague/releases'>" + tr("Latest releases") + "</a>)<br/>" +
                                           "<b>" + tr("Developped by :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>" +
                                           "<b>" + tr("Library used :") + "</b> Qt 5.8.0<br/>" +
                                           "<b>" + tr("Logo :") + "</b> Elodie Fostier<br/>" +
-                                          "<b>" + tr("Icons :") + "</b> <a href='http://www.customicondesign.com/'>Custom Icon Design</a></p>");
+                                          "<b>" + tr("Icons :") + "</b> <a href='http://www.customicondesign.com/'>Custom Icon Design</a><br/>" +
+                                          "<b>" + tr("Sounds :") + "</b>" +
+                                          "<ul style='margin-top : 0px;'>" +
+                                                "<li><a href='https://www.youtube.com/watch?v=xzLt7nvdtjw'>after_first_answer.mp3</a></li>" +
+                                                "<li><a href='https://www.freesound.org/people/Bertrof/sounds/131660/'>answer_found_other.mp3 +" + tr("(shortened)") + "</a></li>" +
+                                                "<li><a href='https://www.freesound.org/people/Bertrof/sounds/131660/'>answer_found_you.mp3</a></li>" +
+                                                "<li><a href='https://www.freesound.org/people/Bertrof/sounds/131657/'>artist_has_failed_skipped.mp3</a></li>" +
+                                                "<li><a href='https://www.freesound.org/people/chripei/sounds/165491/'>end_game.mp3</a></li>" +
+                                                "<li><a href='https://www.freesound.org/people/shinephoenixstormcrow/sounds/337049/'>new_round.mp3</a></li>" +
+                                                "<li><a href='https://www.freesound.org/people/rhodesmas/sounds/322897/'>player_entering.mp3</a></li>" +
+                                                "<li><a href='https://www.freesound.org/people/rhodesmas/sounds/322895/'>player_leaving.mp3</a></li>" +
+                                                "<li><a href='https://www.freesound.org/people/fins/sounds/171671/'>you_are_the_artist.mp3</a></li>" +
+                                          "</ul>");
 }
 
 
@@ -574,7 +593,7 @@ void MainWindow::resetAll(){
     this->updateArtistMode();
 
     mpEnteringLeaving->stop();
-    mpStartEnd->stop();
+    mpStartEndSkip->stop();
     mpAnswer->stop();
     mpTicTac->stop();
 }
@@ -653,14 +672,14 @@ void MainWindow::roundStarting(int round, QString artist, QString word, int poin
 
     //
     if(isArtist()){
-        mpStartEnd->setMedia(QUrl("qrc:/sound/you_are_the_artist.mp3"));
+        mpStartEndSkip->setMedia(QUrl("qrc:/sound/you_are_the_artist.mp3"));
     }
     else{
-        mpStartEnd->setMedia(QUrl("qrc:/sound/new_round.mp3"));
+        mpStartEndSkip->setMedia(QUrl("qrc:/sound/new_round.mp3"));
     }
 
     //
-    mpStartEnd->play();
+    mpStartEndSkip->play();
 
     //
     updateArtistMode();
@@ -676,16 +695,32 @@ void MainWindow::roundEnding(QString word){
     mpTicTac->stop();
 
     //
-    this->canvasLabel->reset();
+    if(room.getPointToWin() == 10){
+        mpStartEndSkip->setMedia(QUrl("qrc:/sound/artist_has_failed_skipped.mp3"));
+        mpStartEndSkip->play();
+
+        //
+        QHash<QString, Player*>::const_iterator artistIterator = players.find(room.getArtist());
+        if(artistIterator != players.end()){
+            artistIterator.value()->setScore(artistIterator.value()->getScore() - 1);
+        }
+
+        Message msg("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", "<b><i>" + room.getArtist() + "</i> " + tr("has failed to draw the word in time and lose 1 point.") + "</b>");
+        addAnswer(msg);
+    }
 
     //
     QHash<QString, Player*>::const_iterator artistIterator = players.find(room.getArtist());
     if(artistIterator != players.end()){
         artistIterator.value()->setIsArtist(false);
     }
+    room.setArtist(" ");
 
     //
     updateArtistMode();
+
+    //
+    this->canvasLabel->reset();
 
     //
     answerLineEdit->setDisabled(true);
@@ -707,14 +742,26 @@ void MainWindow::roundEnding(QString word){
     roomInfo->setRoom(room);
 
 
-    Message msg("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", tr("The word was") + " <i>" + word + "</i> ");
+    Message msg("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", "<b>" +tr("The word was") + " <i>" + word + "</i>.</b>");
     addAnswer(msg);
 }
 
 //
 void MainWindow::skipWord(){
-    Message msg("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", "<i>" + room.getArtist() + "</i> " + tr("has skip the word."));
+    mpStartEndSkip->setMedia(QUrl("qrc:/sound/artist_has_failed_skipped.mp3"));
+    mpStartEndSkip->play();
+
+    //
+    QHash<QString, Player*>::const_iterator artistIterator = players.find(room.getArtist());
+    if(artistIterator != players.end()){
+        artistIterator.value()->setScore(artistIterator.value()->getScore() - 1);
+    }
+
+    Message msg("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", "<b><i>" + room.getArtist() + "</i> " + tr("has skip the word by losing 1 point.") + "</b>");
     addAnswer(msg);
+
+    //
+    room.setPointToWin(-1);
 }
 
 //
@@ -730,8 +777,8 @@ void MainWindow::gameEnding(QString winner){
     canvasLabel->displayWinner(winner);
 
     //
-    mpStartEnd->setMedia(QUrl("qrc:/sound/end_game.mp3"));
-    mpStartEnd->play();
+    mpStartEndSkip->setMedia(QUrl("qrc:/sound/end_game.mp3"));
+    mpStartEndSkip->play();
 }
 
 
@@ -780,7 +827,7 @@ void MainWindow::answerFound(QString pseudo, int pointWon){
 void MainWindow::addEnteringPlayer(Player player){
    addOnlinePlayer(player);
 
-   Message msg = Message("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", player.getPseudo() + " " + tr("has joined the room."));
+   Message msg = Message("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", "<b><i>" + player.getPseudo() + "</i> " + tr("has joined the room.") + "</b>");
    addChat(msg);
 
    mpEnteringLeaving->setMedia(QUrl("qrc:/sound/player_entering.mp3"));
@@ -829,6 +876,10 @@ void MainWindow::changeDrawingToolType(DrawingToolType drawingToolType){
             this->penAction->setChecked(true);
         break;
 
+        case BUCKET :
+            this->bucketAction->setChecked(true);
+        break;
+
         case ERASER :
             this->eraserAction->setChecked(true);
         break;
@@ -854,7 +905,7 @@ void MainWindow::changeDrawingToolWidth(int width){
 
 //
 void MainWindow::showServerMsgReadyNeeded(int howManyMoreReadyNeeded){
-    Message msg("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", QString::number(howManyMoreReadyNeeded) + " " + tr("more ready player(s) are needed to start the game."));
+    Message msg("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", "<b><i>" + QString::number(howManyMoreReadyNeeded) + " </i>" + tr("more ready player(s) are needed to start the game.") + "</b>");
     addChat(msg);
 }
 
@@ -903,5 +954,7 @@ void MainWindow::serverClosed(){
         delete dataBlockWriter;
         socket->deleteLater();
         socket = NULL;
+
+        resetAll();
     }
 }

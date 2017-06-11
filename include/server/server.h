@@ -102,7 +102,9 @@ class Server : public QTcpServer
         //
         void startRound();
         //
-        void endRound(bool hasSkipped = false);
+        void endRound();
+        //
+        void skipWord();
         //
         void endGame();
 
@@ -119,9 +121,6 @@ class Server : public QTcpServer
         void updateDrawingToolColor(QColor color);
         //
         void updateDrawingToolWidth(int width);
-
-        //
-        void skipWord();
 
         //
         void checkAnswer(Message msg);

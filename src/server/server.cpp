@@ -211,11 +211,20 @@ void Server::startRound(){
 }
 
 //
-void Server::endRound(bool hasSkipped){
+void Server::endRound(){
     QObject::disconnect(timerRound, SIGNAL(timeout()), this, SLOT(endRound()));
     this->timerRound->stop();
     QObject::disconnect(timerRoundAfterFirstAnswer, SIGNAL(timeout()), this, SLOT(endRound()));
     this->timerRoundAfterFirstAnswer->stop();
+
+    //
+    if(room.getPointToWin() == 10){
+        //
+        QHash<QString, ServerThread*>::const_iterator artistIterator = serverThreads.find(room.getArtist());
+        if(artistIterator != serverThreads.end()){
+            artistIterator.value()->getPlayer()->setScore(artistIterator.value()->getPlayer()->getScore() - 1);
+        }
+    }
 
     //
     QHash<QString, ServerThread*>::const_iterator artistIterator = serverThreads.find(room.getArtist());
@@ -242,14 +251,23 @@ void Server::endRound(bool hasSkipped){
         this->endGame();
     }
     else{
-        if(!hasSkipped){
-            timerBetweenRound->start();
-        }
-        else{
-            startRound();
-        }
+        timerBetweenRound->start();
     }
 }
+
+//
+void Server::skipWord(){
+    //
+    QHash<QString, ServerThread*>::const_iterator artistIterator = serverThreads.find(room.getArtist());
+    if(artistIterator != serverThreads.end()){
+        artistIterator.value()->getPlayer()->setScore(artistIterator.value()->getPlayer()->getScore() - 1);
+    }
+
+    room.setPointToWin(-1);
+
+    endRound();
+}
+
 
 //
 void Server::endGame(){
@@ -430,14 +448,6 @@ void Server::updateDrawingToolColor(QColor color){
 //
 void Server::updateDrawingToolWidth(int width){
     this->drawingToolWidth = width;
-}
-
-
-//
-void Server::skipWord(){
-    if(playerFoundAnswer == 0){
-        endRound(true);
-    }
 }
 
 

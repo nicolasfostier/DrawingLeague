@@ -10,6 +10,8 @@
 #include <QCursor>
 #include <QTimer>
 #include <QTextOption>
+#include <QImage>
+#include <QStack>
 
 
 // A polyline which can be drawn by the artist
@@ -38,7 +40,9 @@ class Canvas : public QLabel
         int height;
 
         // Pixmap of the canvas
-        QPixmap* pixmap;
+        QPixmap pixmap;
+            // Image version of the pixmap
+            QImage image;
         // Painter of the canvas
         QPainter* painter;
         // Pen to draw on the canvas
@@ -74,6 +78,8 @@ class Canvas : public QLabel
 
     // Methods
     public :
+        //
+        void floodFill(QPoint point, QColor previousColor, QColor newColor);
         // Reset the canvas (make it completly white)
         void reset();
 

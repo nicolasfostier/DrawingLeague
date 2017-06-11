@@ -60,7 +60,7 @@ class MainWindow : public QMainWindow
         //
         QMediaPlayer* mpEnteringLeaving;
         //
-        QMediaPlayer* mpStartEnd;
+        QMediaPlayer* mpStartEndSkip;
         //
         QMediaPlayer* mpAnswer;
         //
@@ -119,6 +119,8 @@ class MainWindow : public QMainWindow
                     QActionGroup* drawingToolsActionGroup;
                         // Pen
                         QAction* penAction;
+                        // Bucket
+                        QAction* bucketAction;
                         // Eraser
                         QAction* eraserAction;
                     // Width of the pen

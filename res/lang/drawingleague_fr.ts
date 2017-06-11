@@ -294,16 +294,6 @@ Entrez une nouvelle adresse.</translation>
         <translation>Quitter</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="56"/>
-        <source>Tools</source>
-        <translation>Outils</translation>
-    </message>
-    <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="57"/>
-        <source>Settings</source>
-        <translation>Paramètres</translation>
-    </message>
-    <message>
         <location filename="../../src/windows/mainwindow.cpp" line="60"/>
         <source>?</source>
         <translation>?</translation>
@@ -333,18 +323,20 @@ Entrez une nouvelle adresse.</translation>
     <message>
         <location filename="../../src/windows/mainwindow.cpp" line="147"/>
         <source>Pick the color of the pen</source>
-        <translation>Couleur la couleur du crayon</translation>
+        <translation>Choisir la couleur du crayon</translation>
     </message>
     <message>
         <location filename="../../src/windows/mainwindow.cpp" line="154"/>
-        <location filename="../../src/windows/mainwindow.cpp" line="540"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="552"/>
         <source>Reset the canvas</source>
         <translation>Réinitialiser la toile</translation>
     </message>
     <message>
         <location filename="../../src/windows/mainwindow.cpp" line="159"/>
-        <source>Skip the word</source>
-        <translation>Passer le mot</translation>
+        <source>Skip the word
+(you will lose 1 point)</source>
+        <translation>Passer le mot
+(vous perdrez 1 point)</translation>
     </message>
     <message>
         <location filename="../../src/windows/mainwindow.cpp" line="191"/>
@@ -428,50 +420,66 @@ Entrez une nouvelle adresse.</translation>
         <translation>Icônes :</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="527"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="511"/>
+        <source>Sounds :</source>
+        <translation>Sons :</translation>
+    </message>
+    <message>
+        <location filename="../../src/windows/mainwindow.cpp" line="514"/>
+        <source>(shortened)</source>
+        <translation>(raccourci)</translation>
+    </message>
+    <message>
+        <location filename="../../src/windows/mainwindow.cpp" line="539"/>
         <source>Pick a color</source>
         <translation>Choisir une couleur</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="540"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="552"/>
         <source>Do you really want to reset the canvas ?</source>
         <translation>Voulez-vous vraiment réinitialiser la toile ?</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="710"/>
-        <location filename="../../src/windows/mainwindow.cpp" line="716"/>
-        <location filename="../../src/windows/mainwindow.cpp" line="783"/>
-        <location filename="../../src/windows/mainwindow.cpp" line="857"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="701"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="738"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="753"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="823"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="897"/>
         <source>Server</source>
         <translation>Serveur</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="710"/>
-        <source>The word was</source>
-        <translation>Le mot était</translation>
+        <location filename="../../src/windows/mainwindow.cpp" line="701"/>
+        <source>has failed to draw the word in time and lose 1 point.</source>
+        <translation>n&apos;a pas réussi à dessiner le mot à temps, et perd donc 1 point.</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="716"/>
-        <source>has skip the word.</source>
-        <translation>a passé le mot.</translation>
+        <location filename="../../src/windows/mainwindow.cpp" line="753"/>
+        <source>has skip the word by losing 1 point.</source>
+        <translation>a passé le mot, et perd donc 1 point.</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="783"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="823"/>
         <source>has joined the room.</source>
         <translation>a rejoint le salon.</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="857"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="738"/>
+        <source>The word was</source>
+        <translation>Le mot était</translation>
+    </message>
+    <message>
+        <location filename="../../src/windows/mainwindow.cpp" line="897"/>
         <source>more ready player(s) are needed to start the game.</source>
         <translation>autre(s) joueur(s) prêt(s) nécessaire(s) pour démarrer la partie.</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="898"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="938"/>
         <source>The server is closed</source>
         <translation>Le serveur est fermé</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="898"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="938"/>
         <source>The server has been shutdown.</source>
         <translation>Le serveur a été fermé.</translation>
     </message>

@@ -32,10 +32,10 @@ Canvas::Canvas(DrawingToolType currentDrawingTool, QColor penBrushColor, int pen
     this->height = height;
 
     // Pixmap of the canvas
-    pixmap = new QPixmap(width, height);
+    pixmap = QPixmap(width, height);
 
     // Painter of the canvas
-    painter = new QPainter(pixmap);
+    painter = new QPainter(&pixmap);
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
     // Pen to draw on the canvas
@@ -60,7 +60,7 @@ Canvas::Canvas(DrawingToolType currentDrawingTool, QColor penBrushColor, int pen
     this->reset();
 
     // Display the canvas
-    this->setPixmap(*pixmap);
+    this->setPixmap(pixmap);
 
     // Add a gray border around the canvas
     this->setStyleSheet("border: 1px solid grey");
@@ -77,18 +77,60 @@ Canvas::Canvas(DrawingToolType currentDrawingTool, QColor penBrushColor, int pen
 // Destructor
 Canvas::~Canvas(){
     delete painter;
-    delete pixmap;
 }
 
 
 
 // Methods
 
+//
+void Canvas::floodFill(QPoint originalPoint, QColor previousColor, QColor newColor){
+    QStack<QPoint> stack;
+    if(image.pixelColor(originalPoint) == previousColor && image.pixelColor(originalPoint) != newColor){
+        stack.push(originalPoint);
+
+        QPoint currentPoint;
+        while(!stack.empty()){
+            currentPoint = stack.pop();
+            image.setPixelColor(currentPoint, newColor);
+
+            //
+            QPoint currentPointUp = currentPoint;
+            currentPointUp.setY(currentPoint.y() + 1);
+            if(image.valid(currentPointUp) && image.pixelColor(currentPointUp) == previousColor){
+                stack.push(currentPointUp);
+            }
+
+            //
+            QPoint currentPointDown = currentPoint;
+            currentPointDown.setY(currentPoint.y()  - 1);
+            if(image.valid(currentPointDown) && image.pixelColor(currentPointDown) == previousColor){
+                stack.push(currentPointDown);
+            }
+
+            //
+            QPoint currentPointLeft = currentPoint;
+            currentPointLeft.setX(currentPoint.x() - 1);
+            if(image.valid(currentPointLeft) && image.pixelColor(currentPointLeft) == previousColor){
+                stack.push(currentPointLeft);
+            }
+
+            //
+            QPoint currentPointRight = currentPoint;
+            currentPointRight.setX(currentPoint.x() + 1);
+            if(image.valid(currentPointRight) && image.pixelColor(currentPointRight) == previousColor){
+                stack.push(currentPointRight);
+            }
+        }
+    }
+}
+
 // Reset the canvas (make it completly white)
 void Canvas::reset(){
-    pixmap->fill(Qt::white);
-    this->setPixmap(*pixmap);
+    pixmap.fill(Qt::white);
+    this->setPixmap(pixmap);
 }
+
 
 //
 void Canvas::displayTypeReady(){
@@ -96,7 +138,7 @@ void Canvas::displayTypeReady(){
     reset();
 
     //
-    pixmap->fill(Qt::black);
+    pixmap.fill(Qt::black);
 
     //
     QFont font;
@@ -106,10 +148,10 @@ void Canvas::displayTypeReady(){
     font.setPixelSize(24);
     painter->setPen(Qt::white);
     painter->setFont(font);
-    painter->drawText(pixmap->rect(), Qt::AlignCenter, tr("Type !ready in the chat,\nif you want to start a game."));
+    painter->drawText(pixmap.rect(), Qt::AlignCenter, tr("Type !ready in the chat,\nif you want to start a game."));
 
     //
-    this->setPixmap(*pixmap);
+    this->setPixmap(pixmap);
 }
 
 //
@@ -118,15 +160,15 @@ void Canvas::displayWinner(QString winner){
     reset();
 
     //
-    pixmap->fill(Qt::black);
+    pixmap.fill(Qt::black);
 
     //
     QFont font;
     font.setBold(true);
 
     QRect rectText;
-    rectText.setWidth(pixmap->rect().width());
-    rectText.setHeight(pixmap->rect().height());
+    rectText.setWidth(pixmap.rect().width());
+    rectText.setHeight(pixmap.rect().height());
 
     // Pseudo of the winner
     font.setPixelSize(75);
@@ -150,8 +192,9 @@ void Canvas::displayWinner(QString winner){
     painter->drawText(rectText, Qt::AlignHCenter, tr("Type !ready in the chat,\nif you want to start another game."));
 
     //
-    this->setPixmap(*pixmap);
+    this->setPixmap(pixmap);
 }
+
 
 // When one click of the mouse is pressed
 void Canvas::mousePressEvent(QMouseEvent* event){
@@ -174,7 +217,7 @@ void Canvas::mousePressEvent(QMouseEvent* event){
 
         lastMousePositionDrawn = event->pos();
 
-        this->setPixmap(*pixmap);
+        this->setPixmap(pixmap);
 
         if(event->screenPos() != QPoint(-232323,-232323)){
             emit mousePressEventToSend(event->pos());
@@ -189,6 +232,23 @@ void Canvas::mousePressEvent(QMouseEvent* event){
 void Canvas::mouseReleaseEvent(QMouseEvent* event){
     if(isArtist || event->screenPos() == QPoint(-232323,-232323)){
         event->accept();
+        switch(currentDrawingTool){
+            case BUCKET :{
+                image = pixmap.toImage();
+                floodFill(event->pos(), image.pixelColor(event->pos()), drawingPen.color());
+
+                //
+                painter->end();
+
+                //
+                pixmap = QPixmap(QPixmap::fromImage(image));
+                painter->begin(&pixmap);
+
+                //
+                this->setPixmap(pixmap);
+            break;
+            }
+        }
 
         if(event->screenPos() != QPoint(-232323,-232323)){
             emit mouseReleaseEventToSend(event->pos());
@@ -223,7 +283,7 @@ void Canvas::mouseMoveEvent(QMouseEvent* event){
 
             lastMousePositionDrawn = event->pos();
 
-            this->setPixmap(*pixmap);
+            this->setPixmap(pixmap);
         }
         else{
             //
@@ -243,7 +303,7 @@ void Canvas::mouseMoveEvent(QMouseEvent* event){
 
                 lastMousePositionDrawn = event->pos();
 
-                this->setPixmap(*pixmap);
+                this->setPixmap(pixmap);
 
                 emit mouseMoveEventToSend(event->pos());
 
