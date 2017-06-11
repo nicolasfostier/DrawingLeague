@@ -12,6 +12,7 @@
 #include <QTextOption>
 #include <QImage>
 #include <QStack>
+#include <QIcon>
 
 
 // A polyline which can be drawn by the artist
@@ -62,6 +63,9 @@ class Canvas : public QLabel
 
         //
         QTimer* TickrateLimiterTimer;
+
+        //
+        QCursor bucketCursor;
 
     // Setter
     public :

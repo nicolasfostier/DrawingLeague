@@ -87,10 +87,10 @@ MainWindow::MainWindow() : QMainWindow()
 
                 // Represent the pen
                 penLabel = new QLabel(this);
-                penLabel->setFixedSize(56,56);
+                penLabel->setFixedSize(58,58);
                 penLabel->setAlignment(Qt::AlignCenter);
                 penLabel->setStyleSheet("background: white; border: 1px solid grey;");
-                penLabelPixmap = new QPixmap(106,106);
+                penLabelPixmap = new QPixmap(58,58);
                 penLabel->setScaledContents(false);
                 penLabelPixmap->fill(Qt::transparent);
                 penLabelBrush.setColor(Qt::black);
@@ -130,7 +130,7 @@ MainWindow::MainWindow() : QMainWindow()
 
                 // Spinbox
                 penWidthSpinBox = new QSpinBox(this);
-                penWidthSpinBox->setRange(1,100);
+                penWidthSpinBox->setRange(1,50);
                 penWidthSpinBox->setValue(2);
                 penWidthSpinBox->setToolTip(tr("Width"));
                 penWidthSpinBox->setStyleSheet("margin: 0 0 2px 0;");
@@ -139,7 +139,7 @@ MainWindow::MainWindow() : QMainWindow()
                 // Slider
                 penWidthSlider = new QSlider(Qt::Vertical, drawingToolsBar);
                 penWidthSlider->setToolTip(tr("Width"));
-                penWidthSlider->setRange(1,100);
+                penWidthSlider->setRange(1,50);
                 penWidthSlider->setValue(2);
                 penWidthSlider->setMinimumHeight(100);
                 QObject::connect(penWidthSlider, SIGNAL(valueChanged(int)), this, SLOT(updateDrawingTools()));
@@ -354,18 +354,27 @@ void MainWindow::refreshPenLabel(){
     QPoint centre((penLabelPixmap->rect().width() / 2) - 1, (penLabelPixmap->rect().height() / 2) - 1);
     penLabelPixmap->fill(Qt::transparent);
 
+    QRect rect;
     switch(selectedDrawingToolType()){
         case PEN : {
+            rect = QRect(0, 0, penWidthSlider->value() + 1, penWidthSlider->value() + 1);
             penLabelPainter->setBrush(penLabelBrush);
         break;
         }
 
+        case BUCKET : {
+            rect = QRect(0, 0, 100, 100);
+            penLabelPainter->setBrush(penLabelBrush);
+            break;
+        }
+
         case ERASER : {
+            rect = QRect(0, 0, penWidthSlider->value() + 1, penWidthSlider->value() + 1);
             penLabelPainter->setBrush(QBrush(Qt::white));
+            break;
         }
     }
 
-    QRect rect = QRect(0, 0, penWidthSlider->value() + 1, penWidthSlider->value() + 1);
     rect.moveCenter(centre);
     penLabelPainter->drawEllipse(rect);
     this->penLabel->setPixmap(*penLabelPixmap);

@@ -10,7 +10,12 @@ void Canvas::setTools(DrawingToolType drawingToolType, int penWidth, QColor penB
     this->erasePen.setWidth(penWidth);
     this->drawingBrush.setColor(penBrushColor);
     if(cursorPixmap != NULL){
-        this->setCursor(QCursor(*cursorPixmap, (cursorPixmap->width() / 2) - 1, (cursorPixmap->width() / 2) - 1));
+        if(drawingToolType == BUCKET){
+            this->setCursor(bucketCursor);
+        }
+        else{
+            this->setCursor(QCursor(*cursorPixmap, (cursorPixmap->width() / 2) - 1, (cursorPixmap->width() / 2) - 1));
+        }
     }
     else{
         this->setCursor(QCursor());
@@ -70,6 +75,9 @@ Canvas::Canvas(DrawingToolType currentDrawingTool, QColor penBrushColor, int pen
     TickrateLimiterTimer->setSingleShot(true);
     // 1000 / 6 = 166.67 of tickrate
     TickrateLimiterTimer->setInterval(6);
+
+    //
+    bucketCursor = QCursor(QIcon(":/images/drawingtools/bucket.ico").pixmap(QSize(24,24)), 2, 18);
 }
 
 
