@@ -5,19 +5,18 @@
 // Constructor
 CreateRoomWindow::CreateRoomWindow() : QDialog()
 {
-    this->socket = new QTcpSocket();
-    QObject::connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectError()));
-    QObject::connect(socket, SIGNAL(connected()), this, SLOT(connectOk()));
-
     dictionaryPath = QString();
 
     //
     layout = new QGridLayout(this);
     layout->setVerticalSpacing(10);
 
+        //
+        labelFont.setBold(true);
 
         //
-        pseudoLabel = new QLabel("<b>" + tr("Your pseudo :") + "</b>", this);
+        pseudoLabel = new QLabel(tr("Your pseudo :"), this);
+        pseudoLabel->setFont(labelFont);
         layout->addWidget(pseudoLabel, 0, 0, 1, 1);
 
         //
@@ -26,7 +25,8 @@ CreateRoomWindow::CreateRoomWindow() : QDialog()
 
 
         //
-        dictionaryTypeLabel = new QLabel("<b>" + tr("Dictionary type :") + "</b>", this);
+        dictionaryTypeLabel = new QLabel(tr("Dictionary type :"), this);
+        dictionaryTypeLabel->setFont(labelFont);
         layout->addWidget(dictionaryTypeLabel, 1, 0, 1, 1);
 
         //
@@ -42,7 +42,7 @@ CreateRoomWindow::CreateRoomWindow() : QDialog()
 
                 //
                 dictionaryStandardComboBox = new QComboBox(this);
-                dictionaryStandardComboBox->insertItem(0, tr("Easy english"));
+//                dictionaryStandardComboBox->insertItem(0, tr("Easy english"));
                 dictionaryStandardComboBox->insertItem(1, tr("Easy french"));
                 dictionaryStackedLayout->addWidget(dictionaryStandardComboBox);
 
@@ -52,7 +52,8 @@ CreateRoomWindow::CreateRoomWindow() : QDialog()
 
 
         //
-        portLabel = new QLabel("<b>" + tr("Server port :") + "</b>", this);
+        portLabel = new QLabel(tr("Server port :"), this);
+        portLabel->setFont(labelFont);
         layout->addWidget(portLabel, 2, 0, 1, 1);
 
         //
@@ -62,7 +63,8 @@ CreateRoomWindow::CreateRoomWindow() : QDialog()
 
 
         //
-        roomNameLabel = new QLabel("<b>" + tr("Room name :") + "</b>", this);
+        roomNameLabel = new QLabel(tr("Room name :"), this);
+        roomNameLabel->setFont(labelFont);
         layout->addWidget(roomNameLabel, 3, 0, 1, 1);
 
         //
@@ -72,7 +74,8 @@ CreateRoomWindow::CreateRoomWindow() : QDialog()
 
 
         //
-        maxRoundLabel = new QLabel("<b>" + tr("Number of round :") + "</b>", this);
+        maxRoundLabel = new QLabel(tr("Number of rounds :"), this);
+        maxRoundLabel->setFont(labelFont);
         layout->addWidget(maxRoundLabel, 4, 0, 1, 1);
 
         //
@@ -82,7 +85,8 @@ CreateRoomWindow::CreateRoomWindow() : QDialog()
 
 
         //
-        maxPlayersLabel = new QLabel("<b>" + tr("Number of players :") + "</b>", this);
+        maxPlayersLabel = new QLabel(tr("Maximum number of players :"), this);
+        maxPlayersLabel->setFont(labelFont);
         layout->addWidget(maxPlayersLabel, 5, 0, 1, 1);
 
         //
@@ -92,7 +96,8 @@ CreateRoomWindow::CreateRoomWindow() : QDialog()
 
 
         //
-        timeByRoundLabel = new QLabel("<b>" + tr("Time by round (in second) :") + "</b>", this);
+        timeByRoundLabel = new QLabel(tr("Time by round (in second) :"), this);
+        timeByRoundLabel->setFont(labelFont);
         layout->addWidget(timeByRoundLabel, 6, 0, 1, 1);
 
         //
@@ -102,7 +107,8 @@ CreateRoomWindow::CreateRoomWindow() : QDialog()
 
 
         //
-        timeAfterFirstGoodAnswerLabel = new QLabel("<b>" + tr("Time after the first good answer (in second) :") + "</b>", this);
+        timeAfterFirstGoodAnswerLabel = new QLabel(tr("Time after the first good answer (in second) :"), this);
+        timeAfterFirstGoodAnswerLabel->setFont(labelFont);
         layout->addWidget(timeAfterFirstGoodAnswerLabel, 7, 0, 1, 1);
 
         //
@@ -204,20 +210,57 @@ void CreateRoomWindow::dictionaryError(){
 //
 void CreateRoomWindow::connection(){
     //
-    socket->connectToHost(QHostAddress::LocalHost, portLineEdit->text().toInt());
+    this->socket = new QTcpSocket();
+    QObject::connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectError()));
+    QObject::connect(socket, SIGNAL(connected()), this, SLOT(connectOk()));
+    this->socket->connectToHost(QHostAddress::LocalHost, portLineEdit->text().toInt());
 }
 
 //
 void CreateRoomWindow::connectOk(){
-    //
-    emit roomCreated(server, socket, this->pseudoLineEdit->text());
+    dataBlockReader = new DataBlockReader(socket);
+    QObject::connect(dataBlockReader, SIGNAL(readyToReceive()), this, SLOT(sendPseudo()));
+    QObject::connect(dataBlockReader, SIGNAL(pseudoOk()), this, SLOT(connectAndPseudoOk()));
+    QObject::connect(dataBlockReader, SIGNAL(pseudoAlreadyUsed()), this, SLOT(pseudoAlreadyUsed()));
 
-    //
-    this->close();
+    dataBlockWriter = new DataBlockWriter(socket);
 }
 
 //
 void CreateRoomWindow::connectError(){
     QMessageBox::critical(this, tr("Creation failed"), tr("Impossible to reach the server.\n"));
     server->deleteLater();
+}
+
+
+//
+void CreateRoomWindow::sendPseudo(){
+    dataBlockWriter->sendPlayerEntering(Player(this->pseudoLineEdit->text().toHtmlEscaped()));
+}
+
+
+//
+void CreateRoomWindow::connectAndPseudoOk(){
+    //
+    emit roomCreated(server, socket, dataBlockReader, dataBlockWriter, this->pseudoLineEdit->text().toHtmlEscaped());
+
+    //
+    this->close();
+}
+
+//
+void CreateRoomWindow::pseudoAlreadyUsed(){
+    QObject::disconnect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectError()));
+
+    //
+    dataBlockWriter->sendPseudoAlreadyUsed();
+
+    //
+    server->deleteLater();
+    socket->deleteLater();
+    dataBlockReader->deleteLater();
+    dataBlockWriter->deleteLater();
+
+    //
+    QMessageBox::critical(this, tr("Pseudo already used"), tr("This pseudo is already taken."));
 }

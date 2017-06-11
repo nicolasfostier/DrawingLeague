@@ -12,18 +12,12 @@
 
 int main(int argc, char *argv[])
 {
-    // Register some meta-type
-    qRegisterMetaType<Room>();
-    qRegisterMetaType<Message>();
-    qRegisterMetaType<Player>();
-    qRegisterMetaType<DrawingToolType>();
-
     // Creation and configuration of the Qt application
     QApplication app(argc, argv);
     app.setApplicationName("Drawing League");
     app.setOrganizationName("Nicolas Fostier");
     app.setOrganizationDomain("nicolasfostier.free.fr");
-    app.setApplicationVersion("0.2");
+    app.setApplicationVersion("1.0");
     app.setWindowIcon(QIcon(":/images/logo.ico"));
 
     // Force the app to use the same language as the system
@@ -31,6 +25,12 @@ int main(int argc, char *argv[])
     QTranslator translator;
     translator.load(QString("drawingleague_") + locale, ":/lang");
     app.installTranslator(&translator);
+
+    // Register some meta-type
+    qRegisterMetaType<Room>();
+    qRegisterMetaType<Message>();
+    qRegisterMetaType<Player>();
+    qRegisterMetaType<DrawingToolType>();
 
     // Check if there is an update available on github
     // (It's executed on its own thread and will delete himself when its task is over)

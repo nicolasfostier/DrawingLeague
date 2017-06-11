@@ -54,15 +54,33 @@ class DataBlockReader : public QObject
     // Signals
     signals :
         //
-        void roomReceived(Room room);
+        void readyToReceive();
+
+        //
+        void pseudoOk();
+        //
+        void pseudoAlreadyUsed();
 
         //
         void playerEnteringReceived(Player player);
         //
+        void playerOnlineReceived(Player pseudo);
+        //
         void playerLeavingReceived(QString pseudo);
 
         //
+        void roomReceived(Room room);
+
+        //
+        void gameStartingReceived();
+        //
         void roundStartingReceived(int round, QString artist, QString word, int pointToWin);
+        //
+        void roundEndingReceived(QString word);
+        //
+        void skipWordReceived();
+        //
+        void gameEndingReceived(QString winner);
 
         //
         void answerFoundReceived(QString pseudo, int pointWon);
@@ -83,18 +101,12 @@ class DataBlockReader : public QObject
         void canvasResetReceived(bool confirmation = false);
 
         //
-        void skipWordReceived();
-
-        //
         void canvasMousePressEventReceived(QPoint pos);
         //
         void canvasMouseMoveEventReceived(QPoint pos);
         //
         void canvasMouseReleaseEventReceived(QPoint pos);
 
-
-        //
-        void serverMsgTypeReadyReceived();
         //
         void serverMsgReadyNeededReceived(int howManyMoreReadyNeeded);
 

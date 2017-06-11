@@ -5,16 +5,16 @@
 // Constructor
 JoinRoomWindow::JoinRoomWindow() : QDialog()
 {
-    this->socket = new QTcpSocket();
-    QObject::connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectError()));
-    QObject::connect(socket, SIGNAL(connected()), this, SLOT(connectOk()));
-
     //
     layout = new QGridLayout(this);
     layout->setVerticalSpacing(10);
 
         //
-        pseudoLabel = new QLabel("<b>" + tr("Your pseudo :") + "</b>", this);
+        labelFont.setBold(true);
+
+        //
+        pseudoLabel = new QLabel(tr("Your pseudo :"), this);
+        pseudoLabel->setFont(labelFont);
         layout->addWidget(pseudoLabel, 0, 0, 1, 1);
 
         //
@@ -23,7 +23,8 @@ JoinRoomWindow::JoinRoomWindow() : QDialog()
 
 
         //
-        ipLabel = new QLabel("<b>" + tr("Server IP :") + "</b>", this);
+        ipLabel = new QLabel(tr("Server IP :"), this);
+        ipLabel->setFont(labelFont);
         layout->addWidget(ipLabel, 2, 0, 1, 1);
 
         //
@@ -32,7 +33,8 @@ JoinRoomWindow::JoinRoomWindow() : QDialog()
 
 
         //
-        portLabel = new QLabel("<b>" + tr("Server port :") + "</b>", this);
+        portLabel = new QLabel(tr("Server port :"), this);
+        portLabel->setFont(labelFont);
         layout->addWidget(portLabel, 3, 0, 1, 1);
 
         //
@@ -78,19 +80,57 @@ void JoinRoomWindow::connectToTheServeur(){
         QMessageBox::critical(this, tr("Forbidden pseudo"), tr("Your pseudo must be at least 3 characters long."));
     }
     else{
+        this->socket = new QTcpSocket();
+        QObject::connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectError()));
+        QObject::connect(socket, SIGNAL(connected()), this, SLOT(connectOk()));
         socket->connectToHost(ipLineEdit->text(), portLineEdit->text().toInt());
     }
 }
 
+
 //
 void JoinRoomWindow::connectOk(){
-    emit roomJoined(socket, this->pseudoLineEdit->text().toHtmlEscaped());
+    dataBlockReader = new DataBlockReader(socket);
+    QObject::connect(dataBlockReader, SIGNAL(readyToReceive()), this, SLOT(sendPseudo()));
+    QObject::connect(dataBlockReader, SIGNAL(pseudoOk()), this, SLOT(connectAndPseudoOk()));
+    QObject::connect(dataBlockReader, SIGNAL(pseudoAlreadyUsed()), this, SLOT(pseudoAlreadyUsed()));
+
+    dataBlockWriter = new DataBlockWriter(socket);
+}
+
+//
+void JoinRoomWindow::connectError(){
+    QMessageBox::critical(this, tr("Connection failed"), tr("Impossible to rearch the server.\nEnter a new adress."));
+}
+
+
+//
+void JoinRoomWindow::sendPseudo(){
+    dataBlockWriter->sendPlayerEntering(Player(this->pseudoLineEdit->text().toHtmlEscaped()));
+}
+
+
+//
+void JoinRoomWindow::connectAndPseudoOk(){
+    //
+    emit roomJoined(socket, dataBlockReader, dataBlockWriter, this->pseudoLineEdit->text().toHtmlEscaped());
 
     //
     this->close();
 }
 
 //
-void JoinRoomWindow::connectError(){
-    QMessageBox::critical(this, tr("Connection failed"), tr("Impossible to rearch the server.\nEnter a new adress."));
+void JoinRoomWindow::pseudoAlreadyUsed(){
+    QObject::disconnect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectError()));
+
+    //
+    dataBlockWriter->sendPseudoAlreadyUsed();
+
+    //
+    socket->deleteLater();
+    dataBlockReader->deleteLater();
+    dataBlockWriter->deleteLater();
+
+    //
+    QMessageBox::critical(this, tr("Pseudo already used"), tr("This pseudo is already taken."));
 }

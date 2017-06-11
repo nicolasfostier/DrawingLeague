@@ -41,7 +41,7 @@ QString Message::toString(bool includeDate){
     QString string;
 
     if(includeDate){
-        string.append(timestamp.toString("[hh:mm:ss] "));
+        string.append(timestamp.toLocalTime().toString("[hh:mm:ss] "));
     }
     string.append("<b>" + this->pseudo + " :</b> ");
     string.append(this->message);

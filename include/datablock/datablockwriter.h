@@ -44,15 +44,33 @@ class DataBlockWriter : public QObject
     // Qt slots
     public slots :
         //
-        void sendRoom(Room room);
+        void sendReadyToReceive();
+
+        //
+        void sendPseudoOk();
+        //
+        void sendPseudoAlreadyUsed();
 
         //
         void sendPlayerEntering(Player player);
         //
+        void sendPlayerOnline(Player player);
+        //
         void sendPlayerLeaving(QString pseudo);
 
         //
+        void sendRoom(Room room);
+
+        //
+        void sendGameStarting();
+        //
         void sendRoundStarting(quint32 round, QString artist, QString word, quint32 pointToWin);
+        //
+        void sendRoundEnding(QString word);
+        //
+        void sendSkipWord();
+        //
+        void sendGameEnding(QString winner);
 
         //
         void sendAnswerFound(QString pseudo, quint32 pointWon);
@@ -73,17 +91,12 @@ class DataBlockWriter : public QObject
         void sendCanvasReset();
 
         //
-        void sendSkipWord();
-
-        //
         void sendCanvasMousePressEvent(QPoint pos);
         //
         void sendCanvasMouseMoveEvent(QPoint pos);
         //
         void sendCanvasMouseReleaseEvent(QPoint pos);
 
-        //
-        void sendServerMsgTypeReady();
         //
         void sendServerMsgReadyNeeded(int howManyMoreReadyNeeded);
 };

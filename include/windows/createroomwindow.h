@@ -18,6 +18,10 @@
 
 //
 #include "include/server/server.h"
+//
+#include "include/datablock/datablockreader.h"
+//
+#include "include/datablock/datablockwriter.h"
 
 
 
@@ -33,67 +37,75 @@ class CreateRoomWindow : public QDialog
         QTcpSocket* socket;
 
         //
+        DataBlockReader* dataBlockReader;
+        //
+        DataBlockWriter* dataBlockWriter;
+
+        //
         QString dictionaryPath;
 
 
         //
         QGridLayout* layout;
 
-        //
-        QLabel* pseudoLabel;
-        //
-        QLineEdit* pseudoLineEdit;
-
-        //
-        QLabel* dictionaryTypeLabel;
-        //
-        QComboBox* dictionaryTypeComboBox;
-        //
-        QStackedLayout* dictionaryStackedLayout;
             //
-            QComboBox* dictionaryStandardComboBox;
+            QFont labelFont;
+
             //
-            QPushButton* browseDictionaryButton;
-
-        //
-        QLabel* portLabel;
-        //
-        QLineEdit* portLineEdit;
-
-        //
-        QLabel* roomNameLabel;
-        //
-        QLineEdit* roomNameLineEdit;
-
-        //
-        QLabel* maxRoundLabel;
-        //
-        QLineEdit* maxRoundLineEdit;
-
-        //
-        QLabel* maxPlayersLabel;
-        //
-        QLineEdit* maxPlayersLineEdit;
-
-        //
-        QLabel* timeByRoundLabel;
-        //
-        QLineEdit* timeByRoundLineEdit;
-
-        //
-        QLabel* timeAfterFirstGoodAnswerLabel;
-        //
-        QLineEdit* timeAfterFirstGoodAnswerLineEdit;
-
-
-        //
-        QWidget* createOrCancel;
+            QLabel* pseudoLabel;
             //
-            QHBoxLayout* layoutConnectOrCancel;
+            QLineEdit* pseudoLineEdit;
+
+            //
+            QLabel* dictionaryTypeLabel;
+            //
+            QComboBox* dictionaryTypeComboBox;
+            //
+            QStackedLayout* dictionaryStackedLayout;
                 //
-                QPushButton* cancelButton;
+                QComboBox* dictionaryStandardComboBox;
                 //
-                QPushButton* createButton;
+                QPushButton* browseDictionaryButton;
+
+            //
+            QLabel* portLabel;
+            //
+            QLineEdit* portLineEdit;
+
+            //
+            QLabel* roomNameLabel;
+            //
+            QLineEdit* roomNameLineEdit;
+
+            //
+            QLabel* maxRoundLabel;
+            //
+            QLineEdit* maxRoundLineEdit;
+
+            //
+            QLabel* maxPlayersLabel;
+            //
+            QLineEdit* maxPlayersLineEdit;
+
+            //
+            QLabel* timeByRoundLabel;
+            //
+            QLineEdit* timeByRoundLineEdit;
+
+            //
+            QLabel* timeAfterFirstGoodAnswerLabel;
+            //
+            QLineEdit* timeAfterFirstGoodAnswerLineEdit;
+
+
+            //
+            QWidget* createOrCancel;
+                //
+                QHBoxLayout* layoutConnectOrCancel;
+                    //
+                    QPushButton* cancelButton;
+                    //
+                    QPushButton* createButton;
 
     // Constructor
     public :
@@ -112,14 +124,23 @@ class CreateRoomWindow : public QDialog
 
         //
         void connection();
+
         //
         void connectOk();
         //
         void connectError();
 
+        //
+        void sendPseudo();
+
+        //
+        void connectAndPseudoOk();
+        //
+        void pseudoAlreadyUsed();
+
     // Signals
    signals :
-        void roomCreated(Server* server, QTcpSocket* socket, QString pseudo);
+        void roomCreated(Server* server, QTcpSocket* socket, DataBlockReader* dataBlockReader, DataBlockWriter* dataBlockWriter, QString pseudo);
 };
 
 

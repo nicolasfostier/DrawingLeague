@@ -8,7 +8,8 @@ Server::Server(int port, Room room, QString dictionaryPath)
     this->port = port;
     this->room = room;
     this->dictionaryPath = dictionaryPath;
-    playerFoundAnswer = 0;
+    this->playerFoundAnswer = 0;
+    this->artist = NULL;
 
     drawingToolType = DrawingToolType::PEN;
     drawingToolColor = QColor(Qt::black);
@@ -26,7 +27,6 @@ Server::Server(int port, Room room, QString dictionaryPath)
 
 // Destructor
 Server::~Server(){
-    delete timerPause;
     delete timerRound;
     delete timerRoundAfterFirstAnswer;
 
@@ -96,7 +96,12 @@ int Server::howManyMoreReadyNeeded(){
 
 
 //
-ServerThread* Server::getNextArtist(){
+void Server::nextArtist(){
+    //
+    if(artist != NULL){
+        artist->getPlayer()->setIsArtist(false);
+    }
+
     //
     if(artistsQueue.empty()){
         ServerThread* serverThread;
@@ -106,18 +111,19 @@ ServerThread* Server::getNextArtist(){
         std::random_shuffle(artistsQueue.begin(), artistsQueue.end());
     }
 
-    return artistsQueue.takeFirst();
+    artist = artistsQueue.takeFirst();
+    artist->getPlayer()->setIsArtist(true);
 }
 
 //
-QString Server::getNextWord(){
+void Server::nextWord(){
     //
     if(wordsQueue.empty()){
         wordsQueue = QList<QString>(words);
         std::random_shuffle(wordsQueue.begin(), wordsQueue.end());
     }
 
-    return wordsQueue.takeFirst();
+    word = wordsQueue.takeFirst();
 }
 
 
@@ -135,10 +141,10 @@ void Server::launch(){
 
     QObject::connect(this, SIGNAL(newConnection()), this, SLOT(addPlayer()));
 
-    timerPause = new QTimer();
-    timerPause->setSingleShot(true);
-    timerPause->setInterval(1000);
-    QObject::connect(timerPause, SIGNAL(timeout()), this, SLOT(startRound()));
+    timerBetweenRound = new QTimer();
+    timerBetweenRound->setSingleShot(true);
+    timerBetweenRound->setInterval(2000);
+    QObject::connect(timerBetweenRound, SIGNAL(timeout()), this, SLOT(startRound()));
 
     timerRound = new QTimer();
     timerRound->setSingleShot(true);
@@ -151,18 +157,34 @@ void Server::launch(){
 
 
 //
-void Server::startRound(){
+void Server::startGame(){
     //
-    if(playerFoundAnswer > 0 || room.getRound() == 0){
-        room.setRound(room.getRound() + 1);
+    ServerThread* serverThread;
+    foreach(serverThread, serverThreads){
+        serverThread->getPlayer()->setScore(0);
     }
 
-    // Select the artist
-    ServerThread* nextArtist = getNextArtist();
-    room.setArtist(nextArtist->getPlayer()->getPseudo());
+    //s
+    DataBlockWriter* svThDBW;
+    foreach(serverThread, serverThreads){
+        svThDBW = serverThread->getDataBlockWriter();
+        QMetaObject::invokeMethod(svThDBW, "sendGameStarting");
+    }
 
-    // Select the word
-    word = getNextWord();
+    //
+    startRound();
+}
+
+//
+void Server::startRound(){
+    room.setRound(room.getRound() + 1);
+
+    // Select the next artist
+    nextArtist();
+    room.setArtist(artist->getPlayer()->getPseudo());
+
+    // Select the next word
+    nextWord();
 
     // Reset the number of point to win
     room.setPointToWin(10);
@@ -174,8 +196,6 @@ void Server::startRound(){
     ServerThread* serverThread;
     DataBlockWriter* svThDBW;
     foreach(serverThread, serverThreads){
-        serverThread->getPlayer()->setAnswerFound(false);
-
         svThDBW = serverThread->getDataBlockWriter();
         if(serverThread->getPlayer()->getPseudo() == room.getArtist()){
             QMetaObject::invokeMethod(svThDBW, "sendRoundStarting", Q_ARG(quint32, quint32(room.getRound())), Q_ARG(QString, room.getArtist()), Q_ARG(QString, word), Q_ARG(quint32, quint32(10)));
@@ -191,138 +211,209 @@ void Server::startRound(){
 }
 
 //
-void Server::endRound(){
-    if(playerFoundAnswer > 0 && room.getRound() == room.getMaxRounds()){
+void Server::endRound(bool hasSkipped){
+    QObject::disconnect(timerRound, SIGNAL(timeout()), this, SLOT(endRound()));
+    this->timerRound->stop();
+    QObject::disconnect(timerRoundAfterFirstAnswer, SIGNAL(timeout()), this, SLOT(endRound()));
+    this->timerRoundAfterFirstAnswer->stop();
+
+    //
+    QHash<QString, ServerThread*>::const_iterator artistIterator = serverThreads.find(room.getArtist());
+    if(artistIterator != serverThreads.end()){
+        artistIterator.value()->getPlayer()->setIsArtist(false);
+    }
+
+    //
+    ServerThread* serverThread;
+    DataBlockWriter* svThDBW;
+    foreach(serverThread, serverThreads){
+        serverThread->getPlayer()->setAnswerFound(false);
+
+        svThDBW = serverThread->getDataBlockWriter();
+        QMetaObject::invokeMethod(svThDBW, "sendRoundEnding", Q_ARG(QString, word));
+    }
+
+    //
+    if(playerFoundAnswer == 0){
+        room.setRound(room.getRound() - 1);
+    }
+
+    if(playerFoundAnswer != 0 && room.getRound() == room.getMaxRounds()){
         this->endGame();
     }
     else{
-        QObject::disconnect(timerRound, SIGNAL(timeout()), this, SLOT(endRound()));
-        this->timerRound->stop();
-        QObject::disconnect(timerRoundAfterFirstAnswer, SIGNAL(timeout()), this, SLOT(endRound()));
-        this->timerRoundAfterFirstAnswer->stop();
-
-        timerPause->start();
+        if(!hasSkipped){
+            timerBetweenRound->start();
+        }
+        else{
+            startRound();
+        }
     }
 }
 
 //
 void Server::endGame(){
+    //
+    ServerThread* serverThread;
+    DataBlockWriter* svThDBW;
+    Player* player;
+    QString winner;
+    int winnerScore = -1;
+    foreach(serverThread, serverThreads){
+        svThDBW = serverThread->getDataBlockWriter();
+        player = serverThread->getPlayer();
+        player->setIsReady(false);
+        if(player->getScore() > winnerScore){
+            winner = player->getPseudo();
+            winnerScore = player->getScore();
+        }
+    }
+
+    foreach(serverThread, serverThreads){
+        svThDBW = serverThread->getDataBlockWriter();
+        QMetaObject::invokeMethod(svThDBW, "sendGameEnding", Q_ARG(QString, winner));
+    }
+
     room.setRound(0);
+    room.setArtist(" ");
+    room.setWord(" ");
+    room.setPointToWin(0);
+
     sendGameNotStarted();
 }
 
 
 //
 void Server::addPlayer(){
+//    qDebug() << "addPlayer()";
     //
     ServerThread* newServerThread = new ServerThread(nextPendingConnection());
-    //
-    QObject::connect(newServerThread, SIGNAL(readyToReceive(ServerThread*)), this, SLOT(setupPlayer(ServerThread*)));
 
     //
-    QObject::connect(newServerThread, SIGNAL(playerLeaving(QString)), this, SLOT(removePlayer(QString)));
+    QObject::connect(newServerThread, SIGNAL(pseudoReceived(ServerThread*)), this, SLOT(setupPlayer(ServerThread*)));
 
     //
     QObject::connect(this, SIGNAL(destroyed(QObject*)), newServerThread, SLOT(deleteLater()));
 }
     //
     void Server::setupPlayer(ServerThread* newServerThread){
-        DataBlockReader* newSvThDBR = newServerThread->getDataBlockReader();
-        DataBlockWriter* newSvThDBW = newServerThread->getDataBlockWriter();
-
         //
-        QObject::connect(newSvThDBR, SIGNAL(chatReceived(Message)), newSvThDBW, SLOT(sendChat(Message)));
-        QObject::connect(newSvThDBR, SIGNAL(chatReceived(Message)), this, SLOT(checkChatCommand(Message)));
-        QObject::connect(newSvThDBR, SIGNAL(answerReceived(Message)), newSvThDBW, SLOT(sendAnswer(Message)));
-        QObject::connect(newSvThDBR, SIGNAL(answerReceived(Message)), this, SLOT(checkAnswer(Message)));
-
-        //
-        QObject::connect(newSvThDBR, SIGNAL(skipWordReceived()), newSvThDBW, SLOT(sendSkipWord()));
-        QObject::connect(newSvThDBR, SIGNAL(skipWordReceived()), this, SLOT(skipWord()));
-
-        //
-        QObject::connect(newSvThDBR, SIGNAL(drawingToolTypeReceived(DrawingToolType)), this, SLOT(updateDrawingToolType(DrawingToolType)));
-        QObject::connect(newSvThDBR, SIGNAL(drawingToolColorReceived(QColor)), this, SLOT(updateDrawingToolColor(QColor)));
-        QObject::connect(newSvThDBR, SIGNAL(drawingToolWidthReceived(int)), this, SLOT(updateDrawingToolWidth(int)));
-
-        //
-        ServerThread* serverThread;
-        DataBlockReader* svThDBR;
-        DataBlockWriter* svThDBW;
-        foreach(serverThread, serverThreads){
-            svThDBR = serverThread->getDataBlockReader();
-            svThDBW = serverThread->getDataBlockWriter();
-
-            //
-            QObject::connect(serverThread, SIGNAL(playerLeaving(QString)), newSvThDBW, SLOT(sendPlayerLeaving(QString)));
-            QObject::connect(newServerThread, SIGNAL(playerLeaving(QString)), svThDBW, SLOT(sendPlayerLeaving(QString)));
-
-            //
-            QObject::connect(svThDBR, SIGNAL(chatReceived(Message)), newSvThDBW, SLOT(sendChat(Message)));
-            QObject::connect(newSvThDBR, SIGNAL(chatReceived(Message)), svThDBW, SLOT(sendChat(Message)));
-            //
-            QObject::connect(svThDBR, SIGNAL(answerReceived(Message)), newSvThDBW, SLOT(sendAnswer(Message)));
-            QObject::connect(newSvThDBR, SIGNAL(answerReceived(Message)), svThDBW, SLOT(sendAnswer(Message)));
-
-            //
-            QObject::connect(svThDBR, SIGNAL(drawingToolTypeReceived(DrawingToolType)), newSvThDBW, SLOT(sendDrawingToolType(DrawingToolType)));
-            QObject::connect(newSvThDBR, SIGNAL(drawingToolTypeReceived(DrawingToolType)), svThDBW, SLOT(sendDrawingToolType(DrawingToolType)));
-            //
-            QObject::connect(svThDBR, SIGNAL(drawingToolColorReceived(QColor)), newSvThDBW, SLOT(sendDrawingToolColor(QColor)));
-            QObject::connect(newSvThDBR, SIGNAL(drawingToolColorReceived(QColor)), svThDBW, SLOT(sendDrawingToolColor(QColor)));
-            //
-            QObject::connect(svThDBR, SIGNAL(drawingToolWidthReceived(int)), newSvThDBW, SLOT(sendDrawingToolWidth(int)));
-            QObject::connect(newSvThDBR, SIGNAL(drawingToolWidthReceived(int)), svThDBW, SLOT(sendDrawingToolWidth(int)));
-
-            //
-            QObject::connect(svThDBR, SIGNAL(canvasResetReceived()), newSvThDBW, SLOT(sendCanvasReset()));
-            QObject::connect(newSvThDBR, SIGNAL(canvasResetReceived()), svThDBW, SLOT(sendCanvasReset()));
-
-            //
-            QObject::connect(svThDBR, SIGNAL(skipWordReceived()), newSvThDBW, SLOT(sendSkipWord()));
-            QObject::connect(newSvThDBR, SIGNAL(skipWordReceived()), svThDBW, SLOT(sendSkipWord()));
-
-            //
-            QObject::connect(svThDBR, SIGNAL(canvasMousePressEventReceived(QPoint)), newSvThDBW, SLOT(sendCanvasMousePressEvent(QPoint)));
-            QObject::connect(newSvThDBR, SIGNAL(canvasMousePressEventReceived(QPoint)), svThDBW, SLOT(sendCanvasMousePressEvent(QPoint)));
-            //
-            QObject::connect(svThDBR, SIGNAL(canvasMouseMoveEventReceived(QPoint)), newSvThDBW, SLOT(sendCanvasMouseMoveEvent(QPoint)));
-            QObject::connect(newSvThDBR, SIGNAL(canvasMouseMoveEventReceived(QPoint)), svThDBW, SLOT(sendCanvasMouseMoveEvent(QPoint)));
-            //
-            QObject::connect(svThDBR, SIGNAL(canvasMouseReleaseEventReceived(QPoint)), newSvThDBW, SLOT(sendCanvasMouseReleaseEvent(QPoint)));
-            QObject::connect(newSvThDBR, SIGNAL(canvasMouseReleaseEventReceived(QPoint)), svThDBW, SLOT(sendCanvasMouseReleaseEvent(QPoint)));
-
-
-            //
-            QMetaObject::invokeMethod(serverThread->getDataBlockWriter(), "sendPlayerEntering", Q_ARG(Player, *newServerThread->getPlayer()));
+        if(serverThreads.contains(newServerThread->getPlayer()->getPseudo())){
+            QMetaObject::invokeMethod(newServerThread, "pseudoAlreadyUsed");
         }
+        else{
+            //
+            DataBlockReader* newSvThDBR = newServerThread->getDataBlockReader();
+            DataBlockWriter* newSvThDBW = newServerThread->getDataBlockWriter();
 
-        //
-        serverThreads.insert(newServerThread->getPlayer()->getPseudo(), newServerThread);
+            //
+            QMetaObject::invokeMethod(newSvThDBW, "sendPseudoOk");
 
-        //
-        foreach(serverThread, serverThreads){
-            QMetaObject::invokeMethod(newSvThDBW, "sendPlayerEntering", Q_ARG(Player, *serverThread->getPlayer()));
+            //
+            QObject::connect(newSvThDBR, SIGNAL(chatReceived(Message)), newSvThDBW, SLOT(sendChat(Message)));
+            QObject::connect(newSvThDBR, SIGNAL(chatReceived(Message)), this, SLOT(checkChatCommand(Message)));
+            QObject::connect(newSvThDBR, SIGNAL(answerReceived(Message)), newSvThDBW, SLOT(sendAnswer(Message)));
+            QObject::connect(newSvThDBR, SIGNAL(answerReceived(Message)), this, SLOT(checkAnswer(Message)));
+
+            //
+            QObject::connect(newSvThDBR, SIGNAL(skipWordReceived()), newSvThDBW, SLOT(sendSkipWord()));
+            QObject::connect(newSvThDBR, SIGNAL(skipWordReceived()), this, SLOT(skipWord()));
+
+            //
+            QObject::connect(newSvThDBR, SIGNAL(drawingToolTypeReceived(DrawingToolType)), this, SLOT(updateDrawingToolType(DrawingToolType)));
+            QObject::connect(newSvThDBR, SIGNAL(drawingToolColorReceived(QColor)), this, SLOT(updateDrawingToolColor(QColor)));
+            QObject::connect(newSvThDBR, SIGNAL(drawingToolWidthReceived(int)), this, SLOT(updateDrawingToolWidth(int)));
+
+            //
+            ServerThread* serverThread;
+            DataBlockReader* svThDBR;
+            DataBlockWriter* svThDBW;
+            foreach(serverThread, serverThreads){
+                svThDBR = serverThread->getDataBlockReader();
+                svThDBW = serverThread->getDataBlockWriter();
+
+                //
+                QObject::connect(serverThread, SIGNAL(playerLeaving(QString,ServerThread*)), newSvThDBW, SLOT(sendPlayerLeaving(QString)));
+                QObject::connect(newServerThread, SIGNAL(playerLeaving(QString,ServerThread*)), svThDBW, SLOT(sendPlayerLeaving(QString)));
+
+                //
+                QObject::connect(svThDBR, SIGNAL(chatReceived(Message)), newSvThDBW, SLOT(sendChat(Message)));
+                QObject::connect(newSvThDBR, SIGNAL(chatReceived(Message)), svThDBW, SLOT(sendChat(Message)));
+
+                //
+                QObject::connect(svThDBR, SIGNAL(drawingToolTypeReceived(DrawingToolType)), newSvThDBW, SLOT(sendDrawingToolType(DrawingToolType)));
+                QObject::connect(newSvThDBR, SIGNAL(drawingToolTypeReceived(DrawingToolType)), svThDBW, SLOT(sendDrawingToolType(DrawingToolType)));
+                //
+                QObject::connect(svThDBR, SIGNAL(drawingToolColorReceived(QColor)), newSvThDBW, SLOT(sendDrawingToolColor(QColor)));
+                QObject::connect(newSvThDBR, SIGNAL(drawingToolColorReceived(QColor)), svThDBW, SLOT(sendDrawingToolColor(QColor)));
+                //
+                QObject::connect(svThDBR, SIGNAL(drawingToolWidthReceived(int)), newSvThDBW, SLOT(sendDrawingToolWidth(int)));
+                QObject::connect(newSvThDBR, SIGNAL(drawingToolWidthReceived(int)), svThDBW, SLOT(sendDrawingToolWidth(int)));
+
+                //
+                QObject::connect(svThDBR, SIGNAL(canvasResetReceived()), newSvThDBW, SLOT(sendCanvasReset()));
+                QObject::connect(newSvThDBR, SIGNAL(canvasResetReceived()), svThDBW, SLOT(sendCanvasReset()));
+
+                //
+                QObject::connect(svThDBR, SIGNAL(skipWordReceived()), newSvThDBW, SLOT(sendSkipWord()));
+                QObject::connect(newSvThDBR, SIGNAL(skipWordReceived()), svThDBW, SLOT(sendSkipWord()));
+
+                //
+                QObject::connect(svThDBR, SIGNAL(canvasMousePressEventReceived(QPoint)), newSvThDBW, SLOT(sendCanvasMousePressEvent(QPoint)));
+                QObject::connect(newSvThDBR, SIGNAL(canvasMousePressEventReceived(QPoint)), svThDBW, SLOT(sendCanvasMousePressEvent(QPoint)));
+                //
+                QObject::connect(svThDBR, SIGNAL(canvasMouseMoveEventReceived(QPoint)), newSvThDBW, SLOT(sendCanvasMouseMoveEvent(QPoint)));
+                QObject::connect(newSvThDBR, SIGNAL(canvasMouseMoveEventReceived(QPoint)), svThDBW, SLOT(sendCanvasMouseMoveEvent(QPoint)));
+                //
+                QObject::connect(svThDBR, SIGNAL(canvasMouseReleaseEventReceived(QPoint)), newSvThDBW, SLOT(sendCanvasMouseReleaseEvent(QPoint)));
+                QObject::connect(newSvThDBR, SIGNAL(canvasMouseReleaseEventReceived(QPoint)), svThDBW, SLOT(sendCanvasMouseReleaseEvent(QPoint)));
+
+                //
+                QMetaObject::invokeMethod(svThDBW, "sendPlayerEntering", Q_ARG(Player, *newServerThread->getPlayer()));
+                QMetaObject::invokeMethod(newSvThDBW, "sendPlayerOnline", Q_ARG(Player, *serverThread->getPlayer()));
+            }
+
+            //
+            QMetaObject::invokeMethod(newSvThDBW, "sendPlayerEntering", Q_ARG(Player, *newServerThread->getPlayer()));
+
+            //
+            QMetaObject::invokeMethod(newSvThDBW, "sendDrawingToolType", Q_ARG(DrawingToolType, drawingToolType));
+            QMetaObject::invokeMethod(newSvThDBW, "sendDrawingToolColor", Q_ARG(QColor, drawingToolColor));
+            QMetaObject::invokeMethod(newSvThDBW, "sendDrawingToolWidth", Q_ARG(int, drawingToolWidth));
+
+            //
+            if(timerRound->remainingTime() != -1 || timerRound->remainingTime() == 0){
+                room.setTimeRemaining(timerRound->remainingTime() / 1000);
+            }
+            else if (timerRoundAfterFirstAnswer->remainingTime() != -1){
+                room.setTimeRemaining(timerRoundAfterFirstAnswer->remainingTime() / 1000);
+            }
+            else{
+                room.setTimeRemaining(0);
+            }
+            QMetaObject::invokeMethod(newSvThDBW, "sendRoom", Q_ARG(Room, room));
+
+            //
+            serverThreads.insert(newServerThread->getPlayer()->getPseudo(), newServerThread);
+            //
+            QObject::connect(newServerThread, SIGNAL(playerLeaving(QString,ServerThread*)), this, SLOT(removePlayer(QString,ServerThread*)));
+
+            artistsQueue.append(newServerThread);
+            std::random_shuffle(artistsQueue.begin(), artistsQueue.end());
+
+            this->sendGameNotStarted();
         }
-
-        //
-        QMetaObject::invokeMethod(newSvThDBW, "sendRoom", Q_ARG(Room, room));
-        QMetaObject::invokeMethod(newSvThDBW, "sendDrawingToolType", Q_ARG(DrawingToolType, drawingToolType));
-        QMetaObject::invokeMethod(newSvThDBW, "sendDrawingToolColor", Q_ARG(QColor, drawingToolColor));
-        QMetaObject::invokeMethod(newSvThDBW, "sendDrawingToolWidth", Q_ARG(int, drawingToolWidth));
-
-        artistsQueue.append(newServerThread);
-        std::random_shuffle(artistsQueue.begin(), artistsQueue.end());
-
-        this->sendGameNotStarted();
     }
 
 //
-void Server::removePlayer(QString pseudo){
+void Server::removePlayer(QString pseudo, ServerThread* serverThread){
     serverThreads.remove(pseudo);
     if(pseudo == room.getArtist()){
+        artist = NULL;
         this->endRound();
     }
+
+    artistsQueue.removeOne(serverThread);
 }
 
 
@@ -345,7 +436,7 @@ void Server::updateDrawingToolWidth(int width){
 //
 void Server::skipWord(){
     if(playerFoundAnswer == 0){
-        startRound();
+        endRound(true);
     }
 }
 
@@ -354,7 +445,7 @@ void Server::skipWord(){
 void Server::checkAnswer(Message msg){
     if(room.getRound() > 0){
         ServerThread* serverThreadAnswer = serverThreads.find(msg.getPseudo()).value();
-        if(!serverThreadAnswer->getPlayer()->getAnswerFound()){
+        if(!serverThreadAnswer->getPlayer()->getAnswerFound() && !serverThreadAnswer->getPlayer()->getIsArtist()){
             if(msg.getMessage().toLower() == word.toLower()){
 
                 int pointWonByArtist;
@@ -372,6 +463,8 @@ void Server::checkAnswer(Message msg){
                 }
 
                 serverThreadAnswer->getPlayer()->setAnswerFound(true);
+                serverThreadAnswer->getPlayer()->setScore(serverThreadAnswer->getPlayer()->getScore() + room.getPointToWin());
+                artist->getPlayer()->setScore(artist->getPlayer()->getScore() + pointWonByArtist);
                 playerFoundAnswer++;
 
                 // Send point win
@@ -387,9 +480,23 @@ void Server::checkAnswer(Message msg){
                     room.setPointToWin(room.getPointToWin() - 1);
                 }
 
+                //
+                QMetaObject::invokeMethod(artist->getDataBlockWriter(), "sendAnswer", Q_ARG(Message, msg));
+
                 // Check if everybody have found the word
                 if(playerFoundAnswer == serverThreads.size() - 1){
                     this->endRound();
+                }
+            }
+            else{
+                //
+                ServerThread* serverThread;
+                DataBlockWriter* svThDBW;
+                foreach(serverThread, serverThreads){
+                    if(serverThread->getPlayer()->getPseudo() != msg.getPseudo()){
+                        svThDBW = serverThread->getDataBlockWriter();
+                        QMetaObject::invokeMethod(svThDBW, "sendAnswer", Q_ARG(Message, msg));
+                    }
                 }
             }
         }
@@ -405,7 +512,7 @@ void Server::checkChatCommand(Message msg){
 
             //
             if(howManyMoreReadyNeeded() < 1){
-                startRound();
+                startGame();
             }
             else{
                 this->sendGameNotStarted();
@@ -422,12 +529,6 @@ void Server::sendGameNotStarted(){
         //
         ServerThread* serverThread;
         foreach(serverThread, serverThreads){
-            //
-            if(!serverThread->getPlayer()->getIsReady()){
-                QMetaObject::invokeMethod(serverThread->getDataBlockWriter(), "sendServerMsgTypeReady");
-
-            }
-
             //
             int howManyMoreReadyNeededResult = howManyMoreReadyNeeded();
             QMetaObject::invokeMethod(serverThread->getDataBlockWriter(), "sendServerMsgReadyNeeded", Q_ARG(int, howManyMoreReadyNeededResult));

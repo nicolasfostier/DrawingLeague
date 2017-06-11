@@ -9,8 +9,16 @@ MainWindow::MainWindow() : QMainWindow()
     settings = new QSettings(this);
 
     //
-    mpShortSound = new QMediaPlayer(this);
-    mpShortSound->setVolume(50);
+    mpEnteringLeaving = new QMediaPlayer(this);
+    mpEnteringLeaving->setVolume(50);
+
+    //
+    mpStartEnd = new QMediaPlayer(this);
+    mpStartEnd->setVolume(50);
+
+    //
+    mpAnswer = new QMediaPlayer(this);
+    mpAnswer->setVolume(50);
 
     //
     mpTicTac = new QMediaPlayer(this);
@@ -45,8 +53,8 @@ MainWindow::MainWindow() : QMainWindow()
         QObject::connect(actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
 
     // Tools menu
-    menuTools = menuBar()->addMenu(tr("Tools"));
-        actionSettings = menuTools->addAction(QIcon(":/images/menubar/settings.ico"), tr("Settings"));
+//    menuTools = menuBar()->addMenu(tr("Tools"));
+//        actionSettings = menuTools->addAction(QIcon(":/images/menubar/settings.ico"), tr("Settings"));
 
     // Help menu
     menuHelp = menuBar()->addMenu(tr("?"));
@@ -350,7 +358,7 @@ void MainWindow::refreshPenLabel(){
         }
     }
 
-    QRect rect = QRect(0, 0, penWidthSlider->value(), penWidthSlider->value());
+    QRect rect = QRect(0, 0, penWidthSlider->value() + 1, penWidthSlider->value() + 1);
     rect.moveCenter(centre);
     penLabelPainter->drawEllipse(rect);
     this->penLabel->setPixmap(*penLabelPixmap);
@@ -365,8 +373,8 @@ void MainWindow::closeEvent(QCloseEvent* event){
                                                                                "Quit the game anyway ?"), QMessageBox::No|QMessageBox::Yes, QMessageBox::No);
     }
     else if(isConnected()){
-        response = QMessageBox::warning(this, tr("Close the room"), tr("You will be disconnected from the room. Do you really want to quit ? "
-                                                                       "Quit the game anyway ?"), QMessageBox::No|QMessageBox::Yes, QMessageBox::No);
+        response = QMessageBox::warning(this, tr("Close the room"), tr("You will be disconnected from the room. Do you really want to quit ? "),
+                                        QMessageBox::No|QMessageBox::Yes, QMessageBox::No);
     }
 
     if(response == QMessageBox::Yes){
@@ -385,13 +393,16 @@ void MainWindow::closeEvent(QCloseEvent* event){
 void MainWindow::joinRoom(){
     //
     JoinRoomWindow* jrw = new JoinRoomWindow();
-    QObject::connect(jrw, SIGNAL(roomJoined(QTcpSocket*,QString)), this, SLOT(roomJoined(QTcpSocket*,QString)));
+    QObject::connect(jrw, SIGNAL(roomJoined(QTcpSocket*,DataBlockReader*,DataBlockWriter*,QString)), this, SLOT(roomJoined(QTcpSocket*,DataBlockReader*,DataBlockWriter*,QString)));
 }
     //
-    void MainWindow::roomJoined(QTcpSocket *socket, QString pseudo){
+    void MainWindow::roomJoined(QTcpSocket *socket, DataBlockReader* dataBlockReader, DataBlockWriter* dataBlockWriter, QString pseudo){
+        //
+        this->resetCanvas(false);
+
         //
         this->socket = socket;
-        QObject::connect(socket, SIGNAL(disconnected()), this, SLOT(resetInterface()));
+        QObject::connect(socket, SIGNAL(disconnected()), this, SLOT(resetAll()));
         if(!isHosting()){
             QObject::connect(socket, SIGNAL(disconnected()), this, SLOT(serverClosed()));
         }
@@ -400,14 +411,19 @@ void MainWindow::joinRoom(){
         this->pseudo = pseudo;
 
         //
-        this->dataBlockReader = new DataBlockReader(socket);
+        this->dataBlockReader = dataBlockReader;
 
-        QObject::connect(dataBlockReader, SIGNAL(roomReceived(Room)), this, SLOT(setRoomInfo(Room)));
+        QObject::connect(dataBlockReader, SIGNAL(roomReceived(Room)), this, SLOT(newRoom(Room)));
 
-        QObject::connect(dataBlockReader, SIGNAL(playerEnteringReceived(Player)), this, SLOT(addPlayer(Player)));
+        QObject::connect(dataBlockReader, SIGNAL(playerEnteringReceived(Player)), this, SLOT(addEnteringPlayer(Player)));
+        QObject::connect(dataBlockReader, SIGNAL(playerOnlineReceived(Player)), this, SLOT(addOnlinePlayer(Player)));
         QObject::connect(dataBlockReader, SIGNAL(playerLeavingReceived(QString)), this, SLOT(removePlayer(QString)));
 
+        QObject::connect(dataBlockReader, SIGNAL(gameStartingReceived()), this, SLOT(gameStarting()));
         QObject::connect(dataBlockReader, SIGNAL(roundStartingReceived(int,QString,QString,int)), this, SLOT(roundStarting(int,QString,QString,int)));
+        QObject::connect(dataBlockReader, SIGNAL(roundEndingReceived(QString)), this, SLOT(roundEnding(QString)));
+        QObject::connect(dataBlockReader, SIGNAL(skipWordReceived()), this, SLOT(skipWord()));
+        QObject::connect(dataBlockReader, SIGNAL(gameEndingReceived(QString)), this, SLOT(gameEnding(QString)));
 
         QObject::connect(dataBlockReader, SIGNAL(answerFoundReceived(QString,int)), this, SLOT(answerFound(QString,int)));
 
@@ -420,19 +436,15 @@ void MainWindow::joinRoom(){
 
         QObject::connect(dataBlockReader, SIGNAL(canvasResetReceived(bool)), this, SLOT(resetCanvas(bool)));
 
-        QObject::connect(dataBlockReader, SIGNAL(skipWordReceived()), this, SLOT(skipWord()));
 
         QObject::connect(dataBlockReader, SIGNAL(canvasMousePressEventReceived(QPoint)), canvasLabel, SLOT(mousePressEventFromServer(QPoint)));
         QObject::connect(dataBlockReader, SIGNAL(canvasMouseMoveEventReceived(QPoint)), canvasLabel, SLOT(mouseMoveEventFromServer(QPoint)));
         QObject::connect(dataBlockReader, SIGNAL(canvasMouseReleaseEventReceived(QPoint)), canvasLabel, SLOT(mouseReleaseEventFromServer(QPoint)));
 
-        QObject::connect(dataBlockReader, SIGNAL(serverMsgTypeReadyReceived()), this, SLOT(showServerMsgTypeReady()));
         QObject::connect(dataBlockReader, SIGNAL(serverMsgReadyNeededReceived(int)), this, SLOT(showServerMsgReadyNeeded(int)));
 
-
         //
-        this->dataBlockWriter = new DataBlockWriter(socket);
-        this->dataBlockWriter->sendPlayerEntering(Player(pseudo));
+        this->dataBlockWriter = dataBlockWriter;
 
         QObject::connect(penWidthSlider, SIGNAL(valueChanged(int)), dataBlockWriter, SLOT(sendDrawingToolWidth(int)));
 
@@ -443,10 +455,6 @@ void MainWindow::joinRoom(){
         QObject::connect(canvasLabel, SIGNAL(mousePressEventToSend(QPoint)), dataBlockWriter, SLOT(sendCanvasMousePressEvent(QPoint)));
         QObject::connect(canvasLabel, SIGNAL(mouseMoveEventToSend(QPoint)), dataBlockWriter, SLOT(sendCanvasMouseMoveEvent(QPoint)));
         QObject::connect(canvasLabel, SIGNAL(mouseReleaseEventToSend(QPoint)), dataBlockWriter, SLOT(sendCanvasMouseReleaseEvent(QPoint)));
-
-
-        //
-        QObject::connect(timer, SIGNAL(timeout()), this, SLOT(oneSecond()));
 
         //
         this->toggleJoinCreateLeave();
@@ -459,15 +467,15 @@ void MainWindow::joinRoom(){
 void MainWindow::createRoom(){
     //
     CreateRoomWindow* crw = new CreateRoomWindow();
-    QObject::connect(crw, SIGNAL(roomCreated(Server*,QTcpSocket*,QString)), this, SLOT(roomCreated(Server*,QTcpSocket*,QString)));
+    QObject::connect(crw, SIGNAL(roomCreated(Server*,QTcpSocket*,DataBlockReader*,DataBlockWriter*,QString)), this, SLOT(roomCreated(Server*,QTcpSocket*,DataBlockReader*,DataBlockWriter*,QString)));
 }
     //
-    void MainWindow::roomCreated(Server *server, QTcpSocket *socket, QString pseudo){
+    void MainWindow::roomCreated(Server *server, QTcpSocket *socket, DataBlockReader* dataBlockReader, DataBlockWriter* dataBlockWriter, QString pseudo){
         //
         this->server = server;
 
         //
-        this->roomJoined(socket, pseudo);
+        this->roomJoined(socket, dataBlockReader, dataBlockWriter, pseudo);
     }
 
 //
@@ -538,7 +546,7 @@ void MainWindow::resetCanvas(bool askConfirmation){
 
 
 //
-void MainWindow::resetInterface(){
+void MainWindow::resetAll(){
     this->resetCanvas(false);
 
     this->answersTextEdit->clear();
@@ -548,9 +556,12 @@ void MainWindow::resetInterface(){
     this->chatLineEdit->clear();
 
     QObject::disconnect(timer, SIGNAL(timeout()), this, SLOT(oneSecond()));
+    timer->stop();
+    secondCounter = 0;
+
 
     room = Room();
-    this->setRoomInfo(Room());
+    roomInfo->setRoom(room);
 
     Player* player;
     foreach(player, players){
@@ -561,16 +572,40 @@ void MainWindow::resetInterface(){
     this->playersTable->setRowCount(0);
 
     this->updateArtistMode();
+
+    mpEnteringLeaving->stop();
+    mpStartEnd->stop();
+    mpAnswer->stop();
+    mpTicTac->stop();
 }
 
 
 //
-void MainWindow::setRoomInfo(Room room){
+void MainWindow::newRoom(Room room){
     //
     this->room = room;
 
     //
     this->roomInfo->setRoom(room);
+
+    //
+    if(room.getRound() != 0){
+        Player* player;
+        foreach(player, players){
+            if(player->getAnswerFound() == true){
+                mpTicTac->play();
+                break;
+            }
+        }
+
+        secondCounter = room.getTimeRemaining();
+        QObject::connect(timer, SIGNAL(timeout()), this, SLOT(oneSecond()));
+        oneSecond();
+    }
+    else{
+        answerLineEdit->setDisabled(true);
+        canvasLabel->displayTypeReady();
+    }
 }
 
 
@@ -583,11 +618,24 @@ void MainWindow::oneSecond(){
     timer->start();
 }
 
+//
+void MainWindow::gameStarting(){
+    Player* player;
+    foreach(player, players){
+        player->setScore(0);
+    }
+
+    //
+    updateDrawingTools();
+
+    //
+    resetCanvas(false);
+}
 
 //
 void MainWindow::roundStarting(int round, QString artist, QString word, int pointToWin){
     //
-    mpTicTac->stop();
+    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(oneSecond()));
 
     //
     this->room.setRound(round);
@@ -599,57 +647,126 @@ void MainWindow::roundStarting(int round, QString artist, QString word, int poin
     this->roomInfo->setRoom(room);
 
     //
-    this->canvasLabel->reset();
-
-    //
-    Player* player;
-    foreach(player, players){
-        if(player->getPseudo() == artist){
-            player->isArtist();
-        }
-        else{
-            player->hasntFound();
-        }
-    }
+    Player* artistPlayer = players.find(artist).value();
+    artistPlayer->setIsArtist(true);
+    artistPlayer->updateColor();
 
     //
     if(isArtist()){
-        mpShortSound->setMedia(QUrl("qrc:/sound/you_are_the_artist.mp3"));
+        mpStartEnd->setMedia(QUrl("qrc:/sound/you_are_the_artist.mp3"));
     }
     else{
-        mpShortSound->setMedia(QUrl("qrc:/sound/new_round.mp3"));
+        mpStartEnd->setMedia(QUrl("qrc:/sound/new_round.mp3"));
     }
+
+    //
+    mpStartEnd->play();
 
     //
     updateArtistMode();
-
-
-
-    //
-    mpShortSound->play();
 
     //
     secondCounter = room.getTimeByRound();
     oneSecond();
 }
 
+//
+void MainWindow::roundEnding(QString word){
+    //
+    mpTicTac->stop();
+
+    //
+    this->canvasLabel->reset();
+
+    //
+    QHash<QString, Player*>::const_iterator artistIterator = players.find(room.getArtist());
+    if(artistIterator != players.end()){
+        artistIterator.value()->setIsArtist(false);
+    }
+
+    //
+    updateArtistMode();
+
+    //
+    answerLineEdit->setDisabled(true);
+
+    //
+    Player* player;
+    foreach(player, players){
+        player->setAnswerFound(false);
+        player->updateColor();
+    }
+
+    //
+    QObject::disconnect(timer, SIGNAL(timeout()), this, SLOT(oneSecond()));
+    timer->stop();
+
+    //
+    secondCounter = 0;
+    room.setTimeRemaining(0);
+    roomInfo->setRoom(room);
+
+
+    Message msg("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", tr("The word was") + " <i>" + word + "</i> ");
+    addAnswer(msg);
+}
+
+//
+void MainWindow::skipWord(){
+    Message msg("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", "<i>" + room.getArtist() + "</i> " + tr("has skip the word."));
+    addAnswer(msg);
+}
+
+//
+void MainWindow::gameEnding(QString winner){
+    //
+    room.setRound(0);
+    room.setArtist(" ");
+    room.setWord(" ");
+    room.setPointToWin(0);
+    roomInfo->setRoom(room);
+
+    //
+    canvasLabel->displayWinner(winner);
+
+    //
+    mpStartEnd->setMedia(QUrl("qrc:/sound/end_game.mp3"));
+    mpStartEnd->play();
+}
+
 
 //
 void MainWindow::answerFound(QString pseudo, int pointWon){
+    //
     Player* player = players.find(pseudo).value();
     player->setScore(player->getScore() + pointWon);
-    if(player->getPseudo() != room.getArtist()){
-        player->hasFound();
+
+    //
+    playersTable->sortItems(0, Qt::AscendingOrder);
+    playersTable->sortItems(1, Qt::DescendingOrder);
+
+    //
+    if(!player->getIsArtist()){
+        if(room.getPointToWin() > 5){
+            room.setPointToWin(room.getPointToWin() - 1);
+            roomInfo->setPointToWin(room.getPointToWin());
+        }
+
+        player->setAnswerFound(true);
+        player->updateColor();
     }
 
-    if(player->getPseudo() == pseudo && !isArtist()){
-        mpShortSound->setMedia(QUrl("qrc:/sound/answer_found_you.mp3"));
+    //
+    if(this->pseudo == pseudo && !isArtist()){
+        mpAnswer->setMedia(QUrl("qrc:/sound/answer_found_you.mp3"));
+        answerLineEdit->setDisabled(true);
     }
     else{
-        mpShortSound->setMedia(QUrl("qrc:/sound/answer_found_other.mp3"));
+        mpAnswer->setMedia(QUrl("qrc:/sound/answer_found_other.mp3"));
     }
-    mpShortSound->play();
+    mpAnswer->play();
 
+    //
     if(mpTicTac->state() == QMediaPlayer::StoppedState){
         actionSkipWord->setDisabled(true);
         secondCounter = room.getTimeAfterFirstGoodAnswer();
@@ -660,18 +777,24 @@ void MainWindow::answerFound(QString pseudo, int pointWon){
 
 
 //
-void MainWindow::addPlayer(Player player){
+void MainWindow::addEnteringPlayer(Player player){
+   addOnlinePlayer(player);
+
+   Message msg = Message("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", player.getPseudo() + " " + tr("has joined the room."));
+   addChat(msg);
+
+   mpEnteringLeaving->setMedia(QUrl("qrc:/sound/player_entering.mp3"));
+   mpEnteringLeaving->play();
+}
+
+//
+void MainWindow::addOnlinePlayer(Player player){
    Player* newPlayer = new Player(player);
+   newPlayer->updateColor();
 
    players.insert(player.getPseudo(), newPlayer);
 
    newPlayer->addToTableWidget(this->playersTable);
-
-   Message msg = Message("<b><span style='color:red'>" + tr("Server") + "</span></b>", player.getPseudo() + tr(" has joined the room."));
-   addChat(msg);
-
-   mpShortSound->setMedia(QUrl("qrc:/sound/player_entering.mp3"));
-   mpShortSound->play();
 }
 
 //
@@ -683,8 +806,8 @@ void MainWindow::removePlayer(QString pseudo){
     playersTable->sortItems(1, Qt::DescendingOrder);
     playersTable->setRowCount(playersTable->rowCount() - 1);
 
-    mpShortSound->setMedia(QUrl("qrc:/sound/player_leaving.mp3"));
-    mpShortSound->play();
+    mpEnteringLeaving->setMedia(QUrl("qrc:/sound/player_leaving.mp3"));
+    mpEnteringLeaving->play();
 }
 
 
@@ -696,13 +819,6 @@ void MainWindow::addAnswer(Message msg){
 //
 void MainWindow::addChat(Message msg){
     this->chatTextEdit->append(msg.toString(true));
-}
-
-
-//
-void MainWindow::skipWord(){
-    Message msg("<b><span style='color:red'>" + tr("Server") + "</span></b>", room.getArtist() + tr(" has skip the word."));
-    addChat(msg);
 }
 
 
@@ -737,14 +853,8 @@ void MainWindow::changeDrawingToolWidth(int width){
 
 
 //
-void MainWindow::showServerMsgTypeReady(){
-    Message msg("<b><span style='color:red'>" + tr("Server") + "</span></b>", tr("Type") + "<b> !ready </b>" + tr("in the chat to be enough to start the game."));
-    addChat(msg);
-}
-
-//
 void MainWindow::showServerMsgReadyNeeded(int howManyMoreReadyNeeded){
-    Message msg("<b><span style='color:red'>" + tr("Server") + "</span></b>", QString::number(howManyMoreReadyNeeded) + " " + tr("more ready player(s) are needed to start the game."));
+    Message msg("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", QString::number(howManyMoreReadyNeeded) + " " + tr("more ready player(s) are needed to start the game."));
     addChat(msg);
 }
 
@@ -753,7 +863,7 @@ void MainWindow::showServerMsgReadyNeeded(int howManyMoreReadyNeeded){
 void MainWindow::sendAnswer(){
     if(!this->answerLineEdit->text().isEmpty()){
         if(isConnected()){
-            Message msg(pseudo, this->answerLineEdit->text().toHtmlEscaped());
+            Message msg(pseudo.toHtmlEscaped(), this->answerLineEdit->text().toHtmlEscaped());
             dataBlockWriter->sendAnswer(msg);
         }
 
@@ -765,7 +875,7 @@ void MainWindow::sendAnswer(){
 void MainWindow::sendChat(){
     if(!this->chatLineEdit->text().isEmpty()){
         if(isConnected()){
-            Message msg(pseudo, this->chatLineEdit->text().toHtmlEscaped());
+            Message msg(pseudo.toHtmlEscaped(), this->chatLineEdit->text().toHtmlEscaped());
             dataBlockWriter->sendChat(msg);
         }
 
@@ -793,7 +903,5 @@ void MainWindow::serverClosed(){
         delete dataBlockWriter;
         socket->deleteLater();
         socket = NULL;
-
-//        updateArtistMode();
     }
 }

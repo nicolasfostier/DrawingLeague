@@ -34,11 +34,12 @@ void RoomInfo::setPointToWin(int pointToWin){
     }
 }
 void RoomInfo::setTime(int timeRemaining, bool oneHasFound){
+    time->setValue(QString::number(timeRemaining / 60) + ":" + QString("%1").arg(timeRemaining % 60, 2, 10, QChar('0')));
     if(oneHasFound){
-        time->setValue("<b><span style='color: red; font-size: 16em;'>" + QString::number(timeRemaining / 60) + ":" + QString("%1").arg(timeRemaining % 60, 2, 10, QChar('0')) + "</span></b>");
+        time->setValueColor(Qt::red);
     }
     else{
-        time->setValue("<b><span style='color: black; font-size: 16em;'>" + QString::number(timeRemaining / 60) + ":" + QString("%1").arg(timeRemaining % 60, 2, 10, QChar('0')) + "</span></b>");
+        time->setValueColor(Qt::black);
     }
 }
 
@@ -56,31 +57,37 @@ RoomInfo::RoomInfo(Room room, QWidget* parent) : QWidget(parent)
     layout->setContentsMargins(0,0,0,0);
 
         //
-        name = new RoomInfoPart(tr("Room name"), room.getRoomName(), this);
+        name = new RoomInfoPart(qApp->translate("RoomInfo", "Room name"), room.getRoomName(), this);
         layout->addWidget(name, 0, 0, 1, 1, Qt::AlignVCenter | Qt::AlignCenter);
 
         //
-        round = new RoomInfoPart(tr("Round"), " ", this);
+        round = new RoomInfoPart(qApp->translate("RoomInfo", "Round"), " ", this);
         setRound(room.getRound());
         layout->addWidget(round, 0, 1, 1, 1, Qt::AlignVCenter | Qt::AlignCenter);
 
         //
-        artist = new RoomInfoPart(tr("Artist"), " ", this);
+        artist = new RoomInfoPart(qApp->translate("RoomInfo", "Artist"), " ", this);
         setArtist(room.getWord());
         layout->addWidget(artist, 0, 2, 1, 1, Qt::AlignVCenter | Qt::AlignCenter);
 
         //
-        word = new RoomInfoPart(tr("Word"), " ", this);
+        word = new RoomInfoPart(qApp->translate("RoomInfo", "Word"), " ", this);
         setWord(room.getWord());
         layout->addWidget(word, 0, 3, 1, 1, Qt::AlignVCenter | Qt::AlignCenter);
 
         //
-        pointToWin = new RoomInfoPart(tr("Point to win"), " ", this);
+        pointToWin = new RoomInfoPart(qApp->translate("RoomInfo", "Point to win"), " ", this);
         setPointToWin(room.getPointToWin());
         layout->addWidget(pointToWin, 0, 4, 1, 1, Qt::AlignVCenter | Qt::AlignCenter);
 
         //
-        time = new RoomInfoPart(tr("Time"), " ", this);
+        time = new RoomInfoPart(qApp->translate("RoomInfo", "Time"), " ", this);
         setTime(room.getTimeRemaining());
         layout->addWidget(time, 0, 5, 1, 1, Qt::AlignVCenter | Qt::AlignCenter);
+
+            //
+            QFont timeFont = QFont();
+            timeFont.setBold(true);
+            timeFont.setPointSize(12);
+            time->setValueFont(timeFont);
 }

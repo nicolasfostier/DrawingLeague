@@ -62,13 +62,16 @@ class ServerThread : public QObject
         //
         void setPlayer(Player player);
 
+        //
+        void pseudoAlreadyUsed();
+
     // Qt signals
     signals :
         //
-        void readyToReceive(ServerThread* serverThread);
+        void pseudoReceived(ServerThread* serverThread);
 
         //
-        void playerLeaving(QString pseudo);
+        void playerLeaving(QString pseudo, ServerThread* ServerThread);
 
     // Operators
     public :

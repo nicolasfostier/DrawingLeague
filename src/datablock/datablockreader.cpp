@@ -49,12 +49,31 @@ void DataBlockReader::read(){
         QDataStream blockReceivedStream(&blockReceived, QIODevice::ReadWrite);
 
         switch (nextDataBlockType){
-            case DataBlockType::ROOM : {
-                Room room;
+            case DataBlockType::READY_TO_RECEIVE : {
+                quint32 useless;
                 *socketStream >> blockReceived;
-                blockReceivedStream >> room;
+                blockReceivedStream >> useless;
 
-                emit roomReceived(room);
+                emit readyToReceive();
+            break;
+            }
+
+
+            case DataBlockType::PSEUDO_OK : {
+                quint32 useless;
+                *socketStream >> blockReceived;
+                blockReceivedStream >> useless;
+
+                emit pseudoOk();
+            break;
+            }
+
+            case DataBlockType::PSEUDO_ALREADY_USED : {
+                quint32 useless;
+                *socketStream >> blockReceived;
+                blockReceivedStream >> useless;
+
+                emit pseudoAlreadyUsed();
             break;
             }
 
@@ -68,6 +87,15 @@ void DataBlockReader::read(){
             break;
             }
 
+            case DataBlockType::PLAYER_ONLINE : {
+                Player player;
+                *socketStream >> blockReceived;
+                blockReceivedStream >> player;
+
+                emit playerOnlineReceived(player);
+            break;
+            }
+
             case DataBlockType::PLAYER_LEAVING : {
                 QString pseudo;
                 *socketStream >> blockReceived;
@@ -78,6 +106,25 @@ void DataBlockReader::read(){
             }
 
 
+            case DataBlockType::ROOM : {
+                Room room;
+                *socketStream >> blockReceived;
+                blockReceivedStream >> room;
+
+                emit roomReceived(room);
+            break;
+            }
+
+
+            case DataBlockType::GAME_STARTING : {
+                quint32 useless;
+                *socketStream >> blockReceived;
+                blockReceivedStream >> useless;
+
+                emit gameStartingReceived();
+            break;
+            }
+
             case DataBlockType::ROUND_STARTING : {
                 int round;
                 QString artist;
@@ -87,6 +134,33 @@ void DataBlockReader::read(){
                 blockReceivedStream >> round >> artist >> word >> pointToWin;
 
                 emit roundStartingReceived(round, artist, word, pointToWin);
+            break;
+            }
+
+            case DataBlockType::ROUND_ENDING : {
+                QString word;
+                *socketStream >> blockReceived;
+                blockReceivedStream >> word;
+
+                emit roundEndingReceived(word);
+            break;
+            }
+
+            case DataBlockType::SKIP_WORD : {
+                quint32 useless;
+                *socketStream >> blockReceived;
+                blockReceivedStream >> useless;
+
+                emit skipWordReceived();
+            break;
+            }
+
+            case DataBlockType::GAME_ENDING : {
+                QString winner;
+                *socketStream >> blockReceived;
+                blockReceivedStream >> winner;
+
+                emit gameEndingReceived(winner);
             break;
             }
 
@@ -159,16 +233,6 @@ void DataBlockReader::read(){
             }
 
 
-            case DataBlockType::SKIP_WORD : {
-                quint32 useless;
-                *socketStream >> blockReceived;
-                blockReceivedStream >> useless;
-
-                emit skipWordReceived();
-            break;
-            }
-
-
             case DataBlockType::CANVAS_MOUSE_PRESS_EVENT : {
                 QPoint pos;
                 *socketStream >> blockReceived;
@@ -196,15 +260,6 @@ void DataBlockReader::read(){
             break;
             }
 
-
-            case DataBlockType::SERVER_MSG_TYPE_READY : {
-                quint32 useless;
-                *socketStream >> blockReceived;
-                blockReceivedStream >> useless;
-
-                emit serverMsgTypeReadyReceived();
-            break;
-            }
 
             case DataBlockType::SERVER_MSG_READY_NEEDED : {
                 quint32 howManyMoreReadyNeeded;

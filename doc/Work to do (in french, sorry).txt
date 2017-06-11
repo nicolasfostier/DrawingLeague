@@ -8,7 +8,6 @@ Tâches avant la sortie de la première version :
 		[X] Quand c'est au tour du joueur actif de dessiner
 	[ ] Créer des dictionnaires standards
 		[ ] Français
-		[ ] Anglais
 	[X] Gérer l'artiste
 		[X] Choix de l'artiste de manière aléatoire, côté serveur
 		[X] Notifier le choix de l'artiste à tout les clients
@@ -23,18 +22,25 @@ Tâches avant la sortie de la première version :
 	[X] Gérer les réponses des joueurs
 		[X] Comparer les réponses des joueurs avec le mot à faire deviner
 		[X] Si c'est le bon mot, faire gagner des points à celui qui a deviner
-	[ ] Systeme de vote
+	[X] Systeme de vote
 		[X] Démarrer le match : !ready
-		[ ] Redémarrer le match : !restart
-	[ ] Utiliser QFont pour mettre en gras les joueurs qui ont trouvés la réponse
-	[ ] Utiliser QFont pour agrandir le timer
-	[ ] Empêcher les joueurs d'insérer des balises HTMLs dans leur message et pseudo
-	[ ] Indiquez le mot en fin de round
-	[ ] Fin de partie
-		[ ] Nom du vainqueur
-		[ ] Musique de victoire !
+
+	[X] Utiliser QFont pour mettre en gras les joueurs qui ont trouvés la réponse
+	[X] Utiliser QFont pour agrandir le timer
+	[X] Remplacer toutes les utilisations d'HTML par QFont et QPalette quand c'est possible possible
+	[X] Empêcher les joueurs d'insérer des balises HTMLs dans leur message et pseudo
+	[X] Indiquez le mot en fin de round
+	[X] Fin de partie
+		[X] Nom du vainqueur
+		[X] Musique de victoire !
 	[X] Affiche la connexion des joueurs dans le chat
 	[X] Ne pas afficher le pinceau quand un non artiste passe la souris au dessus du canvas
+	[X] Empêcher deux joueurs d'avoir le même pseudo
+	[X] Séparer les nouvelles connexions de la réception des joueurs déjà connectés
+	[X] Corriger l'heure des messages du chat
+	[X] Mettre une couleur moins flashy pour les couleurs du serveur
+	[X] Faire la traduction française
+
 
 Extra features for the futur :
 	[ ] Extra drawing tools :
@@ -49,8 +55,17 @@ Extra features for the futur :
 	[ ] Change the setting of the room at the end of the game or during the game
 	[ ] A standalone app to host rooms
 	[ ] Possibility to save your piece of art and the one of others
+	[ ] Autres dictionnaires		
+		[ ] Anglais
+	[ ] Animation de fin de partie
+	[ ] Empecher les joueurs de se connecter si serveur plein atteint sa capacité maximale de joueur
+	[ ] Temps sous forme d'un cercle
+	[ ] Perdre 1 point ou plus si on skip le mot ou n'arrive pas à faire deviner 
+	[ ] Possibilité de donner des indices
+	[ ] Rajouter des commandes de chat
+		[ ] Redémarrer la game
 
 Possible hack / bug to fix after the release :
-	[ ] Players can have the same pseudo
-	[ ] The score of the player is reset if he has a disconnection from the server and reconnect himself after
 	[ ] If the player arrive in the room when a round has already started, he will don't have what the artist has drawn before his connection
+	[ ] The score of the player is reset if he has a disconnection from the server and reconnect himself after
+	[ ] Comportement étrange de tr() dans RoomInfo

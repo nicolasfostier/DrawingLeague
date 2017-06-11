@@ -5,6 +5,9 @@
 
 #include <QWidget>
 #include <QGridLayout>
+#include <QDebug>
+#include <QApplication>
+
 
 //
 #include "include/gameinfo/room.h"
@@ -33,6 +36,8 @@ class RoomInfo : public QWidget
             RoomInfoPart* pointToWin;
             //
             RoomInfoPart* time;
+                //
+                QFont timeFont;
 
     // Setter
     public :

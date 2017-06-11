@@ -58,7 +58,11 @@ class MainWindow : public QMainWindow
         QSettings* settings;
 
         //
-        QMediaPlayer* mpShortSound;
+        QMediaPlayer* mpEnteringLeaving;
+        //
+        QMediaPlayer* mpStartEnd;
+        //
+        QMediaPlayer* mpAnswer;
         //
         QMediaPlayer* mpTicTac;
 
@@ -197,11 +201,11 @@ class MainWindow : public QMainWindow
         // Open a window to enter the information of the room the player want to join
         void joinRoom();
             //
-            void roomJoined(QTcpSocket* socket, QString pseudo);
+            void roomJoined(QTcpSocket* socket, DataBlockReader* dataBlockReader, DataBlockWriter* dataBlockWriter, QString pseudo);
         // Open a window to set up a server
         void createRoom();
             //
-            void roomCreated(Server* server, QTcpSocket* socket, QString pseudo);
+            void roomCreated(Server* server, QTcpSocket* socket, DataBlockReader* dataBlockReader, DataBlockWriter* dataBlockWriter, QString pseudo);
         //
         void leaveRoom();
         //
@@ -215,22 +219,32 @@ class MainWindow : public QMainWindow
         void resetCanvas(bool askConfirmation = true);
 
         //
-        void resetInterface();
+        void resetAll();
 
         //
-        void setRoomInfo(Room room);
+        void newRoom(Room room);
 
         //
         void oneSecond();
 
         //
+        void gameStarting();
+        //
         void roundStarting(int round, QString artist, QString word, int pointToWin);
+        //
+        void roundEnding(QString word);
+        //
+        void skipWord();
+        //
+        void gameEnding(QString winner);
 
         //
         void answerFound(QString pseudo, int pointWon);
 
         //
-        void addPlayer(Player player);
+        void addEnteringPlayer(Player player);
+        //
+        void addOnlinePlayer(Player player);
         //
         void removePlayer(QString pseudo);
 
@@ -240,17 +254,12 @@ class MainWindow : public QMainWindow
         void addChat(Message msg);
 
         //
-        void skipWord();
-
-        //
         void changeDrawingToolType(DrawingToolType drawingToolType);
         //
         void changeDrawingToolColor(QColor color);
         //
         void changeDrawingToolWidth(int width);
 
-        //
-        void showServerMsgTypeReady();
         //
         void showServerMsgReadyNeeded(int playerNotReadyNeeded);
 

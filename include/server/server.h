@@ -40,6 +40,8 @@ class Server : public QTcpServer
 
         //
         QList<ServerThread*> artistsQueue;
+        //
+        ServerThread* artist;
 
         //
         QString dictionaryPath;
@@ -54,7 +56,7 @@ class Server : public QTcpServer
         int playerFoundAnswer;
 
         //
-        QTimer* timerPause;
+        QTimer* timerBetweenRound;
         //
         QTimer* timerRound;
         //
@@ -86,9 +88,9 @@ class Server : public QTcpServer
         int howManyMoreReadyNeeded();
 
         //
-        ServerThread* getNextArtist();
+        void nextArtist();
         //
-        QString getNextWord();
+        void nextWord();
 
     // Qt slots
     public slots :
@@ -96,9 +98,11 @@ class Server : public QTcpServer
         void launch();
 
         //
+        void startGame();
+        //
         void startRound();
         //
-        void endRound();
+        void endRound(bool hasSkipped = false);
         //
         void endGame();
 
@@ -107,7 +111,7 @@ class Server : public QTcpServer
             //
             void setupPlayer(ServerThread* newServerThread);
         //
-        void removePlayer(QString pseudo);
+        void removePlayer(QString pseudo, ServerThread* serverThread);
 
         //
         void updateDrawingToolType(DrawingToolType drawingToolType);
@@ -134,5 +138,7 @@ class Server : public QTcpServer
         //
         void loadDictionaryFailed();
 };
+
+
 
 #endif // SERVER_H

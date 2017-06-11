@@ -20,6 +20,8 @@ class Player
         bool isReady;
         //
         bool answerFound;
+        //
+        bool isArtist;
 
         //
         QFont hasntFoundFont;
@@ -34,12 +36,14 @@ class Player
         int getScore();
         bool getIsReady();
         bool getAnswerFound();
+        bool getIsArtist();
 
     // Setter
     public :
         void setScore(int score);
         void setIsReady(bool isReady);
         void setAnswerFound(bool answerFound);
+        void setIsArtist(bool isArtist);
 
     // Constructor
     public :
@@ -55,11 +59,7 @@ class Player
         //
         void addToTableWidget(QTableWidget* playersTable);
         //
-        void hasntFound();
-        //
-        void hasFound();
-        //
-        void isArtist();
+        void updateColor();
 
 
     // Operators

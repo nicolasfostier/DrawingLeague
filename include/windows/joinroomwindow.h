@@ -16,7 +16,10 @@
 
 
 //
-#include "include/datablock/datablocktype.h"
+#include "include/datablock/datablockreader.h"
+//
+#include "include/datablock/datablockwriter.h"
+
 
 
 
@@ -30,31 +33,39 @@ class JoinRoomWindow : public QDialog
         QTcpSocket* socket;
 
         //
+        DataBlockReader* dataBlockReader;
+        //
+        DataBlockWriter* dataBlockWriter;
+
+        //
         QGridLayout* layout;
 
-        //
-        QLabel* pseudoLabel;
-        //
-        QLineEdit* pseudoLineEdit;
-
-        //
-        QLabel* ipLabel;
-        //
-        QLineEdit* ipLineEdit;
-
-        //
-        QLabel* portLabel;
-        //
-        QLineEdit* portLineEdit;
-
-        //
-        QWidget* connectOrCancel;
             //
-            QHBoxLayout* layoutConnectOrCancel;
+            QFont labelFont;
+
+            //
+            QLabel* pseudoLabel;
+            //
+            QLineEdit* pseudoLineEdit;
+
+            //
+            QLabel* ipLabel;
+            //
+            QLineEdit* ipLineEdit;
+
+            //
+            QLabel* portLabel;
+            //
+            QLineEdit* portLineEdit;
+
+            //
+            QWidget* connectOrCancel;
                 //
-                QPushButton* cancelButton;
-                //
-                QPushButton* connectButton;
+                QHBoxLayout* layoutConnectOrCancel;
+                    //
+                    QPushButton* cancelButton;
+                    //
+                    QPushButton* connectButton;
 
     // Constructor
     public :
@@ -64,14 +75,23 @@ class JoinRoomWindow : public QDialog
     public slots:
         //
         void connectToTheServeur();
+
         //
         void connectOk();
         //
         void connectError();
 
+        //
+        void sendPseudo();
+
+        //
+        void connectAndPseudoOk();
+        //
+        void pseudoAlreadyUsed();
+
     // Signals
     signals :
-        void roomJoined(QTcpSocket* socket, QString pseudo);
+        void roomJoined(QTcpSocket* socket, DataBlockReader* dataBlockReader, DataBlockWriter* dataBlockWriter, QString pseudo);
 };
 
 

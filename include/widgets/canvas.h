@@ -9,7 +9,7 @@
 #include <QLinkedList>
 #include <QCursor>
 #include <QTimer>
-#include <QSignalMapper>
+#include <QTextOption>
 
 
 // A polyline which can be drawn by the artist
@@ -76,6 +76,11 @@ class Canvas : public QLabel
     public :
         // Reset the canvas (make it completly white)
         void reset();
+
+        //
+        void displayTypeReady();
+        //
+        void displayWinner(QString winner);
 
         // When one click of the mouse is pressed
         void mousePressEvent(QMouseEvent* event);

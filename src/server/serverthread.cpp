@@ -34,7 +34,7 @@ ServerThread::ServerThread(QTcpSocket* socket)
 // Destructor
 ServerThread::~ServerThread(){
     //
-    emit playerLeaving(player->getPseudo());
+    emit playerLeaving(player->getPseudo(), this);
     if(player != NULL){
         delete player;
     }
@@ -61,10 +61,17 @@ void ServerThread::launch(){
 
     //
     dataBlockReader = new DataBlockReader(socket);
+    //
+    QObject::connect(dataBlockReader, SIGNAL(pseudoAlreadyUsed()), this, SLOT(deleteLater()));
+    //
     QObject::connect(dataBlockReader, SIGNAL(playerEnteringReceived(Player)), this, SLOT(setPlayer(Player)));
+
 
     //
     dataBlockWriter = new DataBlockWriter(socket);
+
+    //
+    dataBlockWriter->sendReadyToReceive();
 }
 
 
@@ -73,7 +80,12 @@ void ServerThread::setPlayer(Player player){
     this->player = new Player(player);
 
     //
-    emit readyToReceive(this);
+    emit pseudoReceived(this);
+}
+
+//
+void ServerThread::pseudoAlreadyUsed(){
+    dataBlockWriter->sendPseudoAlreadyUsed();
 }
 
 

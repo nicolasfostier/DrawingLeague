@@ -90,6 +90,68 @@ void Canvas::reset(){
     this->setPixmap(*pixmap);
 }
 
+//
+void Canvas::displayTypeReady(){
+    //
+    reset();
+
+    //
+    pixmap->fill(Qt::black);
+
+    //
+    QFont font;
+    font.setBold(true);
+
+    // "Type !ready in the chat to start another game"
+    font.setPixelSize(24);
+    painter->setPen(Qt::white);
+    painter->setFont(font);
+    painter->drawText(pixmap->rect(), Qt::AlignCenter, tr("Type !ready in the chat,\nif you want to start a game."));
+
+    //
+    this->setPixmap(*pixmap);
+}
+
+//
+void Canvas::displayWinner(QString winner){
+    //
+    reset();
+
+    //
+    pixmap->fill(Qt::black);
+
+    //
+    QFont font;
+    font.setBold(true);
+
+    QRect rectText;
+    rectText.setWidth(pixmap->rect().width());
+    rectText.setHeight(pixmap->rect().height());
+
+    // Pseudo of the winner
+    font.setPixelSize(75);
+    rectText.setTopLeft(QPoint(0, 175));
+    painter->setPen(Qt::yellow);
+    painter->setFont(font);
+    painter->drawText(rectText, Qt::AlignHCenter, winner);
+
+    // "is our great winner !"
+    font.setPixelSize(32);
+    rectText.setTopLeft(QPoint(0, 280));
+    painter->setPen(Qt::white);
+    painter->setFont(font);
+    painter->drawText(rectText, Qt::AlignHCenter, tr("is our great winner !"));
+
+    // "Type !ready in the chat to start another game"
+    font.setPixelSize(24);
+    rectText.setTopLeft(QPoint(0, 525));
+    painter->setPen(Qt::white);
+    painter->setFont(font);
+    painter->drawText(rectText, Qt::AlignHCenter, tr("Type !ready in the chat,\nif you want to start another game."));
+
+    //
+    this->setPixmap(*pixmap);
+}
 
 // When one click of the mouse is pressed
 void Canvas::mousePressEvent(QMouseEvent* event){
