@@ -98,36 +98,51 @@ void Canvas::floodFill(QPoint originalPoint, QColor previousColor, QColor newCol
         stack.push(originalPoint);
 
         QPoint currentPoint;
+        QPoint west;
+        QPoint east;
+        QPoint north;
+        QPoint south;
         while(!stack.empty()){
             currentPoint = stack.pop();
-            image.setPixelColor(currentPoint, newColor);
 
-            //
-            QPoint currentPointUp = currentPoint;
-            currentPointUp.setY(currentPoint.y() + 1);
-            if(image.valid(currentPointUp) && image.pixelColor(currentPointUp) == previousColor){
-                stack.push(currentPointUp);
-            }
+            if(image.pixelColor(currentPoint) == previousColor){
+                west = currentPoint;
+                while(image.valid(west) && image.pixelColor(west) == previousColor){
+                    image.setPixelColor(west, newColor);
 
-            //
-            QPoint currentPointDown = currentPoint;
-            currentPointDown.setY(currentPoint.y()  - 1);
-            if(image.valid(currentPointDown) && image.pixelColor(currentPointDown) == previousColor){
-                stack.push(currentPointDown);
-            }
+                    north = west;
+                    north.setY(north.y() - 1);
+                    if(image.valid(north) && image.pixelColor(north) == previousColor){
+                        stack.push(north);
+                    }
 
-            //
-            QPoint currentPointLeft = currentPoint;
-            currentPointLeft.setX(currentPoint.x() - 1);
-            if(image.valid(currentPointLeft) && image.pixelColor(currentPointLeft) == previousColor){
-                stack.push(currentPointLeft);
-            }
+                    south = west;
+                    south.setY(south.y() + 1);
+                    if(image.valid(south) && image.pixelColor(south) == previousColor){
+                        stack.push(south);
+                    }
 
-            //
-            QPoint currentPointRight = currentPoint;
-            currentPointRight.setX(currentPoint.x() + 1);
-            if(image.valid(currentPointRight) && image.pixelColor(currentPointRight) == previousColor){
-                stack.push(currentPointRight);
+                    west.setX(west.x() - 1);
+                }
+                east = currentPoint;
+                east.setX(east.x() + 1);
+                while(image.valid(east) && image.pixelColor(east) == previousColor){
+                    image.setPixelColor(east, newColor);
+
+                    north = east;
+                    north.setY(north.y() - 1);
+                    if(image.valid(north) && image.pixelColor(north) == previousColor){
+                        stack.push(north);
+                    }
+
+                    south = east;
+                    south.setY(south.y() + 1);
+                    if(image.valid(south) && image.pixelColor(south) == previousColor){
+                        stack.push(south);
+                    }
+
+                    east.setX(east.x() + 1);
+                }
             }
         }
     }
