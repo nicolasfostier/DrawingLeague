@@ -165,6 +165,24 @@ void DataBlockReader::read(){
             }
 
 
+            case DataBlockType::CHAT : {
+                Message msg;
+                *socketStream >> blockReceived;
+                blockReceivedStream >> msg;
+
+                emit chatReceived(msg);
+            break;
+            }
+
+            case DataBlockType::ANSWER : {
+                Message msg;
+                *socketStream >> blockReceived;
+                blockReceivedStream >> msg;
+
+                emit answerReceived(msg);
+            break;
+            }
+
             case DataBlockType::ANSWER_FOUND : {
                 QString pseudo;
                 quint32 pointWon;
@@ -176,21 +194,12 @@ void DataBlockReader::read(){
             }
 
 
-            case DataBlockType::ANSWER : {
-                Message msg;
+            case DataBlockType::HINT : {
+                QString hint;
                 *socketStream >> blockReceived;
-                blockReceivedStream >> msg;
+                blockReceivedStream >> hint;
 
-                emit answerReceived(msg);
-            break;
-            }
-
-            case DataBlockType::CHAT : {
-                Message msg;
-                *socketStream >> blockReceived;
-                blockReceivedStream >> msg;
-
-                emit chatReceived(msg);
+                emit hintReceived(hint);
             break;
             }
 

@@ -41,7 +41,7 @@ Canvas::Canvas(DrawingToolType currentDrawingTool, QColor penBrushColor, int pen
 
     // Painter of the canvas
     painter = new QPainter(&pixmap);
-    painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+//    painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
     // Pen to draw on the canvas
     drawingPen.setColor(penBrushColor);

@@ -73,12 +73,14 @@ class DataBlockWriter : public QObject
         void sendGameEnding(QString winner);
 
         //
-        void sendAnswerFound(QString pseudo, quint32 pointWon);
-
+        void sendChat(Message msg);
         //
         void sendAnswer(Message msg);
         //
-        void sendChat(Message msg);
+        void sendAnswerFound(QString pseudo, quint32 pointWon);
+
+        //
+        void sendHint(QString hint);
 
         //
         void sendDrawingToolType(DrawingToolType drawingToolType);

@@ -54,6 +54,15 @@ class Server : public QTcpServer
 
         //
         int playerFoundAnswer;
+        //
+        int hintGiven;
+
+        //
+        DrawingToolType drawingToolType;
+        //
+        QColor drawingToolColor;
+        //
+        int drawingToolWidth;
 
         //
         QTimer* timerBetweenRound;
@@ -62,12 +71,6 @@ class Server : public QTcpServer
         //
         QTimer* timerRoundAfterFirstAnswer;
 
-        //
-        DrawingToolType drawingToolType;
-        //
-        QColor drawingToolColor;
-        //
-        int drawingToolWidth;
 
     // Constructor
     public:
@@ -116,16 +119,19 @@ class Server : public QTcpServer
         void removePlayer(QString pseudo, ServerThread* serverThread);
 
         //
+        void checkAnswer(Message msg);
+        //
+        void checkChatCommand(Message msg);
+
+        //
+        void hint();
+
+        //
         void updateDrawingToolType(DrawingToolType drawingToolType);
         //
         void updateDrawingToolColor(QColor color);
         //
         void updateDrawingToolWidth(int width);
-
-        //
-        void checkAnswer(Message msg);
-        //
-        void checkChatCommand(Message msg);
 
         //
         void sendGameNotStarted();

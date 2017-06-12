@@ -122,13 +122,12 @@ void DataBlockWriter::sendGameEnding(QString winner){
 
 
 //
-void DataBlockWriter::sendAnswerFound(QString pseudo, quint32 pointWon){
+void DataBlockWriter::sendChat(Message msg){
     QByteArray blockToSend;
     QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
-    blockToSendStream << pseudo << pointWon;
-    *socketStream << quint32(blockToSend.size()) << DataBlockType::ANSWER_FOUND << blockToSend;
+    blockToSendStream << msg;
+    *socketStream << quint32(blockToSend.size()) << DataBlockType::CHAT << blockToSend;
 }
-
 
 //
 void DataBlockWriter::sendAnswer(Message msg){
@@ -139,11 +138,20 @@ void DataBlockWriter::sendAnswer(Message msg){
 }
 
 //
-void DataBlockWriter::sendChat(Message msg){
+void DataBlockWriter::sendAnswerFound(QString pseudo, quint32 pointWon){
     QByteArray blockToSend;
     QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
-    blockToSendStream << msg;
-    *socketStream << quint32(blockToSend.size()) << DataBlockType::CHAT << blockToSend;
+    blockToSendStream << pseudo << pointWon;
+    *socketStream << quint32(blockToSend.size()) << DataBlockType::ANSWER_FOUND << blockToSend;
+}
+
+
+//
+void DataBlockWriter::sendHint(QString hint){
+    QByteArray blockToSend;
+    QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
+    blockToSendStream << hint;
+    *socketStream << quint32(blockToSend.size()) << DataBlockType::HINT << blockToSend;
 }
 
 

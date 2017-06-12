@@ -441,10 +441,11 @@ void MainWindow::joinRoom(){
         QObject::connect(dataBlockReader, SIGNAL(skipWordReceived()), this, SLOT(skipWord()));
         QObject::connect(dataBlockReader, SIGNAL(gameEndingReceived(QString)), this, SLOT(gameEnding(QString)));
 
-        QObject::connect(dataBlockReader, SIGNAL(answerFoundReceived(QString,int)), this, SLOT(answerFound(QString,int)));
-
         QObject::connect(dataBlockReader, SIGNAL(answerReceived(Message)), this, SLOT(addAnswer(Message)));
         QObject::connect(dataBlockReader, SIGNAL(chatReceived(Message)), this, SLOT(addChat(Message)));
+        QObject::connect(dataBlockReader, SIGNAL(answerFoundReceived(QString,int)), this, SLOT(answerFound(QString,int)));
+
+        QObject::connect(dataBlockReader, SIGNAL(hintReceived(QString)), this, SLOT(displayHint(QString)));
 
         QObject::connect(dataBlockReader, SIGNAL(drawingToolTypeReceived(DrawingToolType)), this, SLOT(changeDrawingToolType(DrawingToolType)));
         QObject::connect(dataBlockReader, SIGNAL(drawingToolColorReceived(QColor)), this, SLOT(changeDrawingToolColor(QColor)));
@@ -829,6 +830,13 @@ void MainWindow::answerFound(QString pseudo, int pointWon){
         mpTicTac->play();
         oneSecond();
     }
+}
+
+
+//
+void MainWindow::displayHint(QString hint){
+    room.setWord(hint);
+    roomInfo->setWord(hint);
 }
 
 

@@ -338,6 +338,9 @@ void Server::addPlayer(){
             QObject::connect(newSvThDBR, SIGNAL(skipWordReceived()), this, SLOT(skipWord()));
 
             //
+            QObject::connect(newSvThDBR, SIGNAL(hintReceived(QString)), this, SLOT(hint()));
+
+            //
             QObject::connect(newSvThDBR, SIGNAL(drawingToolTypeReceived(DrawingToolType)), this, SLOT(updateDrawingToolType(DrawingToolType)));
             QObject::connect(newSvThDBR, SIGNAL(drawingToolColorReceived(QColor)), this, SLOT(updateDrawingToolColor(QColor)));
             QObject::connect(newSvThDBR, SIGNAL(drawingToolWidthReceived(int)), this, SLOT(updateDrawingToolWidth(int)));
@@ -436,22 +439,6 @@ void Server::removePlayer(QString pseudo, ServerThread* serverThread){
 
 
 //
-void Server::updateDrawingToolType(DrawingToolType drawingToolType){
-    this->drawingToolType = drawingToolType;
-}
-
-//
-void Server::updateDrawingToolColor(QColor color){
-    this->drawingToolColor = color;
-}
-
-//
-void Server::updateDrawingToolWidth(int width){
-    this->drawingToolWidth = width;
-}
-
-
-//
 void Server::checkAnswer(Message msg){
     if(room.getRound() > 0){
         ServerThread* serverThreadAnswer = serverThreads.find(msg.getPseudo()).value();
@@ -529,6 +516,38 @@ void Server::checkChatCommand(Message msg){
             }
         }
     }
+}
+
+
+//
+void Server::hint(){
+    QString hint = word.mid(0, hintGiven);
+    for(int i = 0; i < hintGiven - word.size(); i++){
+        hint.append(" _");
+    }
+
+    DataBlockWriter* svThDBW;
+    ServerThread* serverThread;
+    foreach(serverThread, serverThreads){
+        svThDBW = serverThread->getDataBlockWriter();
+        QMetaObject::invokeMethod(svThDBW, "sendHint", Q_ARG(QString, hint));
+    }
+}
+
+
+//
+void Server::updateDrawingToolType(DrawingToolType drawingToolType){
+    this->drawingToolType = drawingToolType;
+}
+
+//
+void Server::updateDrawingToolColor(QColor color){
+    this->drawingToolColor = color;
+}
+
+//
+void Server::updateDrawingToolWidth(int width){
+    this->drawingToolWidth = width;
 }
 
 

@@ -244,6 +244,9 @@ class MainWindow : public QMainWindow
         void answerFound(QString pseudo, int pointWon);
 
         //
+        void displayHint(QString hint);
+
+        //
         void addEnteringPlayer(Player player);
         //
         void addOnlinePlayer(Player player);

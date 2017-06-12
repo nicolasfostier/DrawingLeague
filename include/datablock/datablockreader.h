@@ -83,12 +83,14 @@ class DataBlockReader : public QObject
         void gameEndingReceived(QString winner);
 
         //
-        void answerFoundReceived(QString pseudo, int pointWon);
-
+        void chatReceived(Message msg);
         //
         void answerReceived(Message msg);
         //
-        void chatReceived(Message msg);
+        void answerFoundReceived(QString pseudo, int pointWon);
+
+        //
+        void hintReceived(QString hint);
 
         //
         void drawingToolTypeReceived(DrawingToolType drawingToolType);
