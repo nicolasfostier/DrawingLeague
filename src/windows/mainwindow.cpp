@@ -159,6 +159,11 @@ MainWindow::MainWindow() : QMainWindow()
                 actionReset->setCheckable(false);
                 drawingToolsBar->addSeparator();
 
+                // Hint
+                actionHint = drawingToolsBar->addAction(QIcon(":/images/drawingtools/hint.ico"), tr("Give a hint"));
+                actionHint->setCheckable(false);
+                drawingToolsBar->addSeparator();
+
                 // Skip the word
                 actionSkipWord = drawingToolsBar->addAction(QIcon(":/images/drawingtools/skip.ico"), tr("Skip the word\n(you will lose 1 point)"));
                 actionSkipWord->setCheckable(false);
@@ -453,7 +458,6 @@ void MainWindow::joinRoom(){
 
         QObject::connect(dataBlockReader, SIGNAL(canvasResetReceived(bool)), this, SLOT(resetCanvas(bool)));
 
-
         QObject::connect(dataBlockReader, SIGNAL(canvasMousePressEventReceived(QPoint)), canvasLabel, SLOT(mousePressEventFromServer(QPoint)));
         QObject::connect(dataBlockReader, SIGNAL(canvasMouseMoveEventReceived(QPoint)), canvasLabel, SLOT(mouseMoveEventFromServer(QPoint)));
         QObject::connect(dataBlockReader, SIGNAL(canvasMouseReleaseEventReceived(QPoint)), canvasLabel, SLOT(mouseReleaseEventFromServer(QPoint)));
@@ -466,6 +470,8 @@ void MainWindow::joinRoom(){
         QObject::connect(penWidthSlider, SIGNAL(valueChanged(int)), dataBlockWriter, SLOT(sendDrawingToolWidth(int)));
 
         QObject::connect(actionReset, SIGNAL(triggered(bool)), dataBlockWriter, SLOT(sendCanvasReset()));
+
+        QObject::connect(actionHint, SIGNAL(triggered(bool)), dataBlockWriter, SLOT(sendHint()));
 
         QObject::connect(actionSkipWord, SIGNAL(triggered(bool)), dataBlockWriter, SLOT(sendSkipWord()));
 

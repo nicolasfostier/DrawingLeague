@@ -80,7 +80,7 @@ class DataBlockWriter : public QObject
         void sendAnswerFound(QString pseudo, quint32 pointWon);
 
         //
-        void sendHint(QString hint);
+        void sendHint(QString hint = QString());
 
         //
         void sendDrawingToolType(DrawingToolType drawingToolType);

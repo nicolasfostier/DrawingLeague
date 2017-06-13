@@ -132,6 +132,8 @@ class MainWindow : public QMainWindow
                         QColor selectedColor;
                     // Reset
                     QAction* actionReset;
+                    // Send a hint
+                    QAction* actionHint;
                     // Skip the word
                     QAction* actionSkipWord;
                 // The canvas, where the artist can draw

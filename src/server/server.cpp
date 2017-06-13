@@ -193,6 +193,9 @@ void Server::startRound(){
     playerFoundAnswer = 0;
 
     //
+    hintGiven = 0;
+
+    //
     ServerThread* serverThread;
     DataBlockWriter* svThDBW;
     foreach(serverThread, serverThreads){
@@ -521,16 +524,31 @@ void Server::checkChatCommand(Message msg){
 
 //
 void Server::hint(){
-    QString hint = word.mid(0, hintGiven);
-    for(int i = 0; i < hintGiven - word.size(); i++){
-        hint.append(" _");
-    }
+    if(hintGiven <= (word.size() / 2) + 1){
+        QString hint = word.mid(0, hintGiven);
+        for(int i = 0; i < word.size() - hintGiven; i++){
+            if(i == 0 && hintGiven == 0)
+            {
+                hint.append("_");
+            }
+            else{
+                hint.append(" _");
+            }
+        }
 
-    DataBlockWriter* svThDBW;
-    ServerThread* serverThread;
-    foreach(serverThread, serverThreads){
-        svThDBW = serverThread->getDataBlockWriter();
-        QMetaObject::invokeMethod(svThDBW, "sendHint", Q_ARG(QString, hint));
+        DataBlockWriter* svThDBW;
+        ServerThread* serverThread;
+        foreach(serverThread, serverThreads){
+            if(serverThread != artist){
+                svThDBW = serverThread->getDataBlockWriter();
+                QMetaObject::invokeMethod(svThDBW, "sendHint", Q_ARG(QString, hint));
+            }
+        }
+
+        svThDBW = artist->getDataBlockWriter();
+        QMetaObject::invokeMethod(svThDBW, "sendHint", Q_ARG(QString, word + " " + hint));
+
+        hintGiven++;
     }
 }
 
