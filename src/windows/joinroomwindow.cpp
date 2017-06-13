@@ -83,7 +83,11 @@ void JoinRoomWindow::connectToTheServeur(){
         this->socket = new QTcpSocket();
         QObject::connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectError()));
         QObject::connect(socket, SIGNAL(connected()), this, SLOT(connectOk()));
-        socket->connectToHost(ipLineEdit->text(), portLineEdit->text().toInt());
+
+        this->socket->connectToHost(ipLineEdit->text(), portLineEdit->text().toInt());
+        if(!socket->waitForConnected(2000)){
+            connectError();
+        }
     }
 }
 

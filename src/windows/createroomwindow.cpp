@@ -213,7 +213,11 @@ void CreateRoomWindow::connection(){
     this->socket = new QTcpSocket();
     QObject::connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(connectError()));
     QObject::connect(socket, SIGNAL(connected()), this, SLOT(connectOk()));
+
     this->socket->connectToHost(QHostAddress::LocalHost, portLineEdit->text().toInt());
+    if(!socket->waitForConnected(2000)){
+        connectError();
+    }
 }
 
 //

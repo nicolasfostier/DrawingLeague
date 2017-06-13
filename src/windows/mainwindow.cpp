@@ -21,6 +21,11 @@ MainWindow::MainWindow() : QMainWindow()
     mpAnswer->setVolume(50);
 
     //
+    mpHint = new QMediaPlayer(this);
+    mpHint->setVolume(50);
+    mpHint->setMedia(QUrl("qrc:/sound/hint.mp3"));
+
+    //
     mpTicTac = new QMediaPlayer(this);
     mpTicTac->setVolume(50);
     mpTicTac->setMedia(QUrl("qrc:/sound/after_first_answer.mp3"));
@@ -543,6 +548,7 @@ void MainWindow::about(){
                                                 "<li><a href='https://www.freesound.org/people/Bertrof/sounds/131660/'>answer_found_you.mp3</a></li>" +
                                                 "<li><a href='https://www.freesound.org/people/Bertrof/sounds/131657/'>artist_has_failed_skipped.mp3</a></li>" +
                                                 "<li><a href='https://www.freesound.org/people/chripei/sounds/165491/'>end_game.mp3</a></li>" +
+                                                "<li><a href='https://www.freesound.org/people/HerbertBoland/sounds/33369/'>hint.mp3</a></li>" +
                                                 "<li><a href='https://www.freesound.org/people/shinephoenixstormcrow/sounds/337049/'>new_round.mp3</a></li>" +
                                                 "<li><a href='https://www.freesound.org/people/rhodesmas/sounds/322897/'>player_entering.mp3</a></li>" +
                                                 "<li><a href='https://www.freesound.org/people/rhodesmas/sounds/322895/'>player_leaving.mp3</a></li>" +
@@ -805,9 +811,6 @@ void MainWindow::gameEnding(QString winner){
 //
 void MainWindow::answerFound(QString pseudo, int pointWon){
     //
-    playerFoundAnswer++;
-
-    //
     Player* player = players.find(pseudo).value();
     player->setScore(player->getScore() + pointWon);
 
@@ -816,7 +819,19 @@ void MainWindow::answerFound(QString pseudo, int pointWon){
     playersTable->sortItems(1, Qt::DescendingOrder);
 
     //
+    if((!isArtist() && this->pseudo == pseudo) || (isArtist() && playerFoundAnswer == 0)){
+        mpAnswer->setMedia(QUrl("qrc:/sound/answer_found_you.mp3"));
+        answerLineEdit->setDisabled(true);
+    }
+    else{
+        mpAnswer->setMedia(QUrl("qrc:/sound/answer_found_other.mp3"));
+    }
+
+    //
     if(!player->getIsArtist()){
+        //
+        playerFoundAnswer++;
+
         if(room.getPointToWin() > 5){
             room.setPointToWin(room.getPointToWin() - 1);
             roomInfo->setPointToWin(room.getPointToWin());
@@ -824,17 +839,9 @@ void MainWindow::answerFound(QString pseudo, int pointWon){
 
         player->setAnswerFound(true);
         player->updateColor();
-    }
 
-    //
-    if(this->pseudo == pseudo && !isArtist()){
-        mpAnswer->setMedia(QUrl("qrc:/sound/answer_found_you.mp3"));
-        answerLineEdit->setDisabled(true);
-    }
-    else{
-        mpAnswer->setMedia(QUrl("qrc:/sound/answer_found_other.mp3"));
-    }
-    mpAnswer->play();
+        mpAnswer->play();
+    }    
 
     //
     if(mpTicTac->state() == QMediaPlayer::StoppedState){
@@ -860,6 +867,11 @@ void MainWindow::displayHint(QString hint){
     if(isArtist() && (room.getPointToWin() <= 5 || hintGiven > (word.size() / 2))){
         hintAction->setDisabled(true);
     }
+
+    Message msg = Message("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", "<b>" + tr("A hint has been given. The number of point to win for this round has been decreased by 1.") + "</b>");
+    addAnswer(msg);
+
+    mpHint->play();
 }
 
 

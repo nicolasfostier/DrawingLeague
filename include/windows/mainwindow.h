@@ -64,6 +64,8 @@ class MainWindow : public QMainWindow
         //
         QMediaPlayer* mpAnswer;
         //
+        QMediaPlayer* mpHint;
+        //
         QMediaPlayer* mpTicTac;
 
         //
