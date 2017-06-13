@@ -32,6 +32,9 @@ MainWindow::MainWindow() : QMainWindow()
     socket = NULL;
 
     //
+    artist = NULL;
+
+    //
     timer = new QTimer(this);
     timer->setSingleShot(true);
     timer->setInterval(1000);
@@ -39,18 +42,18 @@ MainWindow::MainWindow() : QMainWindow()
 
     // Room menu
     menuRoom = menuBar()->addMenu(tr("Room"));
-        actionJoin = menuRoom->addAction(QIcon(":/images/menubar/join.ico"), tr("Join a room"));
-        QObject::connect(actionJoin, SIGNAL(triggered(bool)), this, SLOT(joinRoom()));
+        joinAction = menuRoom->addAction(QIcon(":/images/menubar/join.ico"), tr("Join a room"));
+        QObject::connect(joinAction, SIGNAL(triggered(bool)), this, SLOT(joinRoom()));
 
-        actionCreate = menuRoom->addAction(QIcon(":/images/menubar/create.ico"), tr("Create a room"));
-        QObject::connect(actionCreate, SIGNAL(triggered(bool)), this, SLOT(createRoom()));
+        createAction = menuRoom->addAction(QIcon(":/images/menubar/create.ico"), tr("Create a room"));
+        QObject::connect(createAction, SIGNAL(triggered(bool)), this, SLOT(createRoom()));
 
-        actionLeave = menuRoom->addAction(QIcon(":/images/menubar/leave.ico"), tr("Leave the room"));
-        actionLeave->setVisible(false);
-        QObject::connect(actionLeave, SIGNAL(triggered(bool)), this, SLOT(leaveRoom()));
+        leaveAction = menuRoom->addAction(QIcon(":/images/menubar/leave.ico"), tr("Leave the room"));
+        leaveAction->setVisible(false);
+        QObject::connect(leaveAction, SIGNAL(triggered(bool)), this, SLOT(leaveRoom()));
 
-        actionQuit = menuRoom->addAction(QIcon(":/images/menubar/quit.ico"), tr("Quit"));
-        QObject::connect(actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
+        quitAction = menuRoom->addAction(QIcon(":/images/menubar/quit.ico"), tr("Quit"));
+        QObject::connect(quitAction, SIGNAL(triggered(bool)), this, SLOT(close()));
 
     // Tools menu
 //    menuTools = menuBar()->addMenu(tr("Tools"));
@@ -58,8 +61,8 @@ MainWindow::MainWindow() : QMainWindow()
 
     // Help menu
     menuHelp = menuBar()->addMenu(tr("?"));
-        actionAbout = menuHelp->addAction(QIcon(":/images/menubar/about.ico"), tr("About"));
-        QObject::connect(actionAbout, SIGNAL(triggered(bool)), this, SLOT(about()));
+        aboutAction = menuHelp->addAction(QIcon(":/images/menubar/about.ico"), tr("About"));
+        QObject::connect(aboutAction, SIGNAL(triggered(bool)), this, SLOT(about()));
 
 
     // The main widget which contains everything else
@@ -148,25 +151,25 @@ MainWindow::MainWindow() : QMainWindow()
                 drawingToolsBar->addWidget(penWidthSlider);
 
                 // Pick the color of the pen
-                actionColor = drawingToolsBar->addAction(QIcon(":/images/drawingtools/color.ico"), tr("Pick a color"));
-                QObject::connect(actionColor, SIGNAL(triggered(bool)), this, SLOT(changeColor()));
+                colorAction = drawingToolsBar->addAction(QIcon(":/images/drawingtools/color.ico"), tr("Pick a color"));
+                QObject::connect(colorAction, SIGNAL(triggered(bool)), this, SLOT(changeColor()));
                     selectedColor = Qt::black;
                 drawingToolsBar->addSeparator();
 
 
                 // Reset
-                actionReset = drawingToolsBar->addAction(QIcon(":/images/drawingtools/reset.ico"), tr("Reset the canvas"));
-                actionReset->setCheckable(false);
+                resetAction = drawingToolsBar->addAction(QIcon(":/images/drawingtools/reset.ico"), tr("Reset the canvas"));
+                resetAction->setCheckable(false);
                 drawingToolsBar->addSeparator();
 
                 // Hint
-                actionHint = drawingToolsBar->addAction(QIcon(":/images/drawingtools/hint.ico"), tr("Give a hint"));
-                actionHint->setCheckable(false);
+                hintAction = drawingToolsBar->addAction(QIcon(":/images/drawingtools/hint.ico"), tr("Give a hint"));
+                hintAction->setCheckable(false);
                 drawingToolsBar->addSeparator();
 
                 // Skip the word
-                actionSkipWord = drawingToolsBar->addAction(QIcon(":/images/drawingtools/skip.ico"), tr("Skip the word\n(you will lose 1 point)"));
-                actionSkipWord->setCheckable(false);
+                skipWordAction = drawingToolsBar->addAction(QIcon(":/images/drawingtools/skip.ico"), tr("Skip the word\n(you will lose 1 point)"));
+                skipWordAction->setCheckable(false);
 
             QLayout* layoutDrawingToolsBar = drawingToolsBar->layout();
             for(int i = 0; i < layoutDrawingToolsBar->count(); i++){
@@ -178,7 +181,7 @@ MainWindow::MainWindow() : QMainWindow()
             // The canvas, where the artist can draw
             canvasLabel = new Canvas(PEN, Qt::red, penWidthSlider->value(), 600,600, this);
             canvasLabel->setFixedSize(canvasLabel->sizeHint());
-            QObject::connect(actionReset, SIGNAL(triggered(bool)), this, SLOT(resetCanvas()));
+            QObject::connect(resetAction, SIGNAL(triggered(bool)), this, SLOT(resetCanvas()));
             this->updateDrawingTools();
 
             mainLayout->addWidget(canvasLabel, 1, 1, 1, 1);
@@ -325,16 +328,18 @@ bool MainWindow::isArtist(){
 
 //
 void MainWindow::toggleJoinCreateLeave(){
-    this->actionJoin->setVisible(!this->actionJoin->isVisible());
-    this->actionCreate->setVisible(!this->actionCreate->isVisible());
-    this->actionLeave->setVisible(!this->actionLeave->isVisible());
+    this->joinAction->setVisible(!this->joinAction->isVisible());
+    this->createAction->setVisible(!this->createAction->isVisible());
+    this->leaveAction->setVisible(!this->leaveAction->isVisible());
 }
 
 //
 void MainWindow::updateArtistMode(){
     canvasLabel->setIsArtist(isArtist());
     drawingToolsBar->setEnabled(isArtist());
-    actionSkipWord->setEnabled(isArtist());
+    resetAction->setEnabled(isArtist());
+    skipWordAction->setEnabled(isArtist());
+    hintAction->setEnabled(isArtist());
     answerLineEdit->setDisabled(isArtist());
 
     updateDrawingTools();
@@ -469,11 +474,11 @@ void MainWindow::joinRoom(){
 
         QObject::connect(penWidthSlider, SIGNAL(valueChanged(int)), dataBlockWriter, SLOT(sendDrawingToolWidth(int)));
 
-        QObject::connect(actionReset, SIGNAL(triggered(bool)), dataBlockWriter, SLOT(sendCanvasReset()));
+        QObject::connect(resetAction, SIGNAL(triggered(bool)), dataBlockWriter, SLOT(sendCanvasReset()));
 
-        QObject::connect(actionHint, SIGNAL(triggered(bool)), dataBlockWriter, SLOT(sendHint()));
+        QObject::connect(hintAction, SIGNAL(triggered(bool)), dataBlockWriter, SLOT(sendHint()));
 
-        QObject::connect(actionSkipWord, SIGNAL(triggered(bool)), dataBlockWriter, SLOT(sendSkipWord()));
+        QObject::connect(skipWordAction, SIGNAL(triggered(bool)), dataBlockWriter, SLOT(sendSkipWord()));
 
         QObject::connect(canvasLabel, SIGNAL(mousePressEventToSend(QPoint)), dataBlockWriter, SLOT(sendCanvasMousePressEvent(QPoint)));
         QObject::connect(canvasLabel, SIGNAL(mouseMoveEventToSend(QPoint)), dataBlockWriter, SLOT(sendCanvasMouseMoveEvent(QPoint)));
@@ -604,6 +609,8 @@ void MainWindow::resetAll(){
     }
     players.clear();
 
+    artist = NULL;
+
     this->playersTable->setRowCount(0);
 
     this->updateArtistMode();
@@ -630,6 +637,9 @@ void MainWindow::newRoom(Room room){
             if(player->getAnswerFound() == true){
                 mpTicTac->play();
                 break;
+            }
+            if(player->getIsArtist()){
+                artist = player;
             }
         }
 
@@ -671,23 +681,25 @@ void MainWindow::gameStarting(){
 void MainWindow::roundStarting(int round, QString artist, QString word, int pointToWin){
     //
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(oneSecond()));
+    secondCounter = room.getTimeByRound();
+    oneSecond();
 
     //
     this->room.setRound(round);
     this->room.setArtist(artist);
     this->room.setWord(word);
     this->room.setPointToWin(pointToWin);
-
-    //
     this->roomInfo->setRoom(room);
 
     //
-    Player* artistPlayer = players.find(artist).value();
-    artistPlayer->setIsArtist(true);
-    artistPlayer->updateColor();
+    this->artist = players.find(artist).value();
+    this->artist->setIsArtist(true);
+    this->artist->updateColor();
+    updateArtistMode();
 
     //
     if(isArtist()){
+        this->word = word;
         mpStartEndSkip->setMedia(QUrl("qrc:/sound/you_are_the_artist.mp3"));
     }
     else{
@@ -695,14 +707,11 @@ void MainWindow::roundStarting(int round, QString artist, QString word, int poin
     }
 
     //
+    playerFoundAnswer = 0;
+    hintGiven = 0;
+
+    //
     mpStartEndSkip->play();
-
-    //
-    updateArtistMode();
-
-    //
-    secondCounter = room.getTimeByRound();
-    oneSecond();
 }
 
 //
@@ -711,26 +720,27 @@ void MainWindow::roundEnding(QString word){
     mpTicTac->stop();
 
     //
-    if(room.getPointToWin() == 10){
-        mpStartEndSkip->setMedia(QUrl("qrc:/sound/artist_has_failed_skipped.mp3"));
-        mpStartEndSkip->play();
-
+    if(playerFoundAnswer == 0){
         //
-        QHash<QString, Player*>::const_iterator artistIterator = players.find(room.getArtist());
-        if(artistIterator != players.end()){
-            artistIterator.value()->setScore(artistIterator.value()->getScore() - 1);
+        if(artist != NULL){
+            artist->setScore(artist->getScore() - 1);
         }
 
         Message msg("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", "<b><i>" + room.getArtist() + "</i> " + tr("has failed to draw the word in time and lose 1 point.") + "</b>");
         addAnswer(msg);
+
+        mpStartEndSkip->setMedia(QUrl("qrc:/sound/artist_has_failed_skipped.mp3"));
+        mpStartEndSkip->play();
     }
 
     //
-    QHash<QString, Player*>::const_iterator artistIterator = players.find(room.getArtist());
-    if(artistIterator != players.end()){
-        artistIterator.value()->setIsArtist(false);
+    if(artist != NULL){
+        artist->setIsArtist(false);
     }
     room.setArtist(" ");
+    room.setTimeRemaining(0);
+    room.setPointToWin(0);
+    roomInfo->setRoom(room);
 
     //
     updateArtistMode();
@@ -751,12 +761,7 @@ void MainWindow::roundEnding(QString word){
     //
     QObject::disconnect(timer, SIGNAL(timeout()), this, SLOT(oneSecond()));
     timer->stop();
-
-    //
     secondCounter = 0;
-    room.setTimeRemaining(0);
-    roomInfo->setRoom(room);
-
 
     Message msg("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", "<b>" +tr("The word was") + " <i>" + word + "</i>.</b>");
     addAnswer(msg);
@@ -768,9 +773,8 @@ void MainWindow::skipWord(){
     mpStartEndSkip->play();
 
     //
-    QHash<QString, Player*>::const_iterator artistIterator = players.find(room.getArtist());
-    if(artistIterator != players.end()){
-        artistIterator.value()->setScore(artistIterator.value()->getScore() - 1);
+    if(artist != NULL){
+        artist->setScore(artist->getScore() - 1);
     }
 
     Message msg("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", "<b><i>" + room.getArtist() + "</i> " + tr("has skip the word by losing 1 point.") + "</b>");
@@ -800,6 +804,9 @@ void MainWindow::gameEnding(QString winner){
 
 //
 void MainWindow::answerFound(QString pseudo, int pointWon){
+    //
+    playerFoundAnswer++;
+
     //
     Player* player = players.find(pseudo).value();
     player->setScore(player->getScore() + pointWon);
@@ -831,7 +838,9 @@ void MainWindow::answerFound(QString pseudo, int pointWon){
 
     //
     if(mpTicTac->state() == QMediaPlayer::StoppedState){
-        actionSkipWord->setDisabled(true);
+        resetAction->setDisabled(true);
+        skipWordAction->setDisabled(true);
+        hintAction->setDisabled(true);
         secondCounter = room.getTimeAfterFirstGoodAnswer();
         mpTicTac->play();
         oneSecond();
@@ -843,6 +852,14 @@ void MainWindow::answerFound(QString pseudo, int pointWon){
 void MainWindow::displayHint(QString hint){
     room.setWord(hint);
     roomInfo->setWord(hint);
+
+    hintGiven++;
+    room.setPointToWin(room.getPointToWin() - 1);
+    roomInfo->setPointToWin(room.getPointToWin());
+
+    if(isArtist() && (room.getPointToWin() <= 5 || hintGiven > (word.size() / 2))){
+        hintAction->setDisabled(true);
+    }
 }
 
 
@@ -869,8 +886,12 @@ void MainWindow::addOnlinePlayer(Player player){
 
 //
 void MainWindow::removePlayer(QString pseudo){
-    delete players.find(pseudo).value();
+    Player* removedPlayer = players.find(pseudo).value();
     players.remove(pseudo);
+    delete removedPlayer;
+    if (removedPlayer == artist){
+        artist = NULL;
+    }
 
     playersTable->sortItems(0, Qt::AscendingOrder);
     playersTable->sortItems(1, Qt::DescendingOrder);

@@ -82,6 +82,14 @@ class MainWindow : public QMainWindow
         Room room;
         //
         QHash<QString, Player*> players;
+        //
+        Player* artist;
+        //
+        QString word;
+        //
+        int playerFoundAnswer;
+        //
+        int hintGiven;
 
         //
         QTimer* timer;
@@ -90,14 +98,14 @@ class MainWindow : public QMainWindow
 
         // Menu
         QMenu* menuRoom;
-            QAction* actionJoin;
-            QAction* actionCreate;
-            QAction* actionLeave;
-            QAction* actionQuit;
+            QAction* joinAction;
+            QAction* createAction;
+            QAction* leaveAction;
+            QAction* quitAction;
         QMenu* menuTools;
-            QAction* actionSettings;
+            QAction* settingsAction;
         QMenu* menuHelp;
-            QAction* actionAbout;
+            QAction* aboutAction;
 
         // The main widget which contains everything else
         QWidget* mainWidget;
@@ -128,14 +136,14 @@ class MainWindow : public QMainWindow
                     // Width of the pen
                     QSlider* penWidthSlider;
                     // Pick the color of the pen
-                    QAction* actionColor;
+                    QAction* colorAction;
                         QColor selectedColor;
                     // Reset
-                    QAction* actionReset;
+                    QAction* resetAction;
                     // Send a hint
-                    QAction* actionHint;
+                    QAction* hintAction;
                     // Skip the word
-                    QAction* actionSkipWord;
+                    QAction* skipWordAction;
                 // The canvas, where the artist can draw
                 Canvas* canvasLabel;
                 // Splitter which connects the chat with the players and the answers

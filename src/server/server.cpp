@@ -177,30 +177,25 @@ void Server::startGame(){
 
 //
 void Server::startRound(){
-    room.setRound(room.getRound() + 1);
-
-    // Select the next artist
+    //
+    nextWord();
     nextArtist();
+
+    //
+    room.setRound(room.getRound() + 1);
+    room.setPointToWin(10);
     room.setArtist(artist->getPlayer()->getPseudo());
 
-    // Select the next word
-    nextWord();
-
-    // Reset the number of point to win
-    room.setPointToWin(10);
-
     //
-    playerFoundAnswer = 0;
-
-    //
-    hintGiven = 0;
+    QObject::connect(timerRound, SIGNAL(timeout()), this, SLOT(endRound()));
+    timerRound->start();
 
     //
     ServerThread* serverThread;
     DataBlockWriter* svThDBW;
     foreach(serverThread, serverThreads){
         svThDBW = serverThread->getDataBlockWriter();
-        if(serverThread->getPlayer()->getPseudo() == room.getArtist()){
+        if(serverThread == artist){
             QMetaObject::invokeMethod(svThDBW, "sendRoundStarting", Q_ARG(quint32, quint32(room.getRound())), Q_ARG(QString, room.getArtist()), Q_ARG(QString, word), Q_ARG(quint32, quint32(10)));
         }
         else{
@@ -209,48 +204,36 @@ void Server::startRound(){
     }
 
     //
-    QObject::connect(timerRound, SIGNAL(timeout()), this, SLOT(endRound()));
-    timerRound->start();
+    playerFoundAnswer = 0;
+    hintGiven = 0;
 }
 
 //
 void Server::endRound(){
+    //
+    ServerThread* serverThread;
+    DataBlockWriter* svThDBW;
+    foreach(serverThread, serverThreads){
+        svThDBW = serverThread->getDataBlockWriter();
+        QMetaObject::invokeMethod(svThDBW, "sendRoundEnding", Q_ARG(QString, word));
+
+        serverThread->getPlayer()->setAnswerFound(false);
+    }
+
     QObject::disconnect(timerRound, SIGNAL(timeout()), this, SLOT(endRound()));
     this->timerRound->stop();
     QObject::disconnect(timerRoundAfterFirstAnswer, SIGNAL(timeout()), this, SLOT(endRound()));
     this->timerRoundAfterFirstAnswer->stop();
 
     //
-    if(room.getPointToWin() == 10){
-        //
-        QHash<QString, ServerThread*>::const_iterator artistIterator = serverThreads.find(room.getArtist());
-        if(artistIterator != serverThreads.end()){
-            artistIterator.value()->getPlayer()->setScore(artistIterator.value()->getPlayer()->getScore() - 1);
-        }
-    }
-
-    //
-    QHash<QString, ServerThread*>::const_iterator artistIterator = serverThreads.find(room.getArtist());
-    if(artistIterator != serverThreads.end()){
-        artistIterator.value()->getPlayer()->setIsArtist(false);
-    }
-
-    //
-    ServerThread* serverThread;
-    DataBlockWriter* svThDBW;
-    foreach(serverThread, serverThreads){
-        serverThread->getPlayer()->setAnswerFound(false);
-
-        svThDBW = serverThread->getDataBlockWriter();
-        QMetaObject::invokeMethod(svThDBW, "sendRoundEnding", Q_ARG(QString, word));
-    }
-
-    //
     if(playerFoundAnswer == 0){
+        if(artist != NULL){
+            artist->getPlayer()->setScore(artist->getPlayer()->getScore() - 1);
+        }
         room.setRound(room.getRound() - 1);
     }
 
-    if(playerFoundAnswer != 0 && room.getRound() == room.getMaxRounds()){
+    if(room.getRound() == room.getMaxRounds()){
         this->endGame();
     }
     else{
@@ -260,10 +243,8 @@ void Server::endRound(){
 
 //
 void Server::skipWord(){
-    //
-    QHash<QString, ServerThread*>::const_iterator artistIterator = serverThreads.find(room.getArtist());
-    if(artistIterator != serverThreads.end()){
-        artistIterator.value()->getPlayer()->setScore(artistIterator.value()->getPlayer()->getScore() - 1);
+    if(artist != NULL){
+        artist->getPlayer()->setScore(artist->getPlayer()->getScore() - 1);
     }
 
     room.setPointToWin(-1);
@@ -306,7 +287,6 @@ void Server::endGame(){
 
 //
 void Server::addPlayer(){
-//    qDebug() << "addPlayer()";
     //
     ServerThread* newServerThread = new ServerThread(nextPendingConnection());
 
@@ -450,7 +430,7 @@ void Server::checkAnswer(Message msg){
 
                 int pointWonByArtist;
                 if(playerFoundAnswer == 0){
-                    pointWonByArtist = 10;
+                    pointWonByArtist = room.getPointToWin();
 
                     QObject::disconnect(timerRound, SIGNAL(timeout()), this, SLOT(endRound()));
                     this->timerRound->stop();
@@ -464,7 +444,9 @@ void Server::checkAnswer(Message msg){
 
                 serverThreadAnswer->getPlayer()->setAnswerFound(true);
                 serverThreadAnswer->getPlayer()->setScore(serverThreadAnswer->getPlayer()->getScore() + room.getPointToWin());
-                artist->getPlayer()->setScore(artist->getPlayer()->getScore() + pointWonByArtist);
+                if(artist != NULL){
+                    artist->getPlayer()->setScore(artist->getPlayer()->getScore() + pointWonByArtist);
+                }
                 playerFoundAnswer++;
 
                 // Send point win
@@ -524,7 +506,9 @@ void Server::checkChatCommand(Message msg){
 
 //
 void Server::hint(){
-    if(hintGiven <= (word.size() / 2) + 1){
+    //
+    if(playerFoundAnswer == 0 && room.getPointToWin() > 5 && hintGiven <= (word.size() / 2)){
+        //
         QString hint = word.mid(0, hintGiven);
         for(int i = 0; i < word.size() - hintGiven; i++){
             if(i == 0 && hintGiven == 0)
@@ -536,6 +520,7 @@ void Server::hint(){
             }
         }
 
+        //
         DataBlockWriter* svThDBW;
         ServerThread* serverThread;
         foreach(serverThread, serverThreads){
@@ -545,10 +530,13 @@ void Server::hint(){
             }
         }
 
+        //
         svThDBW = artist->getDataBlockWriter();
         QMetaObject::invokeMethod(svThDBW, "sendHint", Q_ARG(QString, word + " " + hint));
 
+        //
         hintGiven++;
+        room.setPointToWin(room.getPointToWin() - 1);
     }
 }
 
