@@ -227,10 +227,10 @@ void Server::endRound(){
 
     //
     if(playerFoundAnswer == 0){
-        if(artist != NULL){
+        room.setRound(room.getRound() - 1);
+        if(room.getPointToWin() != -1 && artist != NULL){
             artist->getPlayer()->setScore(artist->getPlayer()->getScore() - 1);
         }
-        room.setRound(room.getRound() - 1);
     }
 
     if(room.getRound() == room.getMaxRounds()){

@@ -726,7 +726,7 @@ void MainWindow::roundEnding(QString word){
     mpTicTac->stop();
 
     //
-    if(playerFoundAnswer == 0){
+    if(playerFoundAnswer == 0 && room.getPointToWin() != -1){
         //
         if(artist != NULL){
             artist->setScore(artist->getScore() - 1);
