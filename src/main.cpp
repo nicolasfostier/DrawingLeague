@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     app.setApplicationName("Drawing League");
     app.setOrganizationName("Nicolas Fostier");
     app.setOrganizationDomain("nicolasfostier.free.fr");
-    app.setApplicationVersion("1.0");
+    app.setApplicationVersion("1.0.1");
     app.setWindowIcon(QIcon(":/images/logo.ico"));
 
     // Force the app to use the same language as the system
