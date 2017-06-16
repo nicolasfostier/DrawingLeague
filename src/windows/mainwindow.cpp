@@ -95,10 +95,10 @@ MainWindow::MainWindow() : QMainWindow()
 
                 // Represent the pen
                 penLabel = new QLabel(this);
-                penLabel->setFixedSize(58,58);
+                penLabel->setFixedSize(56,56);
                 penLabel->setAlignment(Qt::AlignCenter);
                 penLabel->setStyleSheet("background: white; border: 1px solid grey;");
-                penLabelPixmap = new QPixmap(58,58);
+                penLabelPixmap = new QPixmap(56,56);
                 penLabel->setScaledContents(false);
                 penLabelPixmap->fill(Qt::transparent);
                 penLabelBrush.setColor(Qt::black);
@@ -138,7 +138,7 @@ MainWindow::MainWindow() : QMainWindow()
 
                 // Spinbox
                 penWidthSpinBox = new QSpinBox(this);
-                penWidthSpinBox->setRange(1,50);
+                penWidthSpinBox->setRange(2,50);
                 penWidthSpinBox->setValue(2);
                 penWidthSpinBox->setToolTip(tr("Width"));
                 penWidthSpinBox->setStyleSheet("margin: 0 0 2px 0;");
@@ -147,7 +147,7 @@ MainWindow::MainWindow() : QMainWindow()
                 // Slider
                 penWidthSlider = new QSlider(Qt::Vertical, drawingToolsBar);
                 penWidthSlider->setToolTip(tr("Width"));
-                penWidthSlider->setRange(1,50);
+                penWidthSlider->setRange(2,50);
                 penWidthSlider->setValue(2);
                 penWidthSlider->setMinimumHeight(100);
                 QObject::connect(penWidthSlider, SIGNAL(valueChanged(int)), this, SLOT(updateDrawingTools()));
@@ -372,7 +372,7 @@ void MainWindow::refreshPenLabel(){
     QRect rect;
     switch(selectedDrawingToolType()){
         case PEN : {
-            rect = QRect(0, 0, penWidthSlider->value() + 1, penWidthSlider->value() + 1);
+            rect = QRect(0, 0, penWidthSlider->value(), penWidthSlider->value());
             penLabelPainter->setBrush(penLabelBrush);
         break;
         }
@@ -384,7 +384,7 @@ void MainWindow::refreshPenLabel(){
         }
 
         case ERASER : {
-            rect = QRect(0, 0, penWidthSlider->value() + 1, penWidthSlider->value() + 1);
+            rect = QRect(0, 0, penWidthSlider->value(), penWidthSlider->value());
             penLabelPainter->setBrush(QBrush(Qt::white));
             break;
         }
