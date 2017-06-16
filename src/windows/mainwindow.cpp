@@ -905,8 +905,8 @@ void MainWindow::removePlayer(QString pseudo){
         artist = NULL;
     }
 
-    playersTable->sortItems(0, Qt::AscendingOrder);
-    playersTable->sortItems(1, Qt::DescendingOrder);
+    playersTable->sortByColumn(0, Qt::AscendingOrder);
+    playersTable->sortByColumn(1, Qt::DescendingOrder);
     playersTable->setRowCount(playersTable->rowCount() - 1);
 
     mpEnteringLeaving->setMedia(QUrl("qrc:/sound/player_leaving.mp3"));
