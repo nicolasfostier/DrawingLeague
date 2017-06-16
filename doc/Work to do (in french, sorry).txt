@@ -1,73 +1,40 @@
-Tâches avant la sortie de la première version :
-	[X] Trouver des sons gratuis pour :
-		[X] Joueur qui entre dans le salon
-		[X] Joueur qui trouve la réponse
-		[X] Quand le joueur actif trouve la réponse
-		[X] Fin du round
-		[X] Fin de la partie
-		[X] Quand c'est au tour du joueur actif de dessiner
-	[ ] Créer des dictionnaires standards
-		[ ] Français
-	[X] Gérer l'artiste
-		[X] Choix de l'artiste de manière aléatoire, côté serveur
-		[X] Notifier le choix de l'artiste à tout les clients
-		[X] Gérer le choix de l'artiste côté client
-	[X] Gérer le temps des rounds
-		[X] Lancer un timer côté serveur
-		[X] Lancer un timer côté client
-		[X] Lorsque le timer du serveur finit, notifier le client (le timer client est juste artificiel)
-	[X] Gérer le dictionnaire
-		[X] Charger tout les mots contenus dans le dictionnaire dans un tableau
-		[X] Créer un générateur aleatoire de mot à partir de ce dictionnaire
-	[X] Gérer les réponses des joueurs
-		[X] Comparer les réponses des joueurs avec le mot à faire deviner
-		[X] Si c'est le bon mot, faire gagner des points à celui qui a deviner
-	[X] Systeme de vote
-		[X] Démarrer le match : !ready
+Bugs :
+	[ ] L'artiste peut continuer à dessiner pendant quelques millisecondes après la fin du round
+	[X] Scores mal triés
+	[X] Réinitialiser la file d'attente d'artiste à la fin des parties et la générer uniquement en début de partie
 
-	[X] Utiliser QFont pour mettre en gras les joueurs qui ont trouvés la réponse
-	[X] Utiliser QFont pour agrandir le timer
-	[X] Remplacer toutes les utilisations d'HTML par QFont et QPalette quand c'est possible possible
-	[X] Empêcher les joueurs d'insérer des balises HTMLs dans leur message et pseudo
-	[X] Indiquez le mot en fin de round
-	[X] Fin de partie
-		[X] Nom du vainqueur
-		[X] Musique de victoire !
-	[X] Affiche la connexion des joueurs dans le chat
-	[X] Ne pas afficher le pinceau quand un non artiste passe la souris au dessus du canvas
-	[X] Empêcher deux joueurs d'avoir le même pseudo
-	[X] Séparer les nouvelles connexions de la réception des joueurs déjà connectés
-	[X] Corriger l'heure des messages du chat
-	[X] Mettre une couleur moins flashy pour les couleurs du serveur
-	[X] Faire la traduction française
-	[X] Perdre 1 point ou plus si on skip le mot ou n'arrive pas à faire deviner 
+Améliorations :
+	[ ] Les joueurs qui arrivent en milieu de round reçoivent le début du dessin de l'artiste
+	[ ] Réinitialiser la couleur et la taille du crayon au début des rounds
+	[X] Peut-être ne pas recréer la file d'attente aléatoire quand elle est vide, mais plutôt la faire boucler en réinsérant à chaque fois l'artiste sortie
+	[X] Empêcher de dessiner en taille 1 : faire de la taille 2, la taille minimum
+	[ ] Faire un bouton ready dans la liste des joueurs à la place de la commande !ready : plus friendly
+	[X] Indique dans le chat quand un joueur se déconnecte
+	[ ] Temps sous forme d'un cercle
+	[ ] Trouver des sons plus différençiable ppur savoir si on est l'artiste lors du début de round
 
-
-Extra features for the futur :
-	[ ] Extra drawing tools :
-		[ ] Line
-		[ ] Frame
-	[ ] Show the ping of each users
-	[ ] Account system in a database
+Nouvelles fonctionnalités
+	[ ] Nouveaux outils de dessin :
+		[ ] Ligne
+		[ ] Cadre
+	[ ] Afficher le ping des joueurs
+	[ ] Système de compte dans une base de donnée
 	[ ] Avatar
-	[ ] System of XP
-	[ ] System of Achievement
-	[ ] More and more dictionnary base on diffrents themes
-	[ ] Change the setting of the room at the end of the game or during the game
-	[ ] A standalone app to host rooms
-	[ ] Possibility to save your piece of art and the one of others
-	[ ] Autres dictionnaires		
+	[ ] Système d'xp
+	[ ] Système de succès
+	[ ] Fenêtre de gestion du serveur pour l'hébergeur, pour modifier les paramètres du serveur, redémarrer la game etc...
+	[ ] Application serveur à part
+	[ ] Pouvoir sauvegarder les dessins précédants
+	[ ] Nouveaux dictionnaires
 		[ ] Anglais
 	[ ] Animation de fin de partie
 	[ ] Empecher les joueurs de se connecter si serveur plein atteint sa capacité maximale de joueur
-	[ ] Temps sous forme d'un cercle
-	[ ] Possibilité de donner des indices
 	[ ] Rajouter des commandes de chat
 		[ ] Redémarrer la game
+		[ ] Kicker un joueur par vote
 	[ ] Menu paramètre
+		[ ] Modifier le volume des sons du jeu
 
-Possible hack / bug to fix after the release :
-	[ ] If the player arrive in the room when a round has already started, he will don't have what the artist has drawn before his connection
-	[ ] The score of the player is reset if he has a disconnection from the server and reconnect himself after
+Autres : :
 	[ ] Comportement étrange de tr() dans RoomInfo
-	[ ] Faire confiance uniquement au serveur, plus du tout au client
+	[ ] Faire confiance uniquement au serveur, pas du tout au client

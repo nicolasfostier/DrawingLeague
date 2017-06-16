@@ -446,7 +446,8 @@ Entrez une nouvelle adresse.</translation>
         <location filename="../../src/windows/mainwindow.cpp" line="786"/>
         <location filename="../../src/windows/mainwindow.cpp" line="871"/>
         <location filename="../../src/windows/mainwindow.cpp" line="882"/>
-        <location filename="../../src/windows/mainwindow.cpp" line="964"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="912"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="967"/>
         <source>Server</source>
         <translation>Serveur</translation>
     </message>
@@ -481,17 +482,22 @@ Entrez une nouvelle adresse.</translation>
         <translation>Chat :</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="964"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="912"/>
+        <source>has left the room.</source>
+        <translation>a quitté le salon.</translation>
+    </message>
+    <message>
+        <location filename="../../src/windows/mainwindow.cpp" line="967"/>
         <source>more ready player(s) are needed to start the game.</source>
         <translation>autre(s) joueur(s) prêt(s) nécessaire(s) pour démarrer la partie.</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="1005"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="1008"/>
         <source>The server is closed</source>
         <translation>Le serveur est fermé</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="1005"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="1008"/>
         <source>The server has been shutdown.</source>
         <translation>Le serveur a été fermé.</translation>
     </message>
