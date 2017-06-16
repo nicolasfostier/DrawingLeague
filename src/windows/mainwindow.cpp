@@ -178,7 +178,7 @@ MainWindow::MainWindow() : QMainWindow()
 
             QLayout* layoutDrawingToolsBar = drawingToolsBar->layout();
             for(int i = 0; i < layoutDrawingToolsBar->count(); i++){
-                if(i != 1 && i != 4 && i != 8){
+                if(i != 1 && i != 5 && i != 9 && i != 11 && i != 13){
                     layoutDrawingToolsBar->itemAt(i)->setAlignment(Qt::AlignCenter);
                 }
             }
