@@ -815,8 +815,8 @@ void MainWindow::answerFound(QString pseudo, int pointWon){
     player->setScore(player->getScore() + pointWon);
 
     //
-    playersTable->sortItems(0, Qt::AscendingOrder);
-    playersTable->sortItems(1, Qt::DescendingOrder);
+    playersTable->sortByColumn(0, Qt::AscendingOrder);
+    playersTable->sortByColumn(1, Qt::DescendingOrder);
 
     //
     if((!isArtist() && this->pseudo == pseudo) || (isArtist() && playerFoundAnswer == 0)){
