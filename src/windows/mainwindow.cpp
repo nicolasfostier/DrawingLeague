@@ -261,7 +261,7 @@ MainWindow::MainWindow() : QMainWindow()
                     chatLayout->setContentsMargins(0,0,0,0);
 
                         // Title
-                        chatTitle = new QLabel("<center><b>" + tr("Chat") + "</b></center>", playersWidget);
+                        chatTitle = new QLabel("<center><b>" + tr("Chat :") + "</b></center>", playersWidget);
                         chatLayout->addWidget(chatTitle);
 
                         // All the messages sent by players

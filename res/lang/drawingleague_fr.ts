@@ -174,7 +174,7 @@ si vous voulez démarrer une autre partie.</translation>
     </message>
     <message>
         <location filename="../../src/windows/createroomwindow.cpp" line="204"/>
-        <location filename="../../src/windows/createroomwindow.cpp" line="231"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="235"/>
         <source>Creation failed</source>
         <translation>Création échouée</translation>
     </message>
@@ -185,18 +185,18 @@ si vous voulez démarrer une autre partie.</translation>
         <translation>Impossible de lire le dictionnaire.</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="231"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="235"/>
         <source>Impossible to reach the server.
 </source>
         <translation>Impossible de se connecter au serveur.</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="265"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="269"/>
         <source>Pseudo already used</source>
         <translation>Pseudo déjà utilisé</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="265"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="269"/>
         <source>This pseudo is already taken.</source>
         <translation>Ce pseudo est déjà pris.</translation>
     </message>
@@ -244,24 +244,24 @@ si vous voulez démarrer une autre partie.</translation>
         <translation>Votre pseudo doit posséder au moins 3 caractères.</translation>
     </message>
     <message>
-        <location filename="../../src/windows/joinroomwindow.cpp" line="103"/>
+        <location filename="../../src/windows/joinroomwindow.cpp" line="107"/>
         <source>Connection failed</source>
         <translation>Connexion échouée</translation>
     </message>
     <message>
-        <location filename="../../src/windows/joinroomwindow.cpp" line="103"/>
+        <location filename="../../src/windows/joinroomwindow.cpp" line="107"/>
         <source>Impossible to rearch the server.
 Enter a new adress.</source>
         <translation>Impossible de se connecter au serveur.
 Entrez une nouvelle adresse.</translation>
     </message>
     <message>
-        <location filename="../../src/windows/joinroomwindow.cpp" line="135"/>
+        <location filename="../../src/windows/joinroomwindow.cpp" line="139"/>
         <source>Pseudo already used</source>
         <translation>Pseudo déjà utilisé</translation>
     </message>
     <message>
-        <location filename="../../src/windows/joinroomwindow.cpp" line="135"/>
+        <location filename="../../src/windows/joinroomwindow.cpp" line="139"/>
         <source>This pseudo is already taken.</source>
         <translation>Ce pseudo est déjà pris.</translation>
     </message>
@@ -358,11 +358,6 @@ Entrez une nouvelle adresse.</translation>
         <translation>Score</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="264"/>
-        <source>Chat</source>
-        <translation>Chat</translation>
-    </message>
-    <message>
         <location filename="../../src/windows/mainwindow.cpp" line="403"/>
         <source>Are you sure to quit ?</source>
         <translation>Être-vous sûr de vouloir quitter ?</translation>
@@ -449,9 +444,9 @@ Entrez une nouvelle adresse.</translation>
         <location filename="../../src/windows/mainwindow.cpp" line="735"/>
         <location filename="../../src/windows/mainwindow.cpp" line="772"/>
         <location filename="../../src/windows/mainwindow.cpp" line="786"/>
-        <location filename="../../src/windows/mainwindow.cpp" line="870"/>
-        <location filename="../../src/windows/mainwindow.cpp" line="881"/>
-        <location filename="../../src/windows/mainwindow.cpp" line="963"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="871"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="882"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="964"/>
         <source>Server</source>
         <translation>Serveur</translation>
     </message>
@@ -466,12 +461,12 @@ Entrez une nouvelle adresse.</translation>
         <translation>a passé le mot, et perd donc 1 point.</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="870"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="871"/>
         <source>A hint has been given. The number of point to win for this round has been decreased by 1.</source>
         <translation>Un indice a été donné. Le nombre de point à gagner pour ce round a été diminué de 1.</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="881"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="882"/>
         <source>has joined the room.</source>
         <translation>a rejoint le salon.</translation>
     </message>
@@ -481,17 +476,22 @@ Entrez une nouvelle adresse.</translation>
         <translation>Le mot était</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="963"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="264"/>
+        <source>Chat :</source>
+        <translation>Chat :</translation>
+    </message>
+    <message>
+        <location filename="../../src/windows/mainwindow.cpp" line="964"/>
         <source>more ready player(s) are needed to start the game.</source>
         <translation>autre(s) joueur(s) prêt(s) nécessaire(s) pour démarrer la partie.</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="1004"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="1005"/>
         <source>The server is closed</source>
         <translation>Le serveur est fermé</translation>
     </message>
     <message>
-        <location filename="../../src/windows/mainwindow.cpp" line="1004"/>
+        <location filename="../../src/windows/mainwindow.cpp" line="1005"/>
         <source>The server has been shutdown.</source>
         <translation>Le serveur a été fermé.</translation>
     </message>
