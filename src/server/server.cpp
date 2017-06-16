@@ -103,16 +103,11 @@ void Server::nextArtist(){
     }
 
     //
-    if(artistsQueue.empty()){
-        ServerThread* serverThread;
-        foreach(serverThread, serverThreads){
-            artistsQueue.append(serverThread);
-        }
-        std::random_shuffle(artistsQueue.begin(), artistsQueue.end());
-    }
-
     artist = artistsQueue.takeFirst();
     artist->getPlayer()->setIsArtist(true);
+
+    //
+    artistsQueue.append(artist);
 }
 
 //
@@ -158,6 +153,9 @@ void Server::launch(){
 
 //
 void Server::startGame(){
+    //
+    std::random_shuffle(wordsQueue.begin(), wordsQueue.end());
+
     //
     ServerThread* serverThread;
     foreach(serverThread, serverThreads){
@@ -403,7 +401,6 @@ void Server::addPlayer(){
             QObject::connect(newServerThread, SIGNAL(playerLeaving(QString,ServerThread*)), this, SLOT(removePlayer(QString,ServerThread*)));
 
             artistsQueue.append(newServerThread);
-            std::random_shuffle(artistsQueue.begin(), artistsQueue.end());
 
             this->sendGameNotStarted();
         }
