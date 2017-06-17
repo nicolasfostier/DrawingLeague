@@ -23,6 +23,12 @@ JoinRoomWindow::JoinRoomWindow() : QDialog()
 
 
         //
+        QFrame* line = new QFrame(this);
+        line->setFrameShape(QFrame::HLine);
+        layout->addWidget(line, 1, 0, 1, 3);
+
+
+        //
         ipLabel = new QLabel(tr("Server IP :"), this);
         ipLabel->setFont(labelFont);
         layout->addWidget(ipLabel, 2, 0, 1, 1);

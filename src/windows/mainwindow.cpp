@@ -909,7 +909,7 @@ void MainWindow::removePlayer(QString pseudo){
     playersTable->sortByColumn(1, Qt::DescendingOrder);
     playersTable->setRowCount(playersTable->rowCount() - 1);
 
-    Message msg = Message("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", "<b><i>" + player.getPseudo() + "</i> " + tr("has left the room.") + "</b>");
+    Message msg = Message("<b><span style='color: #de4d4d'>" + tr("Server") + "</span></b>", "<b><i>" + pseudo + "</i> " + tr("has left the room.") + "</b>");
     addChat(msg);
 
     mpEnteringLeaving->setMedia(QUrl("qrc:/sound/player_leaving.mp3"));

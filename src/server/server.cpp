@@ -48,6 +48,7 @@ void Server::loadDictionary(){
     QFile dictionary(dictionaryPath);
 
     if(!dictionary.open(QIODevice::ReadOnly)){
+        qCritical() << QDateTime::currentDateTime().toString(Qt::RFC2822Date) << "Impossible to load the dictionary.";
         emit loadDictionaryFailed();
     }
     else{
@@ -415,6 +416,11 @@ void Server::removePlayer(QString pseudo, ServerThread* serverThread){
     }
 
     artistsQueue.removeOne(serverThread);
+
+    //
+    if(serverThreads.isEmpty()){
+        endGame();
+    }
 }
 
 

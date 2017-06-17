@@ -57,6 +57,21 @@ class CreateRoomWindow : public QDialog
             QLineEdit* pseudoLineEdit;
 
             //
+            QLabel* roomNameLabel;
+            //
+            QLineEdit* roomNameLineEdit;
+
+            //
+            QLabel* portLabel;
+            //
+            QLineEdit* portLineEdit;
+
+            //
+            QLabel* maxPlayersLabel;
+            //
+            QLineEdit* maxPlayersLineEdit;
+
+            //
             QLabel* dictionaryTypeLabel;
             //
             QComboBox* dictionaryTypeComboBox;
@@ -68,24 +83,9 @@ class CreateRoomWindow : public QDialog
                 QPushButton* browseDictionaryButton;
 
             //
-            QLabel* portLabel;
-            //
-            QLineEdit* portLineEdit;
-
-            //
-            QLabel* roomNameLabel;
-            //
-            QLineEdit* roomNameLineEdit;
-
-            //
             QLabel* maxRoundLabel;
             //
             QLineEdit* maxRoundLineEdit;
-
-            //
-            QLabel* maxPlayersLabel;
-            //
-            QLineEdit* maxPlayersLineEdit;
 
             //
             QLabel* timeByRoundLabel;

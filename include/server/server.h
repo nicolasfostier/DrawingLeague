@@ -19,7 +19,7 @@
 //
 #include "include/gameinfo/room.h"
 //
-#include "include/drawingtooltype.h"
+#include "include/gameinfo/drawingtooltype.h"
 
 
 

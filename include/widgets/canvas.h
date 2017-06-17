@@ -18,7 +18,7 @@
 // A polyline which can be drawn by the artist
 #include "include/shapes/polyline.h"
 // All the type of tool to draw on the canvas
-#include "include/drawingtooltype.h"
+#include "include/gameinfo/drawingtooltype.h"
 //
 #include "include/datablock/datablockreader.h"
 //

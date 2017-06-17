@@ -17,7 +17,7 @@
 //
 #include "include/gameinfo/player.h"
 //
-#include "include/drawingtooltype.h"
+#include "include/gameinfo/drawingtooltype.h"
 
 
 

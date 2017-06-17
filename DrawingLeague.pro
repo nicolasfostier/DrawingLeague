@@ -13,60 +13,62 @@ macx{
     ICON = res/images/logo.icns
 }
 
-TEMPLATE = app
-
 VERSION = 1.0.1
 
 
 
-QT  +=  core gui \
-        widgets \
+TEMPLATE = app
+
+QT  +=  core \
+        gui \
+        multimedia \
         network \
-        multimedia
+        widgets \
 
 SOURCES +=  src/main.cpp \
-            src/windows/mainwindow.cpp \
             src/checkforupdate.cpp \
-            src/widgets/canvas.cpp \
-            src/shapes/polyline.cpp \
-            src/shapes/shape.cpp \
+            src/datablock/datablockreader.cpp \
+            src/datablock/datablocktype.cpp \
+            src/datablock/datablockwriter.cpp \
+            src/gameinfo/drawingtooltype.cpp \
+            src/gameinfo/message.cpp \
+            src/gameinfo/player.cpp \
             src/gameinfo/room.cpp \
-            src/windows/joinroomwindow.cpp \
-            src/windows/createroomwindow.cpp \
             src/server/server.cpp \
             src/server/serverthread.cpp \
-            src/datablock/datablocktype.cpp \
-            src/datablock/datablockreader.cpp \
-            src/datablock/datablockwriter.cpp \
-            src/gameinfo/message.cpp \
+            src/shapes/polyline.cpp \
+            src/shapes/shape.cpp \
+            src/widgets/canvas.cpp \
             src/widgets/roominfo.cpp \
             src/widgets/roominfopart.cpp \
-            src/gameinfo/player.cpp \
-            src/drawingtooltype.cpp
+            src/windows/createroomwindow.cpp \
+            src/windows/joinroomwindow.cpp \
+            src/windows/mainwindow.cpp \
 
-HEADERS +=  include/windows/mainwindow.h \
-            include/checkforupdate.h \
-            include/widgets/canvas.h \
-            include/shapes/polyline.h \
-            include/shapes/shape.h \
+HEADERS +=  include/checkforupdate.h \
+            include/datablock/datablockreader.h \
+            include/datablock/datablocktype.h \
+            include/datablock/datablockwriter.h \
+            include/gameinfo/drawingtooltype.h \
+            include/gameinfo/message.h \
+            include/gameinfo/player.h \
             include/gameinfo/room.h \
-            include/windows/joinroomwindow.h \
-            include/windows/createroomwindow.h \
             include/server/server.h \
             include/server/serverthread.h \
-            include/datablock/datablocktype.h \
-            include/datablock/datablockreader.h \
-            include/datablock/datablockwriter.h \
-            include/gameinfo/message.h \
+            include/shapes/polyline.h \
+            include/shapes/shape.h \
+            include/widgets/canvas.h \
             include/widgets/roominfo.h \
             include/widgets/roominfopart.h \
-            include/gameinfo/player.h \
-            include/drawingtooltype.h
+            include/windows/createroomwindow.h \
+            include/windows/joinroomwindow.h \
+            include/windows/mainwindow.h \
 
-RESOURCES +=    res/lang.qrc \
+
+RESOURCES +=    res/dictionaries.qrc \
                 res/images.qrc \
-                res/dictionaries.qrc \
-                res/sound.qrc
+                res/lang.qrc \
+                res/sound.qrc \
 
 TRANSLATIONS = res/lang/drawingleague_fr.ts
 

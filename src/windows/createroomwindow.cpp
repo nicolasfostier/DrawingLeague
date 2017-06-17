@@ -25,20 +25,59 @@ CreateRoomWindow::CreateRoomWindow() : QDialog()
 
 
         //
+        QFrame* line = new QFrame(this);
+        line->setFrameShape(QFrame::HLine);
+        layout->addWidget(line, 1, 0, 1, 3);
+
+
+        //
+        roomNameLabel = new QLabel(tr("Room name :"), this);
+        roomNameLabel->setFont(labelFont);
+        layout->addWidget(roomNameLabel, 2, 0, 1, 1);
+
+        //
+        roomNameLineEdit = new QLineEdit(this);
+        roomNameLineEdit->setText("Drawing League");
+        layout->addWidget(roomNameLineEdit, 2, 1, 1, 2);
+
+
+        //
+        portLabel = new QLabel(tr("Server port :"), this);
+        portLabel->setFont(labelFont);
+        layout->addWidget(portLabel, 3, 0, 1, 1);
+
+        //
+        portLineEdit = new QLineEdit(this);
+        portLineEdit->setText("23232");
+        layout->addWidget(portLineEdit, 3, 1, 1, 2);
+
+
+        //
+        maxPlayersLabel = new QLabel(tr("Maximum number of players :"), this);
+        maxPlayersLabel->setFont(labelFont);
+        layout->addWidget(maxPlayersLabel, 4, 0, 1, 1);
+
+        //
+        maxPlayersLineEdit = new QLineEdit(this);
+        maxPlayersLineEdit->setText("10");
+        layout->addWidget(maxPlayersLineEdit, 4, 1, 1, 2);
+
+
+        //
         dictionaryTypeLabel = new QLabel(tr("Dictionary type :"), this);
         dictionaryTypeLabel->setFont(labelFont);
-        layout->addWidget(dictionaryTypeLabel, 1, 0, 1, 1);
+        layout->addWidget(dictionaryTypeLabel, 5, 0, 1, 1);
 
         //
         dictionaryTypeComboBox = new QComboBox(this);
         dictionaryTypeComboBox->insertItem(0, tr("Standard"));
         dictionaryTypeComboBox->insertItem(1, tr("Custom"));
-        layout->addWidget(dictionaryTypeComboBox, 1, 1, 1, 1);
+        layout->addWidget(dictionaryTypeComboBox, 5, 1, 1, 1);
 
             //
             dictionaryStackedLayout = new QStackedLayout();
             QObject::connect(dictionaryTypeComboBox, SIGNAL(currentIndexChanged(int)), dictionaryStackedLayout, SLOT(setCurrentIndex(int)));
-            layout->addLayout(dictionaryStackedLayout, 1, 2, 1, 1);
+            layout->addLayout(dictionaryStackedLayout, 5, 2, 1, 1);
 
                 //
                 dictionaryStandardComboBox = new QComboBox(this);
@@ -52,74 +91,41 @@ CreateRoomWindow::CreateRoomWindow() : QDialog()
 
 
         //
-        portLabel = new QLabel(tr("Server port :"), this);
-        portLabel->setFont(labelFont);
-        layout->addWidget(portLabel, 2, 0, 1, 1);
-
-        //
-        portLineEdit = new QLineEdit(this);
-        portLineEdit->setText("23232");
-        layout->addWidget(portLineEdit, 2, 1, 1, 2);
-
-
-        //
-        roomNameLabel = new QLabel(tr("Room name :"), this);
-        roomNameLabel->setFont(labelFont);
-        layout->addWidget(roomNameLabel, 3, 0, 1, 1);
-
-        //
-        roomNameLineEdit = new QLineEdit(this);
-        roomNameLineEdit->setText("Drawing League");
-        layout->addWidget(roomNameLineEdit, 3, 1, 1, 2);
-
-
-        //
         maxRoundLabel = new QLabel(tr("Number of rounds :"), this);
         maxRoundLabel->setFont(labelFont);
-        layout->addWidget(maxRoundLabel, 4, 0, 1, 1);
+        layout->addWidget(maxRoundLabel, 6, 0, 1, 1);
 
         //
         maxRoundLineEdit = new QLineEdit(this);
         maxRoundLineEdit->setText("10");
-        layout->addWidget(maxRoundLineEdit, 4, 1, 1, 2);
-
-
-        //
-        maxPlayersLabel = new QLabel(tr("Maximum number of players :"), this);
-        maxPlayersLabel->setFont(labelFont);
-        layout->addWidget(maxPlayersLabel, 5, 0, 1, 1);
-
-        //
-        maxPlayersLineEdit = new QLineEdit(this);
-        maxPlayersLineEdit->setText("10");
-        layout->addWidget(maxPlayersLineEdit, 5, 1, 1, 2);
+        layout->addWidget(maxRoundLineEdit, 6, 1, 1, 2);
 
 
         //
         timeByRoundLabel = new QLabel(tr("Time by round (in second) :"), this);
         timeByRoundLabel->setFont(labelFont);
-        layout->addWidget(timeByRoundLabel, 6, 0, 1, 1);
+        layout->addWidget(timeByRoundLabel, 7, 0, 1, 1);
 
         //
         timeByRoundLineEdit = new QLineEdit(this);
         timeByRoundLineEdit->setText("180");
-        layout->addWidget(timeByRoundLineEdit, 6, 1, 1, 2);
+        layout->addWidget(timeByRoundLineEdit, 7, 1, 1, 2);
 
 
         //
         timeAfterFirstGoodAnswerLabel = new QLabel(tr("Time after the first good answer (in second) :"), this);
         timeAfterFirstGoodAnswerLabel->setFont(labelFont);
-        layout->addWidget(timeAfterFirstGoodAnswerLabel, 7, 0, 1, 1);
+        layout->addWidget(timeAfterFirstGoodAnswerLabel, 8, 0, 1, 1);
 
         //
         timeAfterFirstGoodAnswerLineEdit = new QLineEdit(this);
         timeAfterFirstGoodAnswerLineEdit->setText("30");
-        layout->addWidget(timeAfterFirstGoodAnswerLineEdit, 7, 1, 1, 2);
+        layout->addWidget(timeAfterFirstGoodAnswerLineEdit, 8, 1, 1, 2);
 
 
         //
         createOrCancel = new QWidget(this);
-        layout->addWidget(createOrCancel, 8, 0, 1, 3, Qt::AlignHCenter);
+        layout->addWidget(createOrCancel, 9, 0, 1, 3, Qt::AlignHCenter);
 
             //
             layoutConnectOrCancel = new QHBoxLayout(createOrCancel);
