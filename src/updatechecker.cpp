@@ -1,9 +1,9 @@
-#include "include/checkforupdate.h"
+#include "include/updatechecker.h"
 
 
 
 // Constructor
-CheckForUpdate::CheckForUpdate(QString currentVersion)
+UpdateChecker::UpdateChecker(QString currentVersion)
 {
     this->currentVersion = currentVersion;
 
@@ -18,7 +18,7 @@ CheckForUpdate::CheckForUpdate(QString currentVersion)
 
 
 // Destructor
-CheckForUpdate::~CheckForUpdate()
+UpdateChecker::~UpdateChecker()
 {
     delete manager;
 
@@ -31,18 +31,18 @@ CheckForUpdate::~CheckForUpdate()
 // Qt slots
 
 // Ask to github the information about the last release of the program
-void CheckForUpdate::askGithub(){
+void UpdateChecker::askGithub(){
     this->manager = new QNetworkAccessManager();
 
     QNetworkRequest request;
     request.setUrl(QString("https://api.github.com/repos/nicolasfostier/DrawingLeague/releases/latest"));
 
     reply = manager->get(request);
-    QObject::connect(reply, SIGNAL(finished()), this, SLOT(processReply()));
+    QObject::connect(reply, SIGNAL(finished()), this, SLOT(readReply()));
 }
 
 // Read and process the reply from github
-void CheckForUpdate::processReply()
+void UpdateChecker::readReply()
 {
     // Check if everything went well
     if(reply->error() == QNetworkReply::NoError)
@@ -51,10 +51,7 @@ void CheckForUpdate::processReply()
         QString lastVersionAvailable = jsonReply.object().value("tag_name").toString();
         if(lastVersionAvailable > currentVersion)
         {
-            QMessageBox().about(nullptr, QObject::tr("Update available !"),"<p>" + QObject::tr("A new version of Drawing League is available on github.") + "<br/>" +
-                                                                "<b>" + QObject::tr("Your version :") + "</b> " + currentVersion + "<br/>" +
-                                                                "<b>" + QObject::tr("Latest version available :") + "</b> " + jsonReply.object().value("tag_name").toString() + "</p>" +
-                                                                "<h3 style='text-align: center'><a href='" + jsonReply.object().value("html_url").toString() + "'>" + QObject::tr("Download the latest version") + "</a></h3>");
+            emit updateToDownload(jsonReply);
         }
     }
 

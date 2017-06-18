@@ -420,6 +420,14 @@ void MainWindow::closeEvent(QCloseEvent* event){
 
 // Qt slots
 
+//
+void MainWindow::showNewUpdateAvailable(QJsonDocument jsonReply){
+    QMessageBox::about(this, QObject::tr("Update available !"),"<p>" + QObject::tr("A new version of Drawing League is available on github.") + "<br/>" +
+                                                        "<b>" + QObject::tr("Your version :") + "</b> " + qApp->applicationVersion() + "<br/>" +
+                                                        "<b>" + QObject::tr("Latest version available :") + "</b> " + jsonReply.object().value("tag_name").toString() + "</p>" +
+                                                        "<h3 style='text-align: center'><a href='" + jsonReply.object().value("html_url").toString() + "'>" + QObject::tr("Download the latest version") + "</a></h3>");
+}
+
 // Open a window to enter the information of the room the player want to join
 void MainWindow::joinRoom(){
     //

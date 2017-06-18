@@ -14,7 +14,7 @@
 
 // Check if there is an update available on github
 // (It's executed on its own thread and will delete himself when its task is over)
-class CheckForUpdate : public QObject
+class UpdateChecker : public QObject
 {
     Q_OBJECT
 
@@ -29,19 +29,23 @@ class CheckForUpdate : public QObject
 
     // Constructor
     public :
-        CheckForUpdate(QString currentVersion);
+        UpdateChecker(QString currentVersion);
 
     // Destructor
     public :
-        ~CheckForUpdate();
+        ~UpdateChecker();
 
     // Qt slots
     public slots :
         // Ask to github the information about the last release of the program
         void askGithub();
 
-        // Read and process the reply from github
-        void processReply();
+        // Read the reply from github and send it to the GUI thread if there is an update
+        void readReply();
+
+    // Signals
+    signals :
+        void updateToDownload(QJsonDocument jsonReply);
 };
 
 

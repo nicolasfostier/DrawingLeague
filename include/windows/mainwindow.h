@@ -23,6 +23,8 @@
 #include <QHeaderView>
 #include <QHash>
 #include <QMediaPlayer>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 
 
@@ -212,6 +214,9 @@ class MainWindow : public QMainWindow
 
     // Qt slots
     public slots :
+        //
+        void showNewUpdateAvailable(QJsonDocument jsonReply);
+
         // Open a window to enter the information of the room the player want to join
         void joinRoom();
             //

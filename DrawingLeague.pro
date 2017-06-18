@@ -13,7 +13,7 @@ macx{
     ICON = res/images/logo.icns
 }
 
-VERSION = 1.0.1
+VERSION = 1.0
 
 
 
@@ -26,7 +26,6 @@ QT  +=  core \
         widgets \
 
 SOURCES +=  src/main.cpp \
-            src/checkforupdate.cpp \
             src/datablock/datablockreader.cpp \
             src/datablock/datablocktype.cpp \
             src/datablock/datablockwriter.cpp \
@@ -44,8 +43,9 @@ SOURCES +=  src/main.cpp \
             src/windows/createroomwindow.cpp \
             src/windows/joinroomwindow.cpp \
             src/windows/mainwindow.cpp \
+    src/updatechecker.cpp
 
-HEADERS +=  include/checkforupdate.h \
+HEADERS +=  \
             include/datablock/datablockreader.h \
             include/datablock/datablocktype.h \
             include/datablock/datablockwriter.h \
@@ -63,6 +63,7 @@ HEADERS +=  include/checkforupdate.h \
             include/windows/createroomwindow.h \
             include/windows/joinroomwindow.h \
             include/windows/mainwindow.h \
+    include/updatechecker.h
 
 
 RESOURCES +=    res/dictionaries.qrc \
