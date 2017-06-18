@@ -6,17 +6,23 @@
 #include <QString>
 #include <QTimer>
 #include <QDataStream>
+#include <QTranslator>
+
+#include <QDateTime>
+#include <QDebug>
 
 
 
-class Room
+class Room : public QObject
 {
+    Q_OBJECT
+
     // Variables
     private :
         // Name of the room
         QString roomName;
         // Number of round by game
-        int maxRounds;
+        int numberOfRounds;
         // Maximum number of players in the room
         int maxPlayers;
         // Time by round in second
@@ -38,12 +44,12 @@ class Room
     // Getter
     public :
         QString getRoomName();
-        int getMaxRounds();
+        int getNumberOfRounds();
         int getMaxPlayers();
         int getTimeByRound();
         int getTimeAfterFirstGoodAnswer();
 
-        int getRound();
+        int getCurrentRound();
         QString getArtist();
         QString getWord();
         int getPointToWin();
@@ -52,12 +58,12 @@ class Room
     // Setter
     public :
         void setRoomName(QString roomName);
-        void setMaxRounds(int maxRounds);
+        void setNumberOfRounds(int numberOfRounds);
         void setMaxPlayers(int maxPlayers);
         void setTimeByRound(int timeByRound);
         void setTimeAfterFirstGoodAnswer(int timeAfterFirstGoodAnswer);
 
-        void setRound(int round);
+        void setCurrentRound(int round);
         void setArtist(QString artist);
         void setWord(QString word);
         void setPointToWin(int pointToWin);
@@ -65,7 +71,7 @@ class Room
 
     // Constructeur
     public :
-        Room(QString roomName = " ", int maxRounds = 10, int maxPlayers = 10, int timeByRound = 180, int timeAfterFirstGoodAnswer = 30);
+        Room(QString roomName = tr("Offline"), int numberOfRounds = 10, int maxPlayers = 10, int timeByRound = 180, int timeAfterFirstGoodAnswer = 30);
         Room(const Room& room);
 
     // Destructor

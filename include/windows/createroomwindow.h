@@ -120,9 +120,6 @@ class CreateRoomWindow : public QDialog
         void createRoom();
 
         //
-        void dictionaryError();
-
-        //
         void connection();
 
         //

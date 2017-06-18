@@ -49,6 +49,11 @@ void DataBlockReader::read(){
         QDataStream blockReceivedStream(&blockReceived, QIODevice::ReadWrite);
 
         switch (nextDataBlockType){
+            case DataBlockType::NOTYPE : {
+
+            break;
+            }
+
             case DataBlockType::READY_TO_RECEIVE : {
                 quint32 useless;
                 *socketStream >> blockReceived;

@@ -5,7 +5,7 @@
 // Setter
 void RoomInfo::setRoom(Room room){
     name->setValue(room.getRoomName());
-    this->setRound(room.getRound());
+    this->setRound(room.getCurrentRound());
     this->setArtist(room.getArtist());
     this->setWord(room.getWord());
     this->setPointToWin(room.getPointToWin());
@@ -62,7 +62,7 @@ RoomInfo::RoomInfo(Room room, QWidget* parent) : QWidget(parent)
 
         //
         round = new RoomInfoPart(qApp->translate("RoomInfo", "Round"), " ", this);
-        setRound(room.getRound());
+        setRound(room.getCurrentRound());
         layout->addWidget(round, 0, 1, 1, 1, Qt::AlignVCenter | Qt::AlignCenter);
 
         //

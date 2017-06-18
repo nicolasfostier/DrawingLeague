@@ -165,50 +165,28 @@ void CreateRoomWindow::browseDictionary(){
 
 //
 void CreateRoomWindow::createRoom(){
-    if(pseudoLineEdit->text().size() < 3){
-        QMessageBox::critical(this, tr("Forbidden pseudo"), tr("Your pseudo must be at least 3 characters long !"));
-    }
-    else if(roomNameLineEdit->text().size() < 3){
-        QMessageBox::critical(this, tr("Forbidden room name"), tr("The name of the room must be at least 3 characters long !"));
-    }
-    else if(maxRoundLineEdit->text().toInt() <= 0){
-        QMessageBox::critical(this, tr("Forbidden number of rounds"), tr("The maximum number of rounds by game must be strictly positive !"));
-    }
-    else if(maxPlayersLineEdit->text().toInt() <= 0){
-        QMessageBox::critical(this, tr("Forbidden maximum number of players"), tr("The maximum number of players must be strictly positive !"));
-    }
-    else if(timeByRoundLineEdit->text().toInt() < 10){
-        QMessageBox::critical(this, tr("Forbidden value for 'time by round'"), tr("The time by round must be at least 10 seconds !"));
-    }
-    else if(timeAfterFirstGoodAnswerLineEdit->text().toInt() < 0){
-        QMessageBox::critical(this, tr("Forbidden value for 'time after first good answer'"), tr("The time remaining after a first good answer must be positive !"));
-    }
-    else{
-        if(dictionaryTypeComboBox->currentText() == tr("Standard")){
-            if(dictionaryStandardComboBox->currentText() == tr("Easy english")){
-                dictionaryPath = ":/dictionaries/easy_english.txt";
-            }
-            else if(dictionaryStandardComboBox->currentText() == tr("Easy french")){
-                dictionaryPath = ":/dictionaries/easy_french.txt";
-            }
+    if(dictionaryTypeComboBox->currentText() == tr("Standard")){
+        if(dictionaryStandardComboBox->currentText() == tr("Easy english")){
+            dictionaryPath = ":/dictionaries/easy_english.txt";
         }
+        else if(dictionaryStandardComboBox->currentText() == tr("Easy french")){
+            dictionaryPath = ":/dictionaries/easy_french.txt";
+        }
+    }
 
+    try{
         Room room(roomNameLineEdit->text(),
                   maxRoundLineEdit->text().toInt(),
                   maxPlayersLineEdit->text().toInt(),
                   timeByRoundLineEdit->text().toInt(),
                   timeAfterFirstGoodAnswerLineEdit->text().toInt());
         this->server = new Server(portLineEdit->text().toInt(), room, dictionaryPath);
-        QObject::connect(server, SIGNAL(loadDictionarySucceed()), this, SLOT(connection()));
-        QObject::connect(server, SIGNAL(loadDictionaryFailed()), this, SLOT(dictionaryError()));
+        QObject::connect(this->server, SIGNAL(isReady()), this, SLOT(connection()));
+        QMetaObject::invokeMethod(this->server, "launch");
     }
-}
-
-
-//
-void CreateRoomWindow::dictionaryError(){
-    QMessageBox::critical(this, tr("Creation failed"), tr("Impossible to read the dictionary.\n"));
-    server->deleteLater();
+    catch(std::invalid_argument exception){
+        QMessageBox::critical(this, tr("Creation failed"), exception.what());
+    }
 }
 
 

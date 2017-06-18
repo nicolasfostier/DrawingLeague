@@ -637,7 +637,7 @@ void MainWindow::newRoom(Room room){
     this->roomInfo->setRoom(room);
 
     //
-    if(room.getRound() != 0){
+    if(room.getCurrentRound() != 0){
         Player* player;
         foreach(player, players){
             if(player->getAnswerFound() == true){
@@ -691,7 +691,7 @@ void MainWindow::roundStarting(int round, QString artist, QString word, int poin
     oneSecond();
 
     //
-    this->room.setRound(round);
+    this->room.setCurrentRound(round);
     this->room.setArtist(artist);
     this->room.setWord(word);
     this->room.setPointToWin(pointToWin);
@@ -793,7 +793,7 @@ void MainWindow::skipWord(){
 //
 void MainWindow::gameEnding(QString winner){
     //
-    room.setRound(0);
+    room.setCurrentRound(0);
     room.setArtist(" ");
     room.setWord(" ");
     room.setPointToWin(0);

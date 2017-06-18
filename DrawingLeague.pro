@@ -70,7 +70,7 @@ RESOURCES +=    res/dictionaries.qrc \
                 res/lang.qrc \
                 res/sound.qrc \
 
-TRANSLATIONS = res/lang/drawingleague_fr.ts
+TRANSLATIONS += res/lang/drawingleague_fr.ts
 
 
 

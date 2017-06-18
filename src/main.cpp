@@ -2,6 +2,7 @@
 #include <QTranslator>
 #include <QLocale>
 #include <QThread>
+#include <QMessageBox>
 
 // Check if there is an update available on github
 #include "include/checkforupdate.h"
@@ -32,14 +33,27 @@ int main(int argc, char *argv[])
     qRegisterMetaType<Player>();
     qRegisterMetaType<DrawingToolType>();
 
-    // Check if there is an update available on github
-    // (It's executed on its own thread and will delete himself when its task is over)
-    new CheckForUpdate(app.applicationVersion());
+    // Serious things begin...
+    try{
+        // Check if there is an update available on github
+        // (It's executed on its own thread and will delete himself when its task is over)
+        new CheckForUpdate(app.applicationVersion());
 
-    // Create the main window of the program and open it
-    MainWindow mainWindow;
-    mainWindow.show();
+        // Create the main window of the program and open it
+        MainWindow mainWindow;
+        mainWindow.show();
 
-    // Execute the Qt application : enter the event loop
-    return app.exec();
+        // Execute the Qt application : enter the event loop
+        return app.exec();
+    }
+    // Catch unexpected throw of exception
+    catch(std::exception exception){
+        //
+        QMessageBox::critical(0, app.translate("main", "Unexpected error"),
+                              app.translate("main", "The application has encountered an unexpected error :") + "\n"
+                              + exception.what());
+        //
+        app.quit();
+        exit(1);
+    }
 }

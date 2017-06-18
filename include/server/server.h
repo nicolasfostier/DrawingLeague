@@ -13,6 +13,9 @@
 #include <QColor>
 #include <QFile>
 
+#include <QDebug>
+#include <QDateTime>
+
 
 //
 #include "include/server/serverthread.h"
@@ -43,7 +46,6 @@ class Server : public QTcpServer
         //
         ServerThread* artist;
 
-        //
         QString dictionaryPath;
         //
         QList<QString> words;
@@ -83,7 +85,7 @@ class Server : public QTcpServer
     // Methods
     public :
         //
-        void loadDictionary();
+        void loadDictionary(QString dictionaryPath);
 
         //
         int playerReady();
@@ -139,9 +141,7 @@ class Server : public QTcpServer
     // Signals
     signals :
         //
-        void loadDictionarySucceed();
-        //
-        void loadDictionaryFailed();
+        void isReady();
 };
 
 

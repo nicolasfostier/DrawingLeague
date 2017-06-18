@@ -49,6 +49,9 @@ HEADERS +=  include/server/server.h \
             include/datablock/datablockwriter.h \
 
 RESOURCES +=    res/dictionaries.qrc \
+                res/lang.qrc
+
+TRANSLATIONS += res/lang/drawingleaguededicatedserver_fr.ts
 
 
 

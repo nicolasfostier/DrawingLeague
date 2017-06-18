@@ -42,6 +42,7 @@ class ServerThread : public QObject
 
     // Getter
     public :
+        QTcpSocket* getTcpSocket();
         Player* getPlayer();
         DataBlockReader* getDataBlockReader();
         DataBlockWriter* getDataBlockWriter();

@@ -236,6 +236,12 @@ void Canvas::mousePressEvent(QMouseEvent* event){
                 painter->drawPoint(event->pos());
             break;
             }
+
+
+            case BUCKET:{
+
+            break;
+            }
         }
 
         lastMousePositionDrawn = event->pos();
@@ -256,6 +262,16 @@ void Canvas::mouseReleaseEvent(QMouseEvent* event){
     if(isArtist || event->screenPos() == QPoint(-232323,-232323)){
         event->accept();
         switch(currentDrawingTool){
+            case PEN :{
+
+            break;
+            }
+
+            case ERASER:{
+
+                break;
+            }
+
             case BUCKET :{
                 image = pixmap.toImage();
                 floodFill(event->pos(), image.pixelColor(event->pos()), drawingPen.color());
@@ -302,6 +318,11 @@ void Canvas::mouseMoveEvent(QMouseEvent* event){
                     painter->drawLine(lastMousePositionDrawn, event->pos());
                 break;
                 }
+
+                case BUCKET :{
+
+                break;
+                }
             }
 
             lastMousePositionDrawn = event->pos();
@@ -320,6 +341,11 @@ void Canvas::mouseMoveEvent(QMouseEvent* event){
 
                     case ERASER :{
                         painter->drawLine(lastMousePositionDrawn, event->pos());
+                    break;
+                    }
+
+                    case BUCKET :{
+
                     break;
                     }
                 }

@@ -3,6 +3,10 @@
 
 
 // Getter
+QTcpSocket* ServerThread::getTcpSocket(){
+    return socket;
+}
+
 Player* ServerThread::getPlayer(){
     return player;
 }

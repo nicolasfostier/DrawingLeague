@@ -1,11 +1,16 @@
 1.0.1 :
+	Nouvelle fonctionalité :
+		- Application stand-alone pour l'hébergement de serveur.
+
 	Bugs : 
-	- Correction d'un mot dans le dictionnaire "Français facile"
-	- Correction des séparateurs de la barre d'outils de dessin
-	- Correction d'une faute de frappe dans un QString
-	- Les joueurs sont correctement triés par leur score puis par ordre alphabétique
+		- Correction d'un mot dans le dictionnaire "Français facile"
+		- Correction des séparateurs de la barre d'outils de dessin
+		- Correction d'une faute de frappe dans un QString
+		- Les joueurs sont correctement triés par leur score puis par ordre alphabétique
 
 	Améliorations :
 		- Meilleure méthode de génération de la file d'attente pour dessiner
 		- Augmentation de la taille minimale du crayon
 		- Message in the chat when someone leave the game
+		- Meilleure gestion des paramètres données lors de la création d'un salon
+		- Balbutiement d'un système de log

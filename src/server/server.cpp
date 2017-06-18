@@ -5,9 +5,14 @@
 // Constructor
 Server::Server(int port, Room room, QString dictionaryPath)
 {
+    if(port < 1 || port > 65535){
+        qCritical() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+                    << "The port number must be between 1 and 65535. Your value :"
+                    << port;
+        throw std::invalid_argument(tr("The port number must be between 1 and 65535.").toUtf8());
+    }
     this->port = port;
     this->room = room;
-    this->dictionaryPath = dictionaryPath;
     this->playerFoundAnswer = 0;
     this->artist = NULL;
 
@@ -15,11 +20,13 @@ Server::Server(int port, Room room, QString dictionaryPath)
     drawingToolColor = QColor(Qt::black);
     drawingToolWidth = 2;
 
+    this->dictionaryPath = dictionaryPath;
+    loadDictionary(dictionaryPath);
+
     // Move the object to another thread and start its execution
     QThread* threadCFU = new QThread();
     QObject::connect(threadCFU, SIGNAL(finished()), threadCFU, SLOT(deleteLater()));
     this->moveToThread(threadCFU);
-    QObject::connect(threadCFU, SIGNAL(started()), this, SLOT(launch()));
     threadCFU->start();
 }
 
@@ -44,12 +51,14 @@ Server::~Server(){
 // Methods
 
 //
-void Server::loadDictionary(){
+void Server::loadDictionary(QString dictionaryPath){
     QFile dictionary(dictionaryPath);
 
     if(!dictionary.open(QIODevice::ReadOnly)){
-        qCritical() << QDateTime::currentDateTime().toString(Qt::RFC2822Date) << "Impossible to load the dictionary.";
-        emit loadDictionaryFailed();
+        qCritical() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+                    << "Impossible to load the dictionary :"
+                    << dictionaryPath;
+        throw std::invalid_argument(tr("Impossible to load the dictionary.").toUtf8());
     }
     else{
         QTextStream dictionaryStream(&dictionary);
@@ -63,8 +72,6 @@ void Server::loadDictionary(){
 
         wordsQueue = QList<QString>(words);
         std::random_shuffle(wordsQueue.begin(), wordsQueue.end());
-
-        emit loadDictionarySucceed();
     }
 }
 
@@ -133,22 +140,36 @@ void Server::launch(){
     //
     this->listen(QHostAddress::Any, port);
 
-    loadDictionary();
-
+    //
     QObject::connect(this, SIGNAL(newConnection()), this, SLOT(addPlayer()));
 
+    //
     timerBetweenRound = new QTimer();
     timerBetweenRound->setSingleShot(true);
     timerBetweenRound->setInterval(2000);
     QObject::connect(timerBetweenRound, SIGNAL(timeout()), this, SLOT(startRound()));
 
+    //
     timerRound = new QTimer();
     timerRound->setSingleShot(true);
     timerRound->setInterval(room.getTimeByRound() * 1000);
 
+    //
     timerRoundAfterFirstAnswer = new QTimer();
     timerRoundAfterFirstAnswer->setSingleShot(true);
     timerRoundAfterFirstAnswer->setInterval(room.getTimeAfterFirstGoodAnswer() * 1000);
+
+    //
+    emit isReady();
+
+    qInfo() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+            << "The server is up and ready with these settings :\n"
+            << "Room name :" << room.getRoomName() << "\n"
+            << "Port :" << port << "\n"
+            << "Max players :" << room.getMaxPlayers() << "\n"
+            << "Dictionary :" << dictionaryPath << "\n"
+            << "Time by round :" << room.getTimeByRound() << "\n"
+            << "Time after the first good answer :" << room.getTimeAfterFirstGoodAnswer();
 }
 
 
@@ -172,6 +193,9 @@ void Server::startGame(){
 
     //
     startRound();
+
+    qInfo() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+            << "New game started";
 }
 
 //
@@ -181,7 +205,7 @@ void Server::startRound(){
     nextArtist();
 
     //
-    room.setRound(room.getRound() + 1);
+    room.setCurrentRound(room.getCurrentRound() + 1);
     room.setPointToWin(10);
     room.setArtist(artist->getPlayer()->getPseudo());
 
@@ -195,16 +219,21 @@ void Server::startRound(){
     foreach(serverThread, serverThreads){
         svThDBW = serverThread->getDataBlockWriter();
         if(serverThread == artist){
-            QMetaObject::invokeMethod(svThDBW, "sendRoundStarting", Q_ARG(quint32, quint32(room.getRound())), Q_ARG(QString, room.getArtist()), Q_ARG(QString, word), Q_ARG(quint32, quint32(10)));
+            QMetaObject::invokeMethod(svThDBW, "sendRoundStarting", Q_ARG(quint32, quint32(room.getCurrentRound())), Q_ARG(QString, room.getArtist()), Q_ARG(QString, word), Q_ARG(quint32, quint32(10)));
         }
         else{
-            QMetaObject::invokeMethod(svThDBW, "sendRoundStarting", Q_ARG(quint32, quint32(room.getRound())), Q_ARG(QString, room.getArtist()), Q_ARG(QString, room.getWord()), Q_ARG(quint32, quint32(10)));
+            QMetaObject::invokeMethod(svThDBW, "sendRoundStarting", Q_ARG(quint32, quint32(room.getCurrentRound())), Q_ARG(QString, room.getArtist()), Q_ARG(QString, room.getWord()), Q_ARG(quint32, quint32(10)));
         }
     }
 
     //
     playerFoundAnswer = 0;
     hintGiven = 0;
+
+    qInfo() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+            << "Round n°" << QString::number(room.getCurrentRound()).toUtf8().data() << "starting :"
+            << "Artist :" << room.getArtist()
+            << "Word :" << word;
 }
 
 //
@@ -226,13 +255,19 @@ void Server::endRound(){
 
     //
     if(playerFoundAnswer == 0){
-        room.setRound(room.getRound() - 1);
+        room.setCurrentRound(room.getCurrentRound() - 1);
         if(room.getPointToWin() != -1 && artist != NULL){
             artist->getPlayer()->setScore(artist->getPlayer()->getScore() - 1);
+
+            qInfo() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+                    << room.getArtist() << "has failed to draw the word in time";
         }
     }
 
-    if(room.getRound() == room.getMaxRounds()){
+    qInfo() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+            << "End of the round n°" << QString::number(room.getCurrentRound()).toUtf8().data();
+
+    if(room.getCurrentRound() == room.getNumberOfRounds()){
         this->endGame();
     }
     else{
@@ -249,6 +284,9 @@ void Server::skipWord(){
     room.setPointToWin(-1);
 
     endRound();
+
+    qInfo() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+            << room.getArtist() << "has skipped the round";
 }
 
 
@@ -275,30 +313,44 @@ void Server::endGame(){
         QMetaObject::invokeMethod(svThDBW, "sendGameEnding", Q_ARG(QString, winner));
     }
 
-    room.setRound(0);
+    room.setCurrentRound(0);
     room.setArtist(" ");
     room.setWord(" ");
     room.setPointToWin(0);
 
     sendGameNotStarted();
+
+    qInfo() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+            << "End of the game. The winner is :" << winner;
 }
 
 
 //
 void Server::addPlayer(){
     //
-    ServerThread* newServerThread = new ServerThread(nextPendingConnection());
+    QTcpSocket* newCon = nextPendingConnection();
+    ServerThread* newServerThread = new ServerThread(newCon);
 
     //
     QObject::connect(newServerThread, SIGNAL(pseudoReceived(ServerThread*)), this, SLOT(setupPlayer(ServerThread*)));
 
     //
     QObject::connect(this, SIGNAL(destroyed(QObject*)), newServerThread, SLOT(deleteLater()));
+
+    qInfo() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+                << newCon->peerAddress().toString() << newCon->peerPort()
+                << ": New connection attempt";
 }
     //
     void Server::setupPlayer(ServerThread* newServerThread){
         //
         if(serverThreads.contains(newServerThread->getPlayer()->getPseudo())){
+            qWarning() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+                        << newServerThread->getTcpSocket()->peerAddress().toString() << newServerThread->getTcpSocket()->peerPort()
+                        << ": Connection attempt failed : The pseudo"
+                        << newServerThread->getPlayer()->getPseudo()
+                        << "is already used";
+
             QMetaObject::invokeMethod(newServerThread, "pseudoAlreadyUsed");
         }
         else{
@@ -404,6 +456,11 @@ void Server::addPlayer(){
             artistsQueue.append(newServerThread);
 
             this->sendGameNotStarted();
+
+            qInfo() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+                        << newServerThread->getTcpSocket()->peerAddress().toString() << newServerThread->getTcpSocket()->peerPort()
+                        << ": Player entering :"
+                        << newServerThread->getPlayer()->getPseudo();
         }
     }
 
@@ -421,13 +478,21 @@ void Server::removePlayer(QString pseudo, ServerThread* serverThread){
     if(serverThreads.isEmpty()){
         endGame();
     }
+
+    qInfo() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+            << "Player leaving :"
+            << pseudo;
 }
 
 
 //
 void Server::checkAnswer(Message msg){
-    if(room.getRound() > 0){
+    if(room.getCurrentRound() > 0){
         ServerThread* serverThreadAnswer = serverThreads.find(msg.getPseudo()).value();
+        qInfo() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+                << serverThreadAnswer->getTcpSocket()->peerAddress().toString() << serverThreadAnswer->getTcpSocket()->peerPort()
+                << ": Answer :"
+                << msg.toString(true);
         if(!serverThreadAnswer->getPlayer()->getAnswerFound() && !serverThreadAnswer->getPlayer()->getIsArtist()){
             if(msg.getMessage().toLower() == word.toLower()){
 
@@ -451,6 +516,9 @@ void Server::checkAnswer(Message msg){
                     artist->getPlayer()->setScore(artist->getPlayer()->getScore() + pointWonByArtist);
                 }
                 playerFoundAnswer++;
+
+                qInfo() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+                        << serverThreadAnswer->getPlayer()->getPseudo() << "has found the word and won" << room.getPointToWin();
 
                 // Send point win
                 ServerThread* serverThread;
@@ -490,10 +558,20 @@ void Server::checkAnswer(Message msg){
 
 //
 void Server::checkChatCommand(Message msg){
-    if(room.getRound() == 0){
+    ServerThread* serverThread = serverThreads.find(msg.getPseudo()).value();
+
+    qInfo() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+            << serverThread->getTcpSocket()->peerAddress().toString() << serverThread->getTcpSocket()->peerPort()
+            << ": Chat :"
+            << msg.toString(true);
+
+    if(room.getCurrentRound() == 0){
         if(msg.getMessage() == QString("!ready")){
-            ServerThread* serverThread = serverThreads.find(msg.getPseudo()).value();
             serverThread->getPlayer()->setIsReady(true);
+
+            qInfo() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+                    << serverThread->getTcpSocket()->peerAddress().toString() << serverThread->getTcpSocket()->peerPort()
+                    << serverThread->getPlayer()->getPseudo() << "is now ready.";
 
             //
             if(howManyMoreReadyNeeded() < 1){
@@ -540,6 +618,9 @@ void Server::hint(){
         //
         hintGiven++;
         room.setPointToWin(room.getPointToWin() - 1);
+
+        qInfo() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+                << "A hint has been given";
     }
 }
 
@@ -563,7 +644,7 @@ void Server::updateDrawingToolWidth(int width){
 //
 void Server::sendGameNotStarted(){
     //
-    if(room.getRound() == 0){
+    if(room.getCurrentRound() == 0){
         //
         ServerThread* serverThread;
         foreach(serverThread, serverThreads){

@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>lang/drawingleague_fr.qm</file>
+        <file>lang/drawingleaguededicatedserver_fr.qm</file>
     </qresource>
 </RCC>

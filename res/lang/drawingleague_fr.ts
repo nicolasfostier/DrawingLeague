@@ -31,172 +31,106 @@ si vous voulez démarrer une autre partie.</translation>
         <translation>Votre pseudo :</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="28"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="67"/>
         <source>Dictionary type :</source>
         <translation>Type de dictionnaire :</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="34"/>
-        <location filename="../../src/windows/createroomwindow.cpp" line="181"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="73"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="168"/>
         <source>Standard</source>
         <translation>Standard</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="35"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="74"/>
         <source>Custom</source>
         <translation>Personnalisé</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="46"/>
-        <location filename="../../src/windows/createroomwindow.cpp" line="185"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="85"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="172"/>
         <source>Easy french</source>
         <translation>Français facile</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="55"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="45"/>
         <source>Server port :</source>
         <translation>Port du serveur :</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="66"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="34"/>
         <source>Room name :</source>
         <translation>Nom du salon :</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="77"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="94"/>
         <source>Number of rounds :</source>
         <translation>Nombre de rounds :</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="88"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="56"/>
         <source>Maximum number of players :</source>
         <translation>Nombre maximale de joueurs :</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="99"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="105"/>
         <source>Time by round (in second) :</source>
         <translation>Temps par round (en seconde) :</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="110"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="116"/>
         <source>Time after the first good answer (in second) :</source>
         <translation>Temps restant après qu&apos;un premier joueur ait trouvé le mot (en seconde) :</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="128"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="134"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="133"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="139"/>
         <source>Create</source>
         <translation>Créer</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="139"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="145"/>
         <source>Create a room</source>
         <translation>Créer le salon</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="152"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="158"/>
         <source>Choose your dictionary</source>
         <translation>Choisir un dictionnaire</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="152"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="158"/>
         <source>Text files</source>
         <translation>Fichiers texte</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="163"/>
-        <source>Forbidden pseudo</source>
-        <translation>Pseudo interdit</translation>
-    </message>
-    <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="163"/>
-        <source>Your pseudo must be at least 3 characters long !</source>
-        <translation>Votre pseudo doit posséder 3 caractères !</translation>
-    </message>
-    <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="166"/>
-        <source>Forbidden room name</source>
-        <translation>Nom de salon interdit</translation>
-    </message>
-    <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="166"/>
-        <source>The name of the room must be at least 3 characters long !</source>
-        <translation>Le nom du salon doit posséder au moins 3 caractères !</translation>
-    </message>
-    <message>
         <location filename="../../src/windows/createroomwindow.cpp" line="169"/>
-        <source>Forbidden number of rounds</source>
-        <translation>Nombre de rounds interdit</translation>
-    </message>
-    <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="169"/>
-        <source>The maximum number of rounds by game must be strictly positive !</source>
-        <translation>Le nombre maximale de rounds par partie doit être strictement positif !</translation>
-    </message>
-    <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="172"/>
-        <source>Forbidden maximum number of players</source>
-        <translation>Nombre maximum de joueurs interdit</translation>
-    </message>
-    <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="172"/>
-        <source>The maximum number of players must be strictly positive !</source>
-        <translation>Le nombre maximal de joueurs doit être strictement positif !</translation>
-    </message>
-    <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="175"/>
-        <source>Forbidden value for &apos;time by round&apos;</source>
-        <translation>Valeur interdit pour le &apos;temps par round&apos;</translation>
-    </message>
-    <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="175"/>
-        <source>The time by round must be at least 10 seconds !</source>
-        <translation>Le temps par round doit être d&apos;au moins 10 secondes !</translation>
-    </message>
-    <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="178"/>
-        <source>Forbidden value for &apos;time after first good answer&apos;</source>
-        <translation>Valeur interdit pour le &apos;temps restant après qu&apos;un premier joueur ait trouvé le mot&apos;</translation>
-    </message>
-    <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="178"/>
-        <source>The time remaining after a first good answer must be positive !</source>
-        <translation>Le temps restant après une première bonne réponse doit être positif !</translation>
-    </message>
-    <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="182"/>
         <source>Easy english</source>
         <translation>Anglais facile</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="204"/>
-        <location filename="../../src/windows/createroomwindow.cpp" line="235"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="188"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="219"/>
         <source>Creation failed</source>
         <translation>Création échouée</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="204"/>
-        <source>Impossible to read the dictionary.
-</source>
-        <translation>Impossible de lire le dictionnaire.</translation>
-    </message>
-    <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="235"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="219"/>
         <source>Impossible to reach the server.
 </source>
         <translation>Impossible de se connecter au serveur.</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="269"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="253"/>
         <source>Pseudo already used</source>
         <translation>Pseudo déjà utilisé</translation>
     </message>
     <message>
-        <location filename="../../src/windows/createroomwindow.cpp" line="269"/>
+        <location filename="../../src/windows/createroomwindow.cpp" line="253"/>
         <source>This pseudo is already taken.</source>
         <translation>Ce pseudo est déjà pris.</translation>
     </message>
@@ -209,59 +143,59 @@ si vous voulez démarrer une autre partie.</translation>
         <translation>Votre pseudo :</translation>
     </message>
     <message>
-        <location filename="../../src/windows/joinroomwindow.cpp" line="26"/>
+        <location filename="../../src/windows/joinroomwindow.cpp" line="32"/>
         <source>Server IP :</source>
         <translation>IP du serveur :</translation>
     </message>
     <message>
-        <location filename="../../src/windows/joinroomwindow.cpp" line="36"/>
+        <location filename="../../src/windows/joinroomwindow.cpp" line="42"/>
         <source>Server port :</source>
         <translation>Port du serveur :</translation>
     </message>
     <message>
-        <location filename="../../src/windows/joinroomwindow.cpp" line="54"/>
+        <location filename="../../src/windows/joinroomwindow.cpp" line="60"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../../src/windows/joinroomwindow.cpp" line="59"/>
+        <location filename="../../src/windows/joinroomwindow.cpp" line="65"/>
         <source>Connect</source>
         <translation>Se connecter</translation>
     </message>
     <message>
-        <location filename="../../src/windows/joinroomwindow.cpp" line="65"/>
+        <location filename="../../src/windows/joinroomwindow.cpp" line="71"/>
         <source>Join a room</source>
         <translation>Rejoindre un salon</translation>
     </message>
     <message>
-        <location filename="../../src/windows/joinroomwindow.cpp" line="80"/>
+        <location filename="../../src/windows/joinroomwindow.cpp" line="86"/>
         <source>Forbidden pseudo</source>
         <translation>Pseudo interdit</translation>
     </message>
     <message>
-        <location filename="../../src/windows/joinroomwindow.cpp" line="80"/>
+        <location filename="../../src/windows/joinroomwindow.cpp" line="86"/>
         <source>Your pseudo must be at least 3 characters long.</source>
         <translation>Votre pseudo doit posséder au moins 3 caractères.</translation>
     </message>
     <message>
-        <location filename="../../src/windows/joinroomwindow.cpp" line="107"/>
+        <location filename="../../src/windows/joinroomwindow.cpp" line="113"/>
         <source>Connection failed</source>
         <translation>Connexion échouée</translation>
     </message>
     <message>
-        <location filename="../../src/windows/joinroomwindow.cpp" line="107"/>
+        <location filename="../../src/windows/joinroomwindow.cpp" line="113"/>
         <source>Impossible to rearch the server.
 Enter a new adress.</source>
         <translation>Impossible de se connecter au serveur.
 Entrez une nouvelle adresse.</translation>
     </message>
     <message>
-        <location filename="../../src/windows/joinroomwindow.cpp" line="139"/>
+        <location filename="../../src/windows/joinroomwindow.cpp" line="145"/>
         <source>Pseudo already used</source>
         <translation>Pseudo déjà utilisé</translation>
     </message>
     <message>
-        <location filename="../../src/windows/joinroomwindow.cpp" line="139"/>
+        <location filename="../../src/windows/joinroomwindow.cpp" line="145"/>
         <source>This pseudo is already taken.</source>
         <translation>Ce pseudo est déjà pris.</translation>
     </message>
@@ -531,6 +465,24 @@ Entrez une nouvelle adresse.</translation>
     </message>
 </context>
 <context>
+    <name>Room</name>
+    <message>
+        <location filename="../../include/gameinfo/room.h" line="74"/>
+        <source>Offline</source>
+        <translation>Hors-Ligne</translation>
+    </message>
+    <message>
+        <location filename="../../src/gameinfo/room.cpp" line="46"/>
+        <source>The name&apos;s room must be at least 3 characters long.</source>
+        <translation>Le nom du salon doit faire au moins 3 caractères de long.</translation>
+    </message>
+    <message>
+        <location filename="../../src/gameinfo/room.cpp" line="57"/>
+        <source>The number of rounds must be at least 1.</source>
+        <translation>Le nombre de rounds doit être au moins de 1.</translation>
+    </message>
+</context>
+<context>
     <name>RoomInfo</name>
     <message>
         <location filename="../../src/widgets/roominfo.cpp" line="60"/>
@@ -561,6 +513,32 @@ Entrez une nouvelle adresse.</translation>
         <location filename="../../src/widgets/roominfo.cpp" line="84"/>
         <source>Time</source>
         <translation>Temps</translation>
+    </message>
+</context>
+<context>
+    <name>Server</name>
+    <message>
+        <location filename="../../src/server/server.cpp" line="12"/>
+        <source>The port number must be between 1 and 65535.</source>
+        <translation>Le port doit être compris entre 1 et 65535.</translation>
+    </message>
+    <message>
+        <location filename="../../src/server/server.cpp" line="60"/>
+        <source>Impossible to load the dictionary.</source>
+        <translation>Impossible de charger le dictionnaire.</translation>
+    </message>
+</context>
+<context>
+    <name>main</name>
+    <message>
+        <location filename="../../src/main.cpp" line="52"/>
+        <source>Unexpected error</source>
+        <translation>Erreur inattendu</translation>
+    </message>
+    <message>
+        <location filename="../../src/main.cpp" line="53"/>
+        <source>The application has encountered an unexpected error :</source>
+        <translation>Le programme a rencontré une erreur inattendue :</translation>
     </message>
 </context>
 </TS>

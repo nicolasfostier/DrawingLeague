@@ -2,6 +2,8 @@
 #include <QCommandLineParser>
 #include <QDebug>
 #include <QTranslator>
+#include <QMessageBox>
+#include <QSettings>
 
 
 
@@ -41,11 +43,18 @@ int main(int argc, char* argv[])
         //
         cmdLineParser.addVersionOption();
 
+        //
+        QCommandLineOption configFileCL("config-file",
+                                    QCoreApplication::translate("main", "Configuration file"),
+                                    QCoreApplication::translate("main", "path"),
+                                    "");
+        cmdLineParser.addOption(configFileCL);
+
         // Name of the room
         QCommandLineOption nameCL(  "name",
                                     QCoreApplication::translate("main", "Room's name."),
                                     QCoreApplication::translate("main", "name"),
-                                    QString("Drawing League"));
+                                    "Drawing League");
         cmdLineParser.addOption(nameCL);
 
         // Port of the server
@@ -65,7 +74,7 @@ int main(int argc, char* argv[])
         // Standard dictionary
         QCommandLineOption standardDictCL(  "std-dict",
                                             QCoreApplication::translate("main", "Standard dictionary."),
-                                            QCoreApplication::translate("main", "easy_french|easy_english"),
+                                            "easy_french|easy_english",
                                             "easy_french");
         cmdLineParser.addOption(standardDictCL);
 
@@ -77,11 +86,11 @@ int main(int argc, char* argv[])
         cmdLineParser.addOption(customDictCL);
 
         // Number of rounds
-        QCommandLineOption maxRoundsCL( QStringList() << "max-rounds",
+        QCommandLineOption numberOfRoundsCL( QStringList() << "max-rounds",
                                         QCoreApplication::translate("main", "Maximum number of rounds."),
                                         QCoreApplication::translate("main", "number of round"),
                                         "10");
-        cmdLineParser.addOption(maxRoundsCL);
+        cmdLineParser.addOption(numberOfRoundsCL);
 
         // Time by rounds
         QCommandLineOption timeByRoundCL(   QStringList() << "time-round",
@@ -97,32 +106,95 @@ int main(int argc, char* argv[])
                                                         "30");
         cmdLineParser.addOption(timeAfterFirstGoodAnswerCL);
 
-    // Parse and process the command line arguments
-    cmdLineParser.process(app);
+    // Serious things begin...
+    try{
+        // Parse and process the command line arguments
+        cmdLineParser.process(app);
 
-    // Get the server's settings
-    int port = cmdLineParser.value(portCL).toInt();
-    Room room(  cmdLineParser.value(nameCL),
-                cmdLineParser.value(maxRoundsCL).toInt(),
-                cmdLineParser.value(maxPlayersCL).toInt(),
-                cmdLineParser.value(timeByRoundCL).toInt(),
-                cmdLineParser.value(timeAfterFirstGoodAnswerCL).toInt());
-    QString dictionary;
-    if(cmdLineParser.value(customDictCL) != ""){
-        dictionary = cmdLineParser.value("cst-dict");
-    }
-    else if(cmdLineParser.value(standardDictCL) == "easy_french"){
-        dictionary = ":/dictionaries/easy_french.txt";
-    }
-    else{
-        dictionary = ":/dictionaries/easy_french.txt";
-    }
+        // Get the server's settings
+        int port;
+        Room room;
+        QString dictionaryStd;
+        QString dictionaryPath;
 
-    // Launch the server
-    Server* server = new Server(port, room, dictionary);
-    QObject::connect(server, SIGNAL(loadDictionaryFailed()), server, SLOT(deleteLater()));
-    QObject::connect(server, SIGNAL(destroyed(QObject*)), &app, SLOT(quit()));
+        // Try first by looking for a config file at the path defined in the command line
+        QSettings* settingsIni;
+        if(cmdLineParser.isSet(configFileCL)){
+            settingsIni = new QSettings(cmdLineParser.value(configFileCL));
+        }
+        // If there is no path defined in the command line, check at the default path
+        else{
+            settingsIni = new QSettings("DrawingLeagueDedicatedServer.ini", QSettings::IniFormat);
+        }
+        // Load the value defined in the config file
+        port = settingsIni->value("port", 23232).toInt();
+        room.setRoomName(settingsIni->value("name", "Drawing League").toString());
+        room.setMaxPlayers(settingsIni->value("max-players", 10).toInt());
+        room.setNumberOfRounds(settingsIni->value("max-rounds", 10).toInt());
+        room.setTimeByRound(settingsIni->value("time-round", 180).toInt());
+        room.setTimeAfterFirstGoodAnswer(settingsIni->value("time-after-first-good-answer", 30).toInt());
+        dictionaryPath = settingsIni->value("cst-dict", "").toString();
+        if(dictionaryPath.isEmpty()){
+            dictionaryStd = settingsIni->value("std-dict", "easy_french").toString();
+        }
 
-    // Execute the Qt application : enter the event loop
-    return app.exec();
+        //
+
+        settingsIni->sync();
+        delete settingsIni;
+
+        //
+        if(cmdLineParser.isSet(portCL)){
+            port = cmdLineParser.value(portCL).toInt();
+        }
+        if(cmdLineParser.isSet(nameCL)){
+            room.setRoomName(cmdLineParser.value(nameCL));
+        }
+        if(cmdLineParser.isSet(maxPlayersCL)){
+            room.setMaxPlayers(cmdLineParser.value(maxPlayersCL).toInt());
+        }
+        if(cmdLineParser.isSet(numberOfRoundsCL)){
+            room.setNumberOfRounds(cmdLineParser.value(numberOfRoundsCL).toInt());
+        }
+        if(cmdLineParser.isSet(timeByRoundCL)){
+            room.setTimeByRound(cmdLineParser.value(timeByRoundCL).toInt());
+        }
+        if(cmdLineParser.isSet(timeAfterFirstGoodAnswerCL)){
+            room.setTimeAfterFirstGoodAnswer(cmdLineParser.value(timeAfterFirstGoodAnswerCL).toInt());
+        }
+
+        //
+        if(cmdLineParser.isSet(customDictCL)){
+            dictionaryPath = cmdLineParser.value(customDictCL);
+        }
+        else if(cmdLineParser.isSet(standardDictCL)){
+            dictionaryStd = cmdLineParser.value(standardDictCL);
+        }
+
+        //
+        if(dictionaryPath.isEmpty()){
+            if(dictionaryStd == "easy_french"){
+                dictionaryPath = ":/dictionaries/easy_french.txt";
+            }
+            else{
+                qCritical() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
+                            << "There is no standard dictionary named like that :"
+                            << dictionaryStd;
+                throw std::invalid_argument(QString("There is no standard dictionary named like that : " + dictionaryStd).toUtf8());
+            }
+        }
+
+        // Create and launch the server
+        Server server(port, room, dictionaryPath);
+        QMetaObject::invokeMethod(&server, "launch");
+
+        // Execute the Qt application : enter the event loop
+        return app.exec();
+    }
+    // Catch unexpected throw of exception
+    catch(std::exception exception){
+        //
+        app.quit();
+        exit(1);
+    }
 }

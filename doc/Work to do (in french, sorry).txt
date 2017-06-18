@@ -12,6 +12,8 @@ Améliorations :
 	[X] Indique dans le chat quand un joueur se déconnecte
 	[ ] Temps sous forme d'un cercle
 	[ ] Trouver des sons plus différençiable ppur savoir si on est l'artiste lors du début de round
+	[ ] Générer des logs tout au long de l'éxécution du serveur / client
+	[ ] Vérifier la version du jeu lors de la connexion au serveur
 
 Nouvelles fonctionnalités
 	[ ] Nouveaux outils de dessin :
