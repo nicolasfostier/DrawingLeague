@@ -1,15 +1,10 @@
 Bugs :
 	[ ] L'artiste peut continuer à dessiner pendant quelques millisecondes après la fin du round
-	[X] Scores mal triés
-	[X] Réinitialiser la file d'attente d'artiste à la fin des parties et la générer uniquement en début de partie
 
 Améliorations :
 	[ ] Les joueurs qui arrivent en milieu de round reçoivent le début du dessin de l'artiste
 	[ ] Réinitialiser la couleur et la taille du crayon au début des rounds
-	[X] Peut-être ne pas recréer la file d'attente aléatoire quand elle est vide, mais plutôt la faire boucler en réinsérant à chaque fois l'artiste sortie
-	[X] Empêcher de dessiner en taille 1 : faire de la taille 2, la taille minimum
 	[ ] Faire un bouton ready dans la liste des joueurs à la place de la commande !ready : plus friendly
-	[X] Indique dans le chat quand un joueur se déconnecte
 	[ ] Temps sous forme d'un cercle
 	[ ] Trouver des sons plus différençiable ppur savoir si on est l'artiste lors du début de round
 	[ ] Générer des logs tout au long de l'éxécution du serveur / client
