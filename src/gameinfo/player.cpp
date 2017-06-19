@@ -42,7 +42,7 @@ Player::Player(QString pseudo, int score){
     this->pseudo = new QTableWidgetItem(pseudo);
     this->pseudo->setFlags(Qt::ItemIsEnabled);
 
-    this->score = new QTableWidgetItem(QString::number(score));
+    this->score = new PlayerScoreTWI(QString::number(score));
     this->score->setFlags(Qt::ItemIsEnabled);
 
     this->isReady = false;
@@ -57,7 +57,7 @@ Player::Player(const Player &player){
     this->pseudo = new QTableWidgetItem(*player.pseudo);
     this->pseudo->setFlags(Qt::ItemIsEnabled);
 
-    this->score = new QTableWidgetItem(*player.score);
+    this->score = new PlayerScoreTWI(*player.score);
     this->score->setFlags(Qt::ItemIsEnabled);
 
     this->isReady = player.isReady;

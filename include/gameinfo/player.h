@@ -6,6 +6,10 @@
 #include <QTableWidgetItem>
 
 
+//
+#include "include/gameinfo/playerscore.h"
+
+
 
 //
 class Player
@@ -15,7 +19,7 @@ class Player
         //
         QTableWidgetItem* pseudo;
         //
-        QTableWidgetItem* score;
+        PlayerScoreTWI* score;
         //
         bool isReady;
         //
