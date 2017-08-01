@@ -9,13 +9,13 @@
 
 //
 class PlayerScoreTWI : public QTableWidgetItem{
-    // Constructeur
-    public :
-        PlayerScoreTWI(QString score);
+	// Constructeur
+	public :
+		PlayerScoreTWI(QString score);
 
-    // Operators
-    public :
-        bool operator<(const QTableWidgetItem &other) const;
+	// Operators
+	public :
+		bool operator<(const QTableWidgetItem &other) const;
 };
 
 

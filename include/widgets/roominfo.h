@@ -19,42 +19,42 @@
 //
 class RoomInfo : public QWidget
 {
-    // Variable
-    private :
+	// Variable
+	private :
 
-        //
-        QGridLayout* layout;
-            //
-            RoomInfoPart* name;
-            //
-            RoomInfoPart* round;
-            //
-            RoomInfoPart* artist;
-            //
-            RoomInfoPart* word;
-            //
-            RoomInfoPart* pointToWin;
-            //
-            RoomInfoPart* time;
-                //
-                QFont timeFont;
+		//
+		QGridLayout* layout;
+			//
+			RoomInfoPart* name;
+			//
+			RoomInfoPart* round;
+			//
+			RoomInfoPart* artist;
+			//
+			RoomInfoPart* word;
+			//
+			RoomInfoPart* pointToWin;
+			//
+			RoomInfoPart* time;
+				//
+				QFont timeFont;
 
-    // Setter
-    public :
-        void setRoom(Room room);
-        void setRound(int round);
-        void setArtist(QString artist);
-        void setWord(QString word);
-        void setPointToWin(int pointToWin);
-        void setTime(int timeRemaining, bool oneHasFound = false);
+	// Setter
+	public :
+		void setRoom(Room room);
+		void setRound(int round);
+		void setArtist(QString artist);
+		void setWord(QString word);
+		void setPointToWin(int pointToWin);
+		void setTime(int timeRemaining, bool oneHasFound = false);
 
-    // Constructor
-    public :
-        RoomInfo(Room room, QWidget* parent = 0);
+	// Constructor
+	public :
+		RoomInfo(Room room, QWidget* parent = 0);
 
-    // Methods
-    public :
-        void updateTimeRemaining();
+	// Methods
+	public :
+		void updateTimeRemaining();
 };
 
 

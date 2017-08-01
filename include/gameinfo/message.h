@@ -11,35 +11,35 @@
 //
 class Message
 {
-    // Variables
-    private :
-        QString pseudo;
-        QString message;
-        QDateTime timestamp;
+	// Variables
+	private :
+		QString pseudo;
+		QString message;
+		QDateTime timestamp;
 
-    // Getter
-    public :
-        QString getPseudo();
-        QString getMessage();
+	// Getter
+	public :
+		QString getPseudo();
+		QString getMessage();
 
-    // Constructor
-    public :
-        Message(QString pseudo = "Default", QString message = QString(), QDateTime timestamp = QDateTime::currentDateTimeUtc());
-        Message(const Message& msg);
+	// Constructor
+	public :
+		Message(QString pseudo = "Default", QString message = QString(), QDateTime timestamp = QDateTime::currentDateTimeUtc());
+		Message(const Message& msg);
 
-    // Destructor
-    public :
-        ~Message();
+	// Destructor
+	public :
+		~Message();
 
-    // Methods
-    public :
-        //
-        QString toString(bool includeDate);
+	// Methods
+	public :
+		//
+		QString toString(bool includeDate);
 
-    // Operators
-    public :
-        friend QDataStream& operator<<(QDataStream& dataStream, Message chatMessage);
-        friend QDataStream& operator>>(QDataStream& dataStream, Message& chatMessage);
+	// Operators
+	public :
+		friend QDataStream& operator<<(QDataStream& dataStream, Message chatMessage);
+		friend QDataStream& operator>>(QDataStream& dataStream, Message& chatMessage);
 };
 
 Q_DECLARE_METATYPE(Message)

@@ -24,96 +24,96 @@
 //
 class DataBlockReader : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 
-    // Variables
-    private :
-        //
-        QTcpSocket* socket;
-        //
-        QDataStream* socketStream;
+	// Variables
+	private :
+		//
+		QTcpSocket* socket;
+		//
+		QDataStream* socketStream;
 
-        //
-        int nextSizeToRead;
-        //
-        DataBlockType nextDataBlockType;
+		//
+		int nextSizeToRead;
+		//
+		DataBlockType nextDataBlockType;
 
-    // Constructor
-    public :
-        DataBlockReader(QTcpSocket* socket);
+	// Constructor
+	public :
+		DataBlockReader(QTcpSocket* socket);
 
-    // Destructor
-    public :
-        ~DataBlockReader();
+	// Destructor
+	public :
+		~DataBlockReader();
 
-    // Qt slots
-    public slots :
-        //
-        void read();
+	// Qt slots
+	public slots :
+		//
+		void read();
 
-    // Signals
-    signals :
-        //
-        void readyToReceive();
+	// Signals
+	signals :
+		//
+		void readyToReceive();
 
-        //
-        void pseudoOk();
-        //
-        void pseudoAlreadyUsed();
+		//
+		void pseudoOk();
+		//
+		void pseudoAlreadyUsed();
 
-        //
-        void playerEnteringReceived(Player player);
-        //
-        void playerOnlineReceived(Player pseudo);
-        //
-        void playerLeavingReceived(QString pseudo);
+		//
+		void playerEnteringReceived(Player player);
+		//
+		void playerOnlineReceived(Player pseudo);
+		//
+		void playerLeavingReceived(QString pseudo);
 
-        //
-        void roomReceived(Room room);
+		//
+		void roomReceived(Room room);
 
-        //
-        void gameStartingReceived();
-        //
-        void roundStartingReceived(int round, QString artist, QString word, int pointToWin);
-        //
-        void roundEndingReceived(QString word);
-        //
-        void skipWordReceived();
-        //
-        void gameEndingReceived(QString winner);
+		//
+		void gameStartingReceived();
+		//
+		void roundStartingReceived(int round, QString artist, QString word, int pointToWin);
+		//
+		void roundEndingReceived(QString word);
+		//
+		void skipWordReceived();
+		//
+		void gameEndingReceived(QString winner);
 
-        //
-        void chatReceived(Message msg);
-        //
-        void answerReceived(Message msg);
-        //
-        void answerFoundReceived(QString pseudo, int pointWon);
+		//
+		void chatReceived(Message msg);
+		//
+		void answerReceived(Message msg);
+		//
+		void answerFoundReceived(QString pseudo, int pointWon);
 
-        //
-        void hintReceived(QString hint);
+		//
+		void hintReceived(QString hint);
 
-        //
-        void drawingToolTypeReceived(DrawingToolType drawingToolType);
-        //
-        void drawingToolColorReceived(QColor color);
-        //
-        void drawingToolWidthReceived(int width);
+		//
+		void drawingToolTypeReceived(DrawingToolType drawingToolType);
+		//
+		void drawingToolColorReceived(QColor color);
+		//
+		void drawingToolWidthReceived(int width);
 
-        //
-        void canvasResetReceived(bool confirmation = false);
+		//
+		void canvasResetReceived(bool confirmation = false);
 
-        //
-        void canvasMousePressEventReceived(QPoint pos);
-        //
-        void canvasMouseMoveEventReceived(QPoint pos);
-        //
-        void canvasMouseReleaseEventReceived(QPoint pos);
+		//
+		void canvasMousePressEventReceived(QPoint pos);
+		//
+		void canvasMouseMoveEventReceived(QPoint pos);
+		//
+		void canvasMouseReleaseEventReceived(QPoint pos);
 
-        //
-        void serverMsgReadyNeededReceived(int howManyMoreReadyNeeded);
+		//
+		void serverMsgReadyNeededReceived(int howManyMoreReadyNeeded);
 
-        //
-        void serverClosed();
+		//
+		void serverClosed();
 };
 
 

@@ -24,83 +24,83 @@
 //
 class DataBlockWriter : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 
-    // Variables
-    private :
-        //
-        QTcpSocket* socket;
-        //
-        QDataStream* socketStream;
+	// Variables
+	private :
+		//
+		QTcpSocket* socket;
+		//
+		QDataStream* socketStream;
 
-    // Constructor
-    public :
-        DataBlockWriter(QTcpSocket* socket);
+	// Constructor
+	public :
+		DataBlockWriter(QTcpSocket* socket);
 
-    // Destructor
-    public :
-        ~DataBlockWriter();
+	// Destructor
+	public :
+		~DataBlockWriter();
 
-    // Qt slots
-    public slots :
-        //
-        void sendReadyToReceive();
+	// Qt slots
+	public slots :
+		//
+		void sendReadyToReceive();
 
-        //
-        void sendPseudoOk();
-        //
-        void sendPseudoAlreadyUsed();
+		//
+		void sendPseudoOk();
+		//
+		void sendPseudoAlreadyUsed();
 
-        //
-        void sendPlayerEntering(Player player);
-        //
-        void sendPlayerOnline(Player player);
-        //
-        void sendPlayerLeaving(QString pseudo);
+		//
+		void sendPlayerEntering(Player player);
+		//
+		void sendPlayerOnline(Player player);
+		//
+		void sendPlayerLeaving(QString pseudo);
 
-        //
-        void sendRoom(Room room);
+		//
+		void sendRoom(Room room);
 
-        //
-        void sendGameStarting();
-        //
-        void sendRoundStarting(quint32 round, QString artist, QString word, quint32 pointToWin);
-        //
-        void sendRoundEnding(QString word);
-        //
-        void sendSkipWord();
-        //
-        void sendGameEnding(QString winner);
+		//
+		void sendGameStarting();
+		//
+		void sendRoundStarting(quint32 round, QString artist, QString word, quint32 pointToWin);
+		//
+		void sendRoundEnding(QString word);
+		//
+		void sendSkipWord();
+		//
+		void sendGameEnding(QString winner);
 
-        //
-        void sendChat(Message msg);
-        //
-        void sendAnswer(Message msg);
-        //
-        void sendAnswerFound(QString pseudo, quint32 pointWon);
+		//
+		void sendChat(Message msg);
+		//
+		void sendAnswer(Message msg);
+		//
+		void sendAnswerFound(QString pseudo, quint32 pointWon);
 
-        //
-        void sendHint(QString hint = QString());
+		//
+		void sendHint(QString hint = QString());
 
-        //
-        void sendDrawingToolType(DrawingToolType drawingToolType);
-        //
-        void sendDrawingToolColor(QColor color);
-        //
-        void sendDrawingToolWidth(int width);
+		//
+		void sendDrawingToolType(DrawingToolType drawingToolType);
+		//
+		void sendDrawingToolColor(QColor color);
+		//
+		void sendDrawingToolWidth(int width);
 
-        //
-        void sendCanvasReset();
+		//
+		void sendCanvasReset();
 
-        //
-        void sendCanvasMousePressEvent(QPoint pos);
-        //
-        void sendCanvasMouseMoveEvent(QPoint pos);
-        //
-        void sendCanvasMouseReleaseEvent(QPoint pos);
+		//
+		void sendCanvasMousePressEvent(QPoint pos);
+		//
+		void sendCanvasMouseMoveEvent(QPoint pos);
+		//
+		void sendCanvasMouseReleaseEvent(QPoint pos);
 
-        //
-        void sendServerMsgReadyNeeded(int howManyMoreReadyNeeded);
+		//
+		void sendServerMsgReadyNeeded(int howManyMoreReadyNeeded);
 };
 
 

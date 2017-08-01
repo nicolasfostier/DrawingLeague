@@ -4,17 +4,17 @@
 
 // Getter
 QTcpSocket* ServerThread::getTcpSocket(){
-    return socket;
+	return socket;
 }
 
 Player* ServerThread::getPlayer(){
-    return player;
+	return player;
 }
 DataBlockReader* ServerThread::getDataBlockReader(){
-    return dataBlockReader;
+	return dataBlockReader;
 }
 DataBlockWriter* ServerThread::getDataBlockWriter(){
-    return dataBlockWriter;
+	return dataBlockWriter;
 }
 
 
@@ -22,34 +22,34 @@ DataBlockWriter* ServerThread::getDataBlockWriter(){
 // Constructeur
 ServerThread::ServerThread(QTcpSocket* socket)
 {
-    this->player = NULL;
-    this->socketDescriptor = socket->socketDescriptor();
+	this->player = NULL;
+	this->socketDescriptor = socket->socketDescriptor();
 
-    // Move the object to another thread and start its execution
-    QThread* threadCFU = new QThread();
-    QObject::connect(threadCFU, SIGNAL(finished()), threadCFU, SLOT(deleteLater()));
-    this->moveToThread(threadCFU);
-    QObject::connect(threadCFU, SIGNAL(started()), this, SLOT(launch()));
-    this->thread()->start();
+	// Move the object to another thread and start its execution
+	QThread* threadCFU = new QThread();
+	QObject::connect(threadCFU, SIGNAL(finished()), threadCFU, SLOT(deleteLater()));
+	this->moveToThread(threadCFU);
+	QObject::connect(threadCFU, SIGNAL(started()), this, SLOT(launch()));
+	this->thread()->start();
 }
 
 
 
 // Destructor
 ServerThread::~ServerThread(){
-    //
-    emit playerLeaving(player->getPseudo(), this);
-    if(player != NULL){
-        delete player;
-    }
+	//
+	emit playerLeaving(player->getPseudo(), this);
+	if(player != NULL){
+		delete player;
+	}
 
-    //
-    socket->deleteLater();
-    delete dataBlockReader;
-    delete dataBlockWriter;
+	//
+	socket->deleteLater();
+	delete dataBlockReader;
+	delete dataBlockWriter;
 
-    // Delete its thread with it
-    this->thread()->quit();
+	// Delete its thread with it
+	this->thread()->quit();
 }
 
 
@@ -58,43 +58,43 @@ ServerThread::~ServerThread(){
 
 //
 void ServerThread::launch(){
-    //
-    socket = new QTcpSocket();
-    socket->setSocketDescriptor(socketDescriptor);
-    QObject::connect(socket, SIGNAL(disconnected()), this, SLOT(deleteLater()));
+	//
+	socket = new QTcpSocket();
+	socket->setSocketDescriptor(socketDescriptor);
+	QObject::connect(socket, SIGNAL(disconnected()), this, SLOT(deleteLater()));
 
-    //
-    dataBlockReader = new DataBlockReader(socket);
-    //
-    QObject::connect(dataBlockReader, SIGNAL(pseudoAlreadyUsed()), this, SLOT(deleteLater()));
-    //
-    QObject::connect(dataBlockReader, SIGNAL(playerEnteringReceived(Player)), this, SLOT(setPlayer(Player)));
+	//
+	dataBlockReader = new DataBlockReader(socket);
+	//
+	QObject::connect(dataBlockReader, SIGNAL(pseudoAlreadyUsed()), this, SLOT(deleteLater()));
+	//
+	QObject::connect(dataBlockReader, SIGNAL(playerEnteringReceived(Player)), this, SLOT(setPlayer(Player)));
 
 
-    //
-    dataBlockWriter = new DataBlockWriter(socket);
+	//
+	dataBlockWriter = new DataBlockWriter(socket);
 
-    //
-    dataBlockWriter->sendReadyToReceive();
+	//
+	dataBlockWriter->sendReadyToReceive();
 }
 
 
 //
 void ServerThread::setPlayer(Player player){
-    this->player = new Player(player);
+	this->player = new Player(player);
 
-    //
-    emit pseudoReceived(this);
+	//
+	emit pseudoReceived(this);
 }
 
 //
 void ServerThread::pseudoAlreadyUsed(){
-    dataBlockWriter->sendPseudoAlreadyUsed();
+	dataBlockWriter->sendPseudoAlreadyUsed();
 }
 
 
 
 // Operators
 bool ServerThread::operator!=(ServerThread serverThread){
-    return this->socket != serverThread.socket;
+	return this->socket != serverThread.socket;
 }

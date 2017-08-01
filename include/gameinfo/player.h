@@ -14,62 +14,62 @@
 //
 class Player
 {
-    // Variables
-    private :
-        //
-        QTableWidgetItem* pseudo;
-        //
-        PlayerScoreTWI* score;
-        //
-        bool isReady;
-        //
-        bool answerFound;
-        //
-        bool isArtist;
+	// Variables
+	private :
+		//
+		QTableWidgetItem* pseudo;
+		//
+		PlayerScoreTWI* score;
+		//
+		bool isReady;
+		//
+		bool answerFound;
+		//
+		bool isArtist;
 
-        //
-        QFont hasntFoundFont;
-        //
-        QFont hasFoundFont;
-        //
-        QFont isArtistFont;
+		//
+		QFont hasntFoundFont;
+		//
+		QFont hasFoundFont;
+		//
+		QFont isArtistFont;
 
-    // Getter
-    public :
-        QString getPseudo();
-        int getScore();
-        bool getIsReady();
-        bool getAnswerFound();
-        bool getIsArtist();
+	// Getter
+	public :
+		QString getPseudo();
+		int getScore();
+		bool getIsReady();
+		bool getAnswerFound();
+		bool getIsArtist();
 
-    // Setter
-    public :
-        void setScore(int score);
-        void setIsReady(bool isReady);
-        void setAnswerFound(bool answerFound);
-        void setIsArtist(bool isArtist);
+	// Setter
+	public :
+		void setScore(int score);
+		void setIsReady(bool isReady);
+		void setAnswerFound(bool answerFound);
+		void setIsArtist(bool isArtist);
 
-    // Constructor
-    public :
-        Player(QString pseudo = " ", int score = 0);
-        Player(const Player& player);
+	// Constructor
+	public :
+		Player(QString pseudo = " ", int score = 0);
+		Player(const Player& player);
 
-    // Destructor
-    public :
-        ~Player();
+	// Destructor
+	public :
+		~Player();
 
-    // Methods
-    public :
-        //
-        void addToTableWidget(QTableWidget* playersTable);
-        //
-        void updateColor();
+	// Methods
+	public :
+		//
+		void addToTableWidget(QTableWidget* playersTable);
+		//
+		void updateColor();
 
 
-    // Operators
-    public :
-        friend QDataStream& operator<<(QDataStream& dataStream, Player player);
-        friend QDataStream& operator>>(QDataStream& dataStream, Player& player);
+	// Operators
+	public :
+		friend QDataStream& operator<<(QDataStream& dataStream, Player player);
+		friend QDataStream& operator>>(QDataStream& dataStream, Player& player);
 };
 
 Q_DECLARE_METATYPE(Player)

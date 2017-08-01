@@ -16,36 +16,36 @@
 // (It's executed on its own thread and will delete himself when its task is over)
 class UpdateChecker : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 
-    // Variable
-    private :
-        // Current version of the program
-        QString currentVersion;
-        // Manager for the connection to github
-        QNetworkAccessManager* manager;
-        // Reply from github
-        QNetworkReply* reply;
+	// Variable
+	private :
+		// Current version of the program
+		QString currentVersion;
+		// Manager for the connection to github
+		QNetworkAccessManager* manager;
+		// Reply from github
+		QNetworkReply* reply;
 
-    // Constructor
-    public :
-        UpdateChecker(QString currentVersion);
+	// Constructor
+	public :
+		UpdateChecker(QString currentVersion);
 
-    // Destructor
-    public :
-        ~UpdateChecker();
+	// Destructor
+	public :
+		~UpdateChecker();
 
-    // Qt slots
-    public slots :
-        // Ask to github the information about the last release of the program
-        void askGithub();
+	// Qt slots
+	public slots :
+		// Ask to github the information about the last release of the program
+		void askGithub();
 
-        // Read the reply from github and send it to the GUI thread if there is an update
-        void readReply();
+		// Read the reply from github and send it to the GUI thread if there is an update
+		void readReply();
 
-    // Signals
-    signals :
-        void updateToDownload(QJsonDocument jsonReply);
+	// Signals
+	signals :
+		void updateToDownload(QJsonDocument jsonReply);
 };
 
 

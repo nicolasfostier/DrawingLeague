@@ -24,59 +24,59 @@
 //
 class ServerThread : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 
-    // Variables
-    private :
-        //
-        int socketDescriptor;
-        //
-        QTcpSocket* socket;
-        //
-        DataBlockReader* dataBlockReader;
-        //
-        DataBlockWriter* dataBlockWriter;
+	// Variables
+	private :
+		//
+		int socketDescriptor;
+		//
+		QTcpSocket* socket;
+		//
+		DataBlockReader* dataBlockReader;
+		//
+		DataBlockWriter* dataBlockWriter;
 
-        //
-        Player* player;
+		//
+		Player* player;
 
-    // Getter
-    public :
-        QTcpSocket* getTcpSocket();
-        Player* getPlayer();
-        DataBlockReader* getDataBlockReader();
-        DataBlockWriter* getDataBlockWriter();
+	// Getter
+	public :
+		QTcpSocket* getTcpSocket();
+		Player* getPlayer();
+		DataBlockReader* getDataBlockReader();
+		DataBlockWriter* getDataBlockWriter();
 
-    // Constructeur
-    public :
-        ServerThread(QTcpSocket* socket);
+	// Constructeur
+	public :
+		ServerThread(QTcpSocket* socket);
 
-    // Destructor
-    public :
-        ~ServerThread();
+	// Destructor
+	public :
+		~ServerThread();
 
-    // Qt slots
-    public slots :
-        //
-        void launch();
+	// Qt slots
+	public slots :
+		//
+		void launch();
 
-        //
-        void setPlayer(Player player);
+		//
+		void setPlayer(Player player);
 
-        //
-        void pseudoAlreadyUsed();
+		//
+		void pseudoAlreadyUsed();
 
-    // Qt signals
-    signals :
-        //
-        void pseudoReceived(ServerThread* serverThread);
+	// Qt signals
+	signals :
+		//
+		void pseudoReceived(ServerThread* serverThread);
 
-        //
-        void playerLeaving(QString pseudo, ServerThread* ServerThread);
+		//
+		void playerLeaving(QString pseudo, ServerThread* ServerThread);
 
-    // Operators
-    public :
-        bool operator!=(ServerThread serverThread);
+	// Operators
+	public :
+		bool operator!=(ServerThread serverThread);
 };
 
 

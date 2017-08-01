@@ -29,119 +29,119 @@
 // Host a room
 class Server : public QTcpServer
 {
-    Q_OBJECT
+	Q_OBJECT
 
-    // Variables
-    private :
-        //
-        int port;        
-        //
-        QHash<QString, ServerThread*> serverThreads;
+	// Variables
+	private :
+		//
+		int port;        
+		//
+		QHash<QString, ServerThread*> serverThreads;
 
-        //
-        Room room;
+		//
+		Room room;
 
-        //
-        QList<ServerThread*> artistsQueue;
-        //
-        ServerThread* artist;
+		//
+		QList<ServerThread*> artistsQueue;
+		//
+		ServerThread* artist;
 
-        QString dictionaryPath;
-        //
-        QList<QString> words;
-        //
-        QList<QString> wordsQueue;
-        //
-        QString word;
+		QString dictionaryPath;
+		//
+		QList<QString> words;
+		//
+		QList<QString> wordsQueue;
+		//
+		QString word;
 
-        //
-        int playerFoundAnswer;
-        //
-        int hintGiven;
+		//
+		int playerFoundAnswer;
+		//
+		int hintGiven;
 
-        //
-        DrawingToolType drawingToolType;
-        //
-        QColor drawingToolColor;
-        //
-        int drawingToolWidth;
+		//
+		DrawingToolType drawingToolType;
+		//
+		QColor drawingToolColor;
+		//
+		int drawingToolWidth;
 
-        //
-        QTimer* timerBetweenRound;
-        //
-        QTimer* timerRound;
-        //
-        QTimer* timerRoundAfterFirstAnswer;
+		//
+		QTimer* timerBetweenRound;
+		//
+		QTimer* timerRound;
+		//
+		QTimer* timerRoundAfterFirstAnswer;
 
 
-    // Constructor
-    public:
-        Server(int port, Room room, QString dictionaryPath);
+	// Constructor
+	public:
+		Server(int port, Room room, QString dictionaryPath);
 
-    // Destructor
-    public :
-        ~Server();
+	// Destructor
+	public :
+		~Server();
 
-    // Methods
-    public :
-        //
-        void loadDictionary(QString dictionaryPath);
+	// Methods
+	public :
+		//
+		void loadDictionary(QString dictionaryPath);
 
-        //
-        int playerReady();
-        //
-        int howManyMoreReadyNeeded();
+		//
+		int playerReady();
+		//
+		int howManyMoreReadyNeeded();
 
-        //
-        void nextArtist();
-        //
-        void nextWord();
+		//
+		void nextArtist();
+		//
+		void nextWord();
 
-    // Qt slots
-    public slots :
-        //
-        void launch();
+	// Qt slots
+	public slots :
+		//
+		void launch();
 
-        //
-        void startGame();
-        //
-        void startRound();
-        //
-        void endRound();
-        //
-        void skipWord();
-        //
-        void endGame();
+		//
+		void startGame();
+		//
+		void startRound();
+		//
+		void endRound();
+		//
+		void skipWord();
+		//
+		void endGame();
 
-        //
-        void addPlayer();
-            //
-            void setupPlayer(ServerThread* newServerThread);
-        //
-        void removePlayer(QString pseudo, ServerThread* serverThread);
+		//
+		void addPlayer();
+			//
+			void setupPlayer(ServerThread* newServerThread);
+		//
+		void removePlayer(QString pseudo, ServerThread* serverThread);
 
-        //
-        void checkAnswer(Message msg);
-        //
-        void checkChatCommand(Message msg);
+		//
+		void checkAnswer(Message msg);
+		//
+		void checkChatCommand(Message msg);
 
-        //
-        void hint();
+		//
+		void hint();
 
-        //
-        void updateDrawingToolType(DrawingToolType drawingToolType);
-        //
-        void updateDrawingToolColor(QColor color);
-        //
-        void updateDrawingToolWidth(int width);
+		//
+		void updateDrawingToolType(DrawingToolType drawingToolType);
+		//
+		void updateDrawingToolColor(QColor color);
+		//
+		void updateDrawingToolWidth(int width);
 
-        //
-        void sendGameNotStarted();
+		//
+		void sendGameNotStarted();
 
-    // Signals
-    signals :
-        //
-        void isReady();
+	// Signals
+	signals :
+		//
+		void isReady();
 };
 
 

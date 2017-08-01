@@ -15,30 +15,30 @@
 // A polyline which can be drawn by the artist
 class Polyline : public AbstractShape
 {
-    // Variables
-    private :
-        // The points of the polyline is stored in this polygon
-        QPolygon polyline;
+	// Variables
+	private :
+		// The points of the polyline is stored in this polygon
+		QPolygon polyline;
 
-    // Getter
-    public :
-        QPoint getLastPoint();
-        bool isFinished();
+	// Getter
+	public :
+		QPoint getLastPoint();
+		bool isFinished();
 
-    // Constructor
-    public :
-        Polyline(QPen pen, QPoint firstPoint);
+	// Constructor
+	public :
+		Polyline(QPen pen, QPoint firstPoint);
 
-    // Destructor
-    public :
-        ~Polyline();
+	// Destructor
+	public :
+		~Polyline();
 
-    // Methods
-    public :
-        // Draw the shape
-        void draw(QPainter *painter);
-        // Add a point at the end of the polyline
-        void addPoint(QPoint newPoint);
+	// Methods
+	public :
+		// Draw the shape
+		void draw(QPainter *painter);
+		// Add a point at the end of the polyline
+		void addPoint(QPoint newPoint);
 };
 
 

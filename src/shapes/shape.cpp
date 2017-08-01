@@ -4,13 +4,13 @@
 
 // Setter
 void AbstractShape::setPen(QPen pen){
-    this->pen = pen;
+	this->pen = pen;
 }
 
 
 // Constructor
 AbstractShape::AbstractShape(QPen pen){
-    this->pen = pen;
+	this->pen = pen;
 }
 
 

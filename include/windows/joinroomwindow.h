@@ -25,73 +25,73 @@
 
 class JoinRoomWindow : public QDialog
 {
-    Q_OBJECT
+	Q_OBJECT
 
-    // Variables
-    private :
-        //
-        QTcpSocket* socket;
+	// Variables
+	private :
+		//
+		QTcpSocket* socket;
 
-        //
-        DataBlockReader* dataBlockReader;
-        //
-        DataBlockWriter* dataBlockWriter;
+		//
+		DataBlockReader* dataBlockReader;
+		//
+		DataBlockWriter* dataBlockWriter;
 
-        //
-        QGridLayout* layout;
+		//
+		QGridLayout* layout;
 
-            //
-            QFont labelFont;
+			//
+			QFont labelFont;
 
-            //
-            QLabel* pseudoLabel;
-            //
-            QLineEdit* pseudoLineEdit;
+			//
+			QLabel* pseudoLabel;
+			//
+			QLineEdit* pseudoLineEdit;
 
-            //
-            QLabel* ipLabel;
-            //
-            QLineEdit* ipLineEdit;
+			//
+			QLabel* ipLabel;
+			//
+			QLineEdit* ipLineEdit;
 
-            //
-            QLabel* portLabel;
-            //
-            QLineEdit* portLineEdit;
+			//
+			QLabel* portLabel;
+			//
+			QLineEdit* portLineEdit;
 
-            //
-            QWidget* connectOrCancel;
-                //
-                QHBoxLayout* layoutConnectOrCancel;
-                    //
-                    QPushButton* cancelButton;
-                    //
-                    QPushButton* connectButton;
+			//
+			QWidget* connectOrCancel;
+				//
+				QHBoxLayout* layoutConnectOrCancel;
+					//
+					QPushButton* cancelButton;
+					//
+					QPushButton* connectButton;
 
-    // Constructor
-    public :
-        JoinRoomWindow();
+	// Constructor
+	public :
+		JoinRoomWindow();
 
-    // Qt slots
-    public slots:
-        //
-        void connectToTheServeur();
+	// Qt slots
+	public slots:
+		//
+		void connectToTheServeur();
 
-        //
-        void connectOk();
-        //
-        void connectError();
+		//
+		void connectOk();
+		//
+		void connectError();
 
-        //
-        void sendPseudo();
+		//
+		void sendPseudo();
 
-        //
-        void connectAndPseudoOk();
-        //
-        void pseudoAlreadyUsed();
+		//
+		void connectAndPseudoOk();
+		//
+		void pseudoAlreadyUsed();
 
-    // Signals
-    signals :
-        void roomJoined(QTcpSocket* socket, DataBlockReader* dataBlockReader, DataBlockWriter* dataBlockWriter, QString pseudo);
+	// Signals
+	signals :
+		void roomJoined(QTcpSocket* socket, DataBlockReader* dataBlockReader, DataBlockWriter* dataBlockWriter, QString pseudo);
 };
 
 
