@@ -1,0 +1,36 @@
+Bugs :
+	[ ] The artist can continue to draw during a few ms after the end of the round
+	[ ] The player limit need to be implemented
+
+Improvements :
+	[ ] Players who enter the room after the beginning of the round, need to see the beginning of the drawing
+	[ ] Reinitialize the drawing tools at the begining of each round
+	[ ] Ask players to mark themselves as ready with a more friendly way.
+	[ ] Represent the time as a circle at the right of the number version
+	[ ] Better sound to differentiate easier when the player start the round as an artist or not
+	[ ] The server need to generate better log
+	[ ] Force the client to have the exact same version of the game than the server he wants to connect
+	[ ] Better end game screen
+
+New functionnalities :
+	[ ] New tools to draw :
+		[ ] Line
+		[ ] Frame
+	[ ] Display the ping of player
+	[ ] System of centralized account in a database
+		[ ] Avatar
+		[ ] XP system
+		[ ] Achievement system
+	[ ] Window to manage the server, change the parameter, restart the game, kick players, etc...
+	[ ] Save the drawing of the last round
+	[ ] New dictionnaries
+		[ ] English (just translate the french dictionnary)
+	[ ] Add some command in the chat
+		[ ] Vote to restart the game
+		[ ] Vote to kick a player
+	[ ] Settings menu
+		[ ] Change the volume of the sound
+
+Others : :
+	[ ] Strange behaviour of the method tr() in the class RoomInfo
+	[ ] Only trust the server, not the client (can fix a lot of little bug)
