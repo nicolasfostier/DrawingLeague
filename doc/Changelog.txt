@@ -1,15 +1,6 @@
-1.0.1 :
-	New functionality :
-		- Stand-alone app to host a room.
+1.0.2 :
+	Bug : 
+		- The players list is now correctly sort by score
 
-	Bugs : 
-		- Fix a word in the french dictionary
-		- Fix the separators in the drawing's toolbar
-		- Sort correctly the players by score and by name in the players's list
-
-	Improvements :
-		- Better way to generate the waiting list to draw.
-		- Raise the minimum width on the pen
-		- Message in the chat when someone leave the game
-		- Better way to handle arguments when creating a room
-		- Early stage of a log system
+	Improvement :
+		- More words in the french dictionnary
