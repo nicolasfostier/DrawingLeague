@@ -2,12 +2,10 @@
 
 
 
-//
 QDataStream& operator<<(QDataStream& dataStream, DataBlockType dataBlockType) {
 	return dataStream << static_cast<quint16>(dataBlockType);
 }
 
-//
 QDataStream& operator>>(QDataStream& dataStream, DataBlockType& dataBlockType) {
 	quint16 value;
 	dataStream >> value;

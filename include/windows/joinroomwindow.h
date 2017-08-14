@@ -13,85 +13,59 @@
 #include <QHostAddress>
 #include <QMessageBox>
 #include <QDataStream>
+#include <QApplication>
 
 
-//
 #include "include/datablock/datablockreader.h"
-//
 #include "include/datablock/datablockwriter.h"
+#include "include/gameinfo/errorcode.h"
+#include "include/gameinfo/connection.h"
 
 
 
-
+// Window to join a room
 class JoinRoomWindow : public QDialog
 {
 	Q_OBJECT
 
 	// Variables
 	private :
-		//
-		QTcpSocket* socket;
+		Connection* connection;
 
-		//
-		DataBlockReader* dataBlockReader;
-		//
-		DataBlockWriter* dataBlockWriter;
-
-		//
 		QGridLayout* layout;
 
-			//
 			QFont labelFont;
 
-			//
 			QLabel* pseudoLabel;
-			//
 			QLineEdit* pseudoLineEdit;
 
-			//
 			QLabel* ipLabel;
-			//
 			QLineEdit* ipLineEdit;
 
-			//
 			QLabel* portLabel;
-			//
 			QLineEdit* portLineEdit;
 
-			//
 			QWidget* connectOrCancel;
-				//
 				QHBoxLayout* layoutConnectOrCancel;
-					//
 					QPushButton* cancelButton;
-					//
 					QPushButton* connectButton;
 
 	// Constructor
 	public :
 		JoinRoomWindow();
 
+	// Destructor
+	public :
+		~JoinRoomWindow();
+
 	// Qt slots
 	public slots:
-		//
-		void connectToTheServeur();
-
-		//
-		void connectOk();
-		//
-		void connectError();
-
-		//
-		void sendPseudo();
-
-		//
-		void connectAndPseudoOk();
-		//
-		void pseudoAlreadyUsed();
+		void newConnection();
+		void hasEnteredTheGame();
 
 	// Signals
 	signals :
-		void roomJoined(QTcpSocket* socket, DataBlockReader* dataBlockReader, DataBlockWriter* dataBlockWriter, QString pseudo);
+		void roomJoined(Connection* connection);
 };
 
 

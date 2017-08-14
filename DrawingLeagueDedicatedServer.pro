@@ -13,7 +13,7 @@ macx{
 	ICON = res/images/logo.icns
 }
 
-VERSION = 1.0.1
+VERSION = 1.1
 
 
 
@@ -27,26 +27,36 @@ QT +=   core \
 		network \
 		widgets \
 
-SOURCES +=  src/server/servermain.cpp \
-			src/server/server.cpp \
-			src/server/serverthread.cpp \
-			src/gameinfo/message.cpp \
-			src/gameinfo/player.cpp \
-			src/gameinfo/room.cpp \
-			src/gameinfo/drawingtooltype.cpp \
-			src/datablock/datablockreader.cpp \
+SOURCES +=  src/datablock/datablockreader.cpp \
 			src/datablock/datablocktype.cpp \
 			src/datablock/datablockwriter.cpp \
+			src/gameinfo/connection.cpp \
+			src/gameinfo/drawingtooltype.cpp \
+			src/gameinfo/errorcode.cpp \
+			src/gameinfo/message.cpp \
+			src/gameinfo/player.cpp \
+			src/gameinfo/playerscore.cpp \
+			src/gameinfo/room.cpp \
+			src/loghandler.cpp \
+			src/server/server.cpp \
+			src/server/servermain.cpp \
+			src/server/serverthread.cpp \
+			src/server/wordtools.cpp \
 
-HEADERS +=  include/server/server.h \
-			include/server/serverthread.h \
-			include/gameinfo/message.h \
-			include/gameinfo/player.h \
-			include/gameinfo/room.h \
-			include/gameinfo/drawingtooltype.h \
-			include/datablock/datablockreader.h \
+HEADERS +=  include/datablock/datablockreader.h \
 			include/datablock/datablocktype.h \
 			include/datablock/datablockwriter.h \
+			include/gameinfo/connection.h \
+			include/gameinfo/drawingtooltype.h \
+			include/gameinfo/errorcode.h \
+			include/gameinfo/message.h \
+			include/gameinfo/player.h \
+			include/gameinfo/playerscore.h \
+			include/gameinfo/room.h \
+			include/loghandler.h \
+			include/server/server.h \
+			include/server/serverthread.h \
+			include/server/wordtools.h \
 
 RESOURCES +=    res/dictionaries.qrc \
 				res/lang.qrc

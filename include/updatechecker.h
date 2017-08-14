@@ -20,11 +20,8 @@ class UpdateChecker : public QObject
 
 	// Variable
 	private :
-		// Current version of the program
 		QString currentVersion;
-		// Manager for the connection to github
 		QNetworkAccessManager* manager;
-		// Reply from github
 		QNetworkReply* reply;
 
 	// Constructor
@@ -37,10 +34,8 @@ class UpdateChecker : public QObject
 
 	// Qt slots
 	public slots :
-		// Ask to github the information about the last release of the program
 		void askGithub();
 
-		// Read the reply from github and send it to the GUI thread if there is an update
 		void readReply();
 
 	// Signals

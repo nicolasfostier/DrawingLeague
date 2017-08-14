@@ -7,7 +7,6 @@
 #include <QPainter>
 
 
-// Abstract class which contains the shape drawn by the artist
 #include "include/shapes/shape.h"
 
 
@@ -17,7 +16,6 @@ class Polyline : public AbstractShape
 {
 	// Variables
 	private :
-		// The points of the polyline is stored in this polygon
 		QPolygon polyline;
 
 	// Getter
@@ -35,9 +33,7 @@ class Polyline : public AbstractShape
 
 	// Methods
 	public :
-		// Draw the shape
 		void draw(QPainter *painter);
-		// Add a point at the end of the polyline
 		void addPoint(QPoint newPoint);
 };
 

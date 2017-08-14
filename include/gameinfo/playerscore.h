@@ -7,13 +7,15 @@
 
 
 
-//
-class PlayerScoreTWI : public QTableWidgetItem{
+// Handle the score of a player
+/* It's needed to overload the comparison operator :
+ * we can't sort the player by score without it */
+class PlayerScore : public QTableWidgetItem{
 	// Constructeur
 	public :
-		PlayerScoreTWI(QString score);
+		PlayerScore(QString score);
 
-	// Operators
+	// Operator
 	public :
 		bool operator<(const QTableWidgetItem &other) const;
 };

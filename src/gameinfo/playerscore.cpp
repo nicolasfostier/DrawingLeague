@@ -3,12 +3,14 @@
 
 
 // Constructeur
-PlayerScoreTWI::PlayerScoreTWI(QString score) : QTableWidgetItem(score)
+PlayerScore::PlayerScore(QString score) : QTableWidgetItem(score)
 {
 
 }
 
-//
-bool PlayerScoreTWI::operator<(const QTableWidgetItem &other) const{
+
+
+// Operator
+bool PlayerScore::operator<(const QTableWidgetItem &other) const{
 	return text().toInt() < other.text().toInt();
 }

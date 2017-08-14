@@ -24,7 +24,6 @@ Polyline::~Polyline(){
 
 // Methods
 
-// Draw the shape
 void Polyline::draw(QPainter *painter){
 	painter->setPen(pen);
 
@@ -40,7 +39,6 @@ void Polyline::draw(QPainter *painter){
 	}
 }
 
-// Add a point at the end of the polyline
 void Polyline::addPoint(QPoint newPoint)
 {
 	polyline.append(newPoint);

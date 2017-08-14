@@ -9,9 +9,11 @@ UpdateChecker::UpdateChecker(QString currentVersion)
 
 	// Move the object to another thread and start its execution
 	QThread* threadCFU = new QThread();
-	QObject::connect(threadCFU, SIGNAL(finished()), threadCFU, SLOT(deleteLater()));
+	QObject::connect(threadCFU, SIGNAL(finished()),
+					 threadCFU, SLOT(deleteLater()));
 	this->moveToThread(threadCFU);
-	QObject::connect(threadCFU, SIGNAL(started()), this, SLOT(askGithub()));
+	QObject::connect(threadCFU, SIGNAL(started()),
+					 this, SLOT(askGithub()));
 	threadCFU->start();
 }
 
@@ -22,7 +24,6 @@ UpdateChecker::~UpdateChecker()
 {
 	delete manager;
 
-	// Delete its thread with it
 	this->thread()->quit();
 }
 
@@ -30,7 +31,6 @@ UpdateChecker::~UpdateChecker()
 
 // Qt slots
 
-// Ask to github the information about the last release of the program
 void UpdateChecker::askGithub(){
 	this->manager = new QNetworkAccessManager();
 
@@ -38,13 +38,12 @@ void UpdateChecker::askGithub(){
 	request.setUrl(QString("https://api.github.com/repos/nicolasfostier/DrawingLeague/releases/latest"));
 
 	reply = manager->get(request);
-	QObject::connect(reply, SIGNAL(finished()), this, SLOT(readReply()));
+	QObject::connect(reply, SIGNAL(finished()),
+					 this, SLOT(readReply()));
 }
 
-// Read and process the reply from github
 void UpdateChecker::readReply()
 {
-	// Check if everything went well
 	if(reply->error() == QNetworkReply::NoError)
 	{
 		QJsonDocument jsonReply = QJsonDocument::fromJson(reply->readAll());
@@ -55,6 +54,5 @@ void UpdateChecker::readReply()
 		}
 	}
 
-	// The task of this object is over, we can delete it
 	this->deleteLater();
 }

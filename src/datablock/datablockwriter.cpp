@@ -3,7 +3,7 @@
 
 
 // Constructor
-DataBlockWriter::DataBlockWriter(QTcpSocket* socket)
+DataBlockWriter::DataBlockWriter(QTcpSocket* socket, QObject* parent) : QObject(parent)
 {
 	this->socket = socket;
 	this->socketStream = new QDataStream(socket);
@@ -20,7 +20,6 @@ DataBlockWriter::~DataBlockWriter(){
 
 // Qt slots
 
-//
 void DataBlockWriter::sendReadyToReceive(){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -28,33 +27,35 @@ void DataBlockWriter::sendReadyToReceive(){
 	*socketStream << quint32(blockToSend.size()) << DataBlockType::READY_TO_RECEIVE << blockToSend;
 }
 
+void DataBlockWriter::sendEnterTheGame(Player player, QString gameVersion){
+	QByteArray blockToSend;
+	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
+	blockToSendStream << player << gameVersion;
+	*socketStream << quint32(blockToSend.size()) << DataBlockType::ENTER_THE_GAME << blockToSend;
+}
 
-//
-void DataBlockWriter::sendPseudoOk(){
+void DataBlockWriter::sendHasEnteredTheGame(){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
 	blockToSendStream << quint32(0);
-	*socketStream << quint32(blockToSend.size()) << DataBlockType::PSEUDO_OK << blockToSend;
+	*socketStream << quint32(blockToSend.size()) << DataBlockType::HAS_ENTERED_THE_GAME << blockToSend;
 }
 
-//
-void DataBlockWriter::sendPseudoAlreadyUsed(){
+void DataBlockWriter::sendGameError(ErrorCode errorCode){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
-	blockToSendStream << quint32(0);
-	*socketStream << quint32(blockToSend.size()) << DataBlockType::PSEUDO_ALREADY_USED << blockToSend;
+	blockToSendStream << errorCode;
+	*socketStream << quint32(blockToSend.size()) << DataBlockType::GAME_ERROR << blockToSend;
 }
 
 
-//
-void DataBlockWriter::sendPlayerEntering(Player player){
+void DataBlockWriter::sendPlayerEntering(QString pseudo){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
-	blockToSendStream << player;
+	blockToSendStream << pseudo;
 	*socketStream << quint32(blockToSend.size()) << DataBlockType::PLAYER_ENTERING << blockToSend;
 }
 
-//
 void DataBlockWriter::sendPlayerOnline(Player player){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -62,7 +63,6 @@ void DataBlockWriter::sendPlayerOnline(Player player){
 	*socketStream << quint32(blockToSend.size()) << DataBlockType::PLAYER_ONLINE << blockToSend;
 }
 
-//
 void DataBlockWriter::sendPlayerLeaving(QString pseudo){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -71,7 +71,6 @@ void DataBlockWriter::sendPlayerLeaving(QString pseudo){
 }
 
 
-//
 void DataBlockWriter::sendRoom(Room room){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -80,7 +79,6 @@ void DataBlockWriter::sendRoom(Room room){
 }
 
 
-//
 void DataBlockWriter::sendGameStarting(){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -88,7 +86,6 @@ void DataBlockWriter::sendGameStarting(){
 	*socketStream << quint32(blockToSend.size()) << DataBlockType::GAME_STARTING << blockToSend;
 }
 
-//
 void DataBlockWriter::sendRoundStarting(quint32 round, QString artist, QString word, quint32 pointToWin){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -96,7 +93,6 @@ void DataBlockWriter::sendRoundStarting(quint32 round, QString artist, QString w
 	*socketStream << quint32(blockToSend.size()) << DataBlockType::ROUND_STARTING << blockToSend;
 }
 
-//
 void DataBlockWriter::sendRoundEnding(QString word){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -104,15 +100,6 @@ void DataBlockWriter::sendRoundEnding(QString word){
 	*socketStream << quint32(blockToSend.size()) << DataBlockType::ROUND_ENDING << blockToSend;
 }
 
-//
-void DataBlockWriter::sendSkipWord(){
-	QByteArray blockToSend;
-	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
-	blockToSendStream << quint32(0);
-	*socketStream << quint32(blockToSend.size()) << DataBlockType::SKIP_WORD << blockToSend;
-}
-
-//
 void DataBlockWriter::sendGameEnding(QString winner){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -121,7 +108,6 @@ void DataBlockWriter::sendGameEnding(QString winner){
 }
 
 
-//
 void DataBlockWriter::sendChat(Message msg){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -129,7 +115,6 @@ void DataBlockWriter::sendChat(Message msg){
 	*socketStream << quint32(blockToSend.size()) << DataBlockType::CHAT << blockToSend;
 }
 
-//
 void DataBlockWriter::sendAnswer(Message msg){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -137,7 +122,6 @@ void DataBlockWriter::sendAnswer(Message msg){
 	*socketStream << quint32(blockToSend.size()) << DataBlockType::ANSWER << blockToSend;
 }
 
-//
 void DataBlockWriter::sendAnswerFound(QString pseudo, quint32 pointWon){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -145,8 +129,14 @@ void DataBlockWriter::sendAnswerFound(QString pseudo, quint32 pointWon){
 	*socketStream << quint32(blockToSend.size()) << DataBlockType::ANSWER_FOUND << blockToSend;
 }
 
+void DataBlockWriter::sendAnswerClose(){
+	QByteArray blockToSend;
+	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
+	blockToSendStream << quint32(0);
+	*socketStream << quint32(blockToSend.size()) << DataBlockType::ANSWER_CLOSE << blockToSend;
+}
 
-//
+
 void DataBlockWriter::sendHint(QString hint){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -154,8 +144,22 @@ void DataBlockWriter::sendHint(QString hint){
 	*socketStream << quint32(blockToSend.size()) << DataBlockType::HINT << blockToSend;
 }
 
+void DataBlockWriter::sendSkipWord(){
+	QByteArray blockToSend;
+	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
+	blockToSendStream << quint32(0);
+	*socketStream << quint32(blockToSend.size()) << DataBlockType::SKIP_WORD << blockToSend;
+}
 
-//
+
+void DataBlockWriter::sendReady(){
+	QByteArray blockToSend;
+	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
+	blockToSendStream << quint32(0);
+	*socketStream << quint32(blockToSend.size()) << DataBlockType::READY << blockToSend;
+}
+
+
 void DataBlockWriter::sendDrawingToolType(DrawingToolType drawingToolType){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -163,7 +167,6 @@ void DataBlockWriter::sendDrawingToolType(DrawingToolType drawingToolType){
 	*socketStream << quint32(blockToSend.size()) << DataBlockType::DRAWING_TOOL_TYPE << blockToSend;
 }
 
-//
 void DataBlockWriter::sendDrawingToolColor(QColor color){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -171,7 +174,6 @@ void DataBlockWriter::sendDrawingToolColor(QColor color){
 	*socketStream << quint32(blockToSend.size()) << DataBlockType::DRAWING_TOOL_COLOR << blockToSend;
 }
 
-//
 void DataBlockWriter::sendDrawingToolWidth(int width){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -180,7 +182,6 @@ void DataBlockWriter::sendDrawingToolWidth(int width){
 }
 
 
-//
 void DataBlockWriter::sendCanvasReset(){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -189,7 +190,6 @@ void DataBlockWriter::sendCanvasReset(){
 }
 
 
-//
 void DataBlockWriter::sendCanvasMousePressEvent(QPoint pos){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -197,7 +197,6 @@ void DataBlockWriter::sendCanvasMousePressEvent(QPoint pos){
 	*socketStream << quint32(blockToSend.size()) << DataBlockType::CANVAS_MOUSE_PRESS_EVENT << blockToSend;
 }
 
-//
 void DataBlockWriter::sendCanvasMouseMoveEvent(QPoint pos){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -205,7 +204,6 @@ void DataBlockWriter::sendCanvasMouseMoveEvent(QPoint pos){
 	*socketStream << quint32(blockToSend.size()) << DataBlockType::CANVAS_MOUSE_MOVE_EVENT << blockToSend;
 }
 
-//
 void DataBlockWriter::sendCanvasMouseReleaseEvent(QPoint pos){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
@@ -214,10 +212,9 @@ void DataBlockWriter::sendCanvasMouseReleaseEvent(QPoint pos){
 }
 
 
-//
-void DataBlockWriter::sendServerMsgReadyNeeded(int howManyMoreReadyNeeded){
+void DataBlockWriter::sendReadyNeeded(int nbReadyNeeded){
 	QByteArray blockToSend;
 	QDataStream blockToSendStream(&blockToSend, QIODevice::ReadWrite);
-	blockToSendStream << quint32(howManyMoreReadyNeeded);
-	*socketStream << quint32(blockToSend.size()) << DataBlockType::SERVER_MSG_READY_NEEDED << blockToSend;
+	blockToSendStream << quint32(nbReadyNeeded);
+	*socketStream << quint32(blockToSend.size()) << DataBlockType::READY_NEEDED << blockToSend;
 }

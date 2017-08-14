@@ -12,7 +12,6 @@ class AbstractShape
 {
 	// Variables
 	protected :
-		// Pen to draw the shape
 		QPen pen;
 
 	// Setter
@@ -29,7 +28,6 @@ class AbstractShape
 
 	// Methods
 	public :
-		// Draw the shape
 		virtual void draw(QPainter* painter) = 0;
 };
 

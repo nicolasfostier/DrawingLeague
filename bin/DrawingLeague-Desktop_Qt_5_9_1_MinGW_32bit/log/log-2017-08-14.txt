@@ -1,0 +1,298 @@
+[14 Aug 2017 00:54:47 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[14 Aug 2017 00:54:47 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[14 Aug 2017 00:54:47 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[14 Aug 2017 00:54:47 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[14 Aug 2017 00:54:47 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[14 Aug 2017 02:26:42 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[14 Aug 2017 02:26:42 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[14 Aug 2017 02:26:42 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[14 Aug 2017 02:26:42 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[14 Aug 2017 02:26:42 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[14 Aug 2017 02:27:10 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[14 Aug 2017 02:27:10 +0200] "::ffff:127.0.0.1" 62247 : New connection attempt
+[14 Aug 2017 02:27:10 +0200] InitDataBlock Deb
+[14 Aug 2017 02:27:10 +0200] read Connection(0x21b6bcd0)
+[14 Aug 2017 02:27:10 +0200] InitDataBlock Fin
+[14 Aug 2017 02:27:10 +0200] read Connection(0x21b6bcd0)
+[14 Aug 2017 02:27:10 +0200] DBR ready to receive
+[14 Aug 2017 02:27:10 +0200] enterTheGame Deb
+[14 Aug 2017 02:27:10 +0200] QAbstractSocket::ConnectedState
+[14 Aug 2017 02:27:10 +0200] enterTheGame Fin
+[14 Aug 2017 02:27:10 +0200] read Connection(0x21b79430)
+[14 Aug 2017 02:27:10 +0200] DBR enter the game
+[14 Aug 2017 02:27:10 +0200] wantToEnterTheGame "Test" "1.1"
+[14 Aug 2017 02:27:10 +0200] Avant le cast
+[14 Aug 2017 02:27:10 +0200] Après le cast
+[14 Aug 2017 02:27:10 +0200] "Test"
+[14 Aug 2017 02:27:10 +0200] read Connection(0x21b6bcd0)
+[14 Aug 2017 02:27:10 +0200] read Connection(0x21b79430)
+[14 Aug 2017 02:27:10 +0200] DBR ready to receive
+[14 Aug 2017 02:27:10 +0200] "::ffff:127.0.0.1" 62247 : Player entering : "Test"
+[14 Aug 2017 02:27:10 +0200] read Connection(0x21b6bcd0)
+[14 Aug 2017 02:27:15 +0200] The server is closing
+[14 Aug 2017 02:27:18 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[14 Aug 2017 02:27:18 +0200] "::ffff:127.0.0.1" 62250 : New connection attempt
+[14 Aug 2017 02:27:18 +0200] InitDataBlock Deb
+[14 Aug 2017 02:27:18 +0200] read Connection(0x2a649a08)
+[14 Aug 2017 02:27:18 +0200] InitDataBlock Fin
+[14 Aug 2017 02:27:18 +0200] read Connection(0x2a649a08)
+[14 Aug 2017 02:27:18 +0200] DBR ready to receive
+[14 Aug 2017 02:27:18 +0200] enterTheGame Deb
+[14 Aug 2017 02:27:18 +0200] QAbstractSocket::ConnectedState
+[14 Aug 2017 02:27:18 +0200] enterTheGame Fin
+[14 Aug 2017 02:27:18 +0200] read Connection(0x21b811d8)
+[14 Aug 2017 02:27:18 +0200] DBR enter the game
+[14 Aug 2017 02:27:18 +0200] wantToEnterTheGame "Test" "1.1"
+[14 Aug 2017 02:27:18 +0200] Avant le cast
+[14 Aug 2017 02:27:18 +0200] Après le cast
+[14 Aug 2017 02:27:18 +0200] "Test"
+[14 Aug 2017 02:27:18 +0200] read Connection(0x2a649a08)
+[14 Aug 2017 02:27:18 +0200] read Connection(0x21b811d8)
+[14 Aug 2017 02:27:18 +0200] DBR ready to receive
+[14 Aug 2017 02:27:18 +0200] "::ffff:127.0.0.1" 62250 : Player entering : "Test"
+[14 Aug 2017 02:27:18 +0200] read Connection(0x2a649a08)
+[14 Aug 2017 02:27:18 +0200] QGraphicsScene::addItem: item has already been added to this scene
+[14 Aug 2017 02:27:18 +0200] QGraphicsScene::addItem: item has already been added to this scene
+[14 Aug 2017 02:27:19 +0200] The server is closing
+[14 Aug 2017 02:27:22 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[14 Aug 2017 02:27:22 +0200] "::ffff:127.0.0.1" 62257 : New connection attempt
+[14 Aug 2017 02:27:22 +0200] InitDataBlock Deb
+[14 Aug 2017 02:27:22 +0200] read Connection(0x21b71c80)
+[14 Aug 2017 02:27:22 +0200] InitDataBlock Fin
+[14 Aug 2017 02:27:22 +0200] read Connection(0x21b71c80)
+[14 Aug 2017 02:27:22 +0200] DBR ready to receive
+[14 Aug 2017 02:27:22 +0200] enterTheGame Deb
+[14 Aug 2017 02:27:22 +0200] QAbstractSocket::ConnectedState
+[14 Aug 2017 02:27:22 +0200] enterTheGame Fin
+[14 Aug 2017 02:27:22 +0200] read Connection(0x21b731f0)
+[14 Aug 2017 02:27:22 +0200] DBR enter the game
+[14 Aug 2017 02:27:22 +0200] wantToEnterTheGame "Tessssteet" "1.1"
+[14 Aug 2017 02:27:22 +0200] Avant le cast
+[14 Aug 2017 02:27:22 +0200] Après le cast
+[14 Aug 2017 02:27:22 +0200] "Tessssteet"
+[14 Aug 2017 02:27:22 +0200] read Connection(0x21b71c80)
+[14 Aug 2017 02:27:22 +0200] read Connection(0x21b731f0)
+[14 Aug 2017 02:27:22 +0200] DBR ready to receive
+[14 Aug 2017 02:27:22 +0200] "::ffff:127.0.0.1" 62257 : Player entering : "Tessssteet"
+[14 Aug 2017 02:27:22 +0200] read Connection(0x21b71c80)
+[14 Aug 2017 02:27:22 +0200] QGraphicsScene::addItem: item has already been added to this scene
+[14 Aug 2017 02:27:22 +0200] QGraphicsScene::addItem: item has already been added to this scene
+[14 Aug 2017 02:27:24 +0200] The server is closing
+[14 Aug 2017 02:27:28 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[14 Aug 2017 02:27:28 +0200] "::ffff:127.0.0.1" 62260 : New connection attempt
+[14 Aug 2017 02:27:28 +0200] InitDataBlock Deb
+[14 Aug 2017 02:27:28 +0200] read Connection(0x21b7e140)
+[14 Aug 2017 02:27:28 +0200] InitDataBlock Fin
+[14 Aug 2017 02:27:28 +0200] read Connection(0x21b7e140)
+[14 Aug 2017 02:27:28 +0200] DBR ready to receive
+[14 Aug 2017 02:27:28 +0200] enterTheGame Deb
+[14 Aug 2017 02:27:28 +0200] QAbstractSocket::ConnectedState
+[14 Aug 2017 02:27:28 +0200] enterTheGame Fin
+[14 Aug 2017 02:27:28 +0200] read Connection(0x21b7fc38)
+[14 Aug 2017 02:27:28 +0200] DBR enter the game
+[14 Aug 2017 02:27:28 +0200] wantToEnterTheGame "Teeessst" "1.1"
+[14 Aug 2017 02:27:28 +0200] Avant le cast
+[14 Aug 2017 02:27:28 +0200] Après le cast
+[14 Aug 2017 02:27:28 +0200] "Teeessst"
+[14 Aug 2017 02:27:28 +0200] read Connection(0x21b7e140)
+[14 Aug 2017 02:27:28 +0200] read Connection(0x21b7fc38)
+[14 Aug 2017 02:27:28 +0200] DBR ready to receive
+[14 Aug 2017 02:27:28 +0200] "::ffff:127.0.0.1" 62260 : Player entering : "Teeessst"
+[14 Aug 2017 02:27:28 +0200] read Connection(0x21b7e140)
+[14 Aug 2017 02:27:28 +0200] QGraphicsScene::addItem: item has already been added to this scene
+[14 Aug 2017 02:27:28 +0200] QGraphicsScene::addItem: item has already been added to this scene
+[14 Aug 2017 02:27:29 +0200] The server is closing
+[14 Aug 2017 02:27:31 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[14 Aug 2017 02:27:31 +0200] "::ffff:127.0.0.1" 62262 : New connection attempt
+[14 Aug 2017 02:27:31 +0200] InitDataBlock Deb
+[14 Aug 2017 02:27:31 +0200] read Connection(0x21bac308)
+[14 Aug 2017 02:27:31 +0200] InitDataBlock Fin
+[14 Aug 2017 02:27:31 +0200] read Connection(0x21bac308)
+[14 Aug 2017 02:27:31 +0200] DBR ready to receive
+[14 Aug 2017 02:27:31 +0200] enterTheGame Deb
+[14 Aug 2017 02:27:31 +0200] QAbstractSocket::ConnectedState
+[14 Aug 2017 02:27:31 +0200] enterTheGame Fin
+[14 Aug 2017 02:27:31 +0200] read Connection(0x21b776b0)
+[14 Aug 2017 02:27:31 +0200] DBR enter the game
+[14 Aug 2017 02:27:31 +0200] wantToEnterTheGame "Tesst" "1.1"
+[14 Aug 2017 02:27:31 +0200] Avant le cast
+[14 Aug 2017 02:27:31 +0200] Après le cast
+[14 Aug 2017 02:27:31 +0200] "Tesst"
+[14 Aug 2017 02:27:31 +0200] read Connection(0x21bac308)
+[14 Aug 2017 02:27:31 +0200] read Connection(0x21b776b0)
+[14 Aug 2017 02:27:31 +0200] DBR ready to receive
+[14 Aug 2017 02:27:31 +0200] "::ffff:127.0.0.1" 62262 : Player entering : "Tesst"
+[14 Aug 2017 02:27:31 +0200] read Connection(0x21bac308)
+[14 Aug 2017 02:27:31 +0200] QGraphicsScene::addItem: item has already been added to this scene
+[14 Aug 2017 02:27:31 +0200] QGraphicsScene::addItem: item has already been added to this scene
+[14 Aug 2017 02:27:36 +0200] The server is closing
+[14 Aug 2017 02:27:39 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[14 Aug 2017 02:27:39 +0200] InitDataBlock Deb
+[14 Aug 2017 02:27:39 +0200] read Connection(0x21babc58)
+[14 Aug 2017 02:27:39 +0200] InitDataBlock Fin
+[14 Aug 2017 02:27:39 +0200] "::ffff:127.0.0.1" 62266 : New connection attempt
+[14 Aug 2017 02:27:39 +0200] read Connection(0x21babc58)
+[14 Aug 2017 02:27:39 +0200] DBR ready to receive
+[14 Aug 2017 02:27:39 +0200] enterTheGame Deb
+[14 Aug 2017 02:27:39 +0200] QAbstractSocket::ConnectedState
+[14 Aug 2017 02:27:39 +0200] enterTheGame Fin
+[14 Aug 2017 02:27:39 +0200] read Connection(0x2a63f1a0)
+[14 Aug 2017 02:27:39 +0200] DBR enter the game
+[14 Aug 2017 02:27:39 +0200] wantToEnterTheGame "tttest" "1.1"
+[14 Aug 2017 02:27:39 +0200] Avant le cast
+[14 Aug 2017 02:27:39 +0200] Après le cast
+[14 Aug 2017 02:27:39 +0200] "tttest"
+[14 Aug 2017 02:27:39 +0200] read Connection(0x21babc58)
+[14 Aug 2017 02:27:39 +0200] read Connection(0x2a63f1a0)
+[14 Aug 2017 02:27:39 +0200] DBR ready to receive
+[14 Aug 2017 02:27:39 +0200] "::ffff:127.0.0.1" 62266 : Player entering : "tttest"
+[14 Aug 2017 02:27:40 +0200] read Connection(0x21babc58)
+[14 Aug 2017 02:27:40 +0200] QGraphicsScene::addItem: item has already been added to this scene
+[14 Aug 2017 02:27:40 +0200] QGraphicsScene::addItem: item has already been added to this scene
+[14 Aug 2017 02:27:43 +0200] The server is closing
+[14 Aug 2017 02:27:45 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[14 Aug 2017 02:27:45 +0200] InitDataBlock Deb
+[14 Aug 2017 02:27:45 +0200] read Connection(0x21b697b0)
+[14 Aug 2017 02:27:45 +0200] InitDataBlock Fin
+[14 Aug 2017 02:27:45 +0200] "::ffff:127.0.0.1" 62268 : New connection attempt
+[14 Aug 2017 02:27:45 +0200] read Connection(0x21b697b0)
+[14 Aug 2017 02:27:45 +0200] DBR ready to receive
+[14 Aug 2017 02:27:45 +0200] enterTheGame Deb
+[14 Aug 2017 02:27:45 +0200] QAbstractSocket::ConnectedState
+[14 Aug 2017 02:27:45 +0200] enterTheGame Fin
+[14 Aug 2017 02:27:45 +0200] read Connection(0x2a572a40)
+[14 Aug 2017 02:27:45 +0200] DBR enter the game
+[14 Aug 2017 02:27:45 +0200] wantToEnterTheGame "Test" "1.1"
+[14 Aug 2017 02:27:45 +0200] Avant le cast
+[14 Aug 2017 02:27:45 +0200] Après le cast
+[14 Aug 2017 02:27:45 +0200] "Test"
+[14 Aug 2017 02:27:45 +0200] read Connection(0x21b697b0)
+[14 Aug 2017 02:27:45 +0200] read Connection(0x2a572a40)
+[14 Aug 2017 02:27:45 +0200] DBR ready to receive
+[14 Aug 2017 02:27:45 +0200] "::ffff:127.0.0.1" 62268 : Player entering : "Test"
+[14 Aug 2017 02:27:45 +0200] read Connection(0x21b697b0)
+[14 Aug 2017 02:27:45 +0200] QGraphicsScene::addItem: item has already been added to this scene
+[14 Aug 2017 02:27:45 +0200] QGraphicsScene::addItem: item has already been added to this scene
+[14 Aug 2017 02:27:48 +0200] The server is closing
+[14 Aug 2017 02:37:33 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[14 Aug 2017 02:37:33 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[14 Aug 2017 02:37:33 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[14 Aug 2017 02:37:33 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[14 Aug 2017 02:37:33 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[14 Aug 2017 02:37:36 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[14 Aug 2017 02:37:36 +0200] InitDataBlock Deb
+[14 Aug 2017 02:37:36 +0200] read Connection(0x2b77d9c8)
+[14 Aug 2017 02:37:36 +0200] InitDataBlock Fin
+[14 Aug 2017 02:37:36 +0200] "::ffff:127.0.0.1" 62542 : New connection attempt
+[14 Aug 2017 02:37:36 +0200] read Connection(0x2b77d9c8)
+[14 Aug 2017 02:37:36 +0200] DBR ready to receive
+[14 Aug 2017 02:37:36 +0200] enterTheGame Deb
+[14 Aug 2017 02:37:36 +0200] QAbstractSocket::ConnectedState
+[14 Aug 2017 02:37:36 +0200] enterTheGame Fin
+[14 Aug 2017 02:37:36 +0200] read Connection(0x2b719c30)
+[14 Aug 2017 02:37:36 +0200] DBR enter the game
+[14 Aug 2017 02:37:36 +0200] wantToEnterTheGame "Test" "1.1"
+[14 Aug 2017 02:37:36 +0200] Avant le cast
+[14 Aug 2017 02:37:36 +0200] Après le cast
+[14 Aug 2017 02:37:36 +0200] "Test"
+[14 Aug 2017 02:37:36 +0200] read Connection(0x2b77d9c8)
+[14 Aug 2017 02:37:37 +0200] read Connection(0x2b719c30)
+[14 Aug 2017 02:37:37 +0200] DBR ready to receive
+[14 Aug 2017 02:37:37 +0200] "::ffff:127.0.0.1" 62542 : Player entering : "Test"
+[14 Aug 2017 02:37:37 +0200] read Connection(0x2b77d9c8)
+[14 Aug 2017 02:37:39 +0200] The server is closing
+[14 Aug 2017 02:38:17 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[14 Aug 2017 02:38:17 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[14 Aug 2017 02:38:17 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[14 Aug 2017 02:38:17 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[14 Aug 2017 02:38:17 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[14 Aug 2017 02:38:21 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[14 Aug 2017 02:38:21 +0200] "::ffff:127.0.0.1" 62566 : New connection attempt
+[14 Aug 2017 02:38:21 +0200] InitDataBlock Deb
+[14 Aug 2017 02:38:21 +0200] InitDataBlock Fin
+[14 Aug 2017 02:38:21 +0200] DBR ready to receive
+[14 Aug 2017 02:38:21 +0200] enterTheGame Deb
+[14 Aug 2017 02:38:21 +0200] QAbstractSocket::ConnectedState
+[14 Aug 2017 02:38:21 +0200] enterTheGame Fin
+[14 Aug 2017 02:38:21 +0200] DBR enter the game
+[14 Aug 2017 02:38:21 +0200] wantToEnterTheGame "Test" "1.1"
+[14 Aug 2017 02:38:21 +0200] "Test"
+[14 Aug 2017 02:38:21 +0200] DBR ready to receive
+[14 Aug 2017 02:38:21 +0200] "::ffff:127.0.0.1" 62566 : Player entering : "Test"
+[14 Aug 2017 02:43:53 +0200] The server is closing
+[14 Aug 2017 02:43:55 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[14 Aug 2017 02:43:55 +0200] "::ffff:127.0.0.1" 62721 : New connection attempt
+[14 Aug 2017 02:43:55 +0200] InitDataBlock Deb
+[14 Aug 2017 02:43:55 +0200] InitDataBlock Fin
+[14 Aug 2017 02:43:55 +0200] DBR ready to receive
+[14 Aug 2017 02:43:55 +0200] enterTheGame Deb
+[14 Aug 2017 02:43:55 +0200] QAbstractSocket::ConnectedState
+[14 Aug 2017 02:43:55 +0200] enterTheGame Fin
+[14 Aug 2017 02:43:55 +0200] DBR enter the game
+[14 Aug 2017 02:43:55 +0200] wantToEnterTheGame "Test" "1.1"
+[14 Aug 2017 02:43:55 +0200] "Test"
+[14 Aug 2017 02:43:55 +0200] DBR ready to receive
+[14 Aug 2017 02:43:55 +0200] "::ffff:127.0.0.1" 62721 : Player entering : "Test"
+[14 Aug 2017 02:43:55 +0200] QGraphicsScene::addItem: item has already been added to this scene
+[14 Aug 2017 02:43:55 +0200] QGraphicsScene::addItem: item has already been added to this scene
+[14 Aug 2017 02:43:57 +0200] The server is closing

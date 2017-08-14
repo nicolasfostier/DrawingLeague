@@ -9,25 +9,24 @@
 
 
 
-//
+// Part of the RoomInfo class,
+// which display only one distinct information about the room
 class RoomInfoPart : public QWidget
 {
 	// Variables
 	private :
-		//
 		QHBoxLayout* layout;
-			//
 			QLabel* label;
-				//
 				QFont labelFont;
-			//
 			QLabel* value;
 
 	// Setters
 	public :
 		void setValue(QString value);
-		void setValueFont(QFont font);
-		void setValueColor(QColor color);
+
+	// Getters
+	public :
+		QString getValue();
 
 	// Constructor
 	public:

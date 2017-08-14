@@ -13,33 +13,24 @@
 
 
 
+// Handle informations about a game room
 class Room : public QObject
 {
 	Q_OBJECT
 
 	// Variables
 	private :
-		// Name of the room
 		QString roomName;
-		// Number of round by game
 		int numberOfRounds;
-		// Maximum number of players in the room
 		int maxPlayers;
-		// Time by round in second
 		int timeByRound;
-		// Time ramaining after one player have found the word
 		int timeAfterFirstGoodAnswer;
 
-		//
 		int round;
-		//
 		QString artist;
-		//
 		QString word;
-		//
 		int pointToWin;
-		//
-		int timeRemaining;
+		int timeRemainingMs;
 
 	// Getter
 	public :
@@ -53,7 +44,7 @@ class Room : public QObject
 		QString getArtist();
 		QString getWord();
 		int getPointToWin();
-		int getTimeRemaining();
+		int getTimeRemainingMs();
 
 	// Setter
 	public :
@@ -67,7 +58,7 @@ class Room : public QObject
 		void setArtist(QString artist);
 		void setWord(QString word);
 		void setPointToWin(int pointToWin);
-		void setTimeRemaining(int timeRemaining);
+		void setTimeRemainingMs(int timeRemainingMs);
 
 	// Constructeur
 	public :
@@ -87,9 +78,7 @@ class Room : public QObject
 
 Q_DECLARE_METATYPE(Room)
 
-//
 QDataStream& operator<<(QDataStream& dataStream, Room room);
-//
 QDataStream& operator>>(QDataStream& dataStream, Room& room);
 
 

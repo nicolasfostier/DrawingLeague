@@ -3,18 +3,22 @@
 
 
 // Getter
-QTcpSocket* ServerThread::getTcpSocket(){
-	return socket;
+QTcpSocket* ServerThread::getSocket(){
+	return connection->getSocket();
 }
 
 Player* ServerThread::getPlayer(){
 	return player;
 }
+QString ServerThread::getGameVersion(){
+	return gameVersion;
+}
+
 DataBlockReader* ServerThread::getDataBlockReader(){
-	return dataBlockReader;
+	return connection->getDBR();
 }
 DataBlockWriter* ServerThread::getDataBlockWriter(){
-	return dataBlockWriter;
+	return connection->getDBW();
 }
 
 
@@ -27,28 +31,24 @@ ServerThread::ServerThread(QTcpSocket* socket)
 
 	// Move the object to another thread and start its execution
 	QThread* threadCFU = new QThread();
-	QObject::connect(threadCFU, SIGNAL(finished()), threadCFU, SLOT(deleteLater()));
+	QObject::connect(threadCFU, SIGNAL(finished()),
+					 threadCFU, SLOT(deleteLater()));
 	this->moveToThread(threadCFU);
-	QObject::connect(threadCFU, SIGNAL(started()), this, SLOT(launch()));
-	this->thread()->start();
+	QObject::connect(threadCFU, SIGNAL(started()),
+					 this, SLOT(launch()));
 }
 
 
 
 // Destructor
 ServerThread::~ServerThread(){
-	//
-	emit playerLeaving(player->getPseudo(), this);
 	if(player != NULL){
+		emit playerLeaving(player->getPseudo(), this, this->getPlayer()->getAnswerFound());
 		delete player;
 	}
 
-	//
-	socket->deleteLater();
-	delete dataBlockReader;
-	delete dataBlockWriter;
+	connection->deleteLater();
 
-	// Delete its thread with it
 	this->thread()->quit();
 }
 
@@ -56,45 +56,53 @@ ServerThread::~ServerThread(){
 
 // Qt slots
 
-//
 void ServerThread::launch(){
-	//
-	socket = new QTcpSocket();
-	socket->setSocketDescriptor(socketDescriptor);
-	QObject::connect(socket, SIGNAL(disconnected()), this, SLOT(deleteLater()));
+	timeout = new QTimer(this);
+	timeout->setSingleShot(true);
+	timeout->setInterval(5000);
+	QObject::connect(timeout, SIGNAL(timeout()),
+					 this, SLOT(deleteLater()));
+	timeout->start();
 
-	//
-	dataBlockReader = new DataBlockReader(socket);
-	//
-	QObject::connect(dataBlockReader, SIGNAL(pseudoAlreadyUsed()), this, SLOT(deleteLater()));
-	//
-	QObject::connect(dataBlockReader, SIGNAL(playerEnteringReceived(Player)), this, SLOT(setPlayer(Player)));
+	connection = new Connection(socketDescriptor, this);
 
+	QObject::connect(connection->getSocket(), SIGNAL(disconnected()),
+					 this, SLOT(deleteLater()));
 
-	//
-	dataBlockWriter = new DataBlockWriter(socket);
+	QObject::connect(connection->getDBR(), SIGNAL(enterTheGameReceived(Player,QString)),
+					 this, SLOT(setupPlayerInfo(Player, QString)));
+	QObject::connect(connection->getDBR(), SIGNAL(readyToReceive()),
+					 this, SIGNAL(readyToReceive()));
 
-	//
-	dataBlockWriter->sendReadyToReceive();
+//	thread()->msleep(100);
+
+	connection->getDBW()->sendReadyToReceive();
 }
 
 
-//
-void ServerThread::setPlayer(Player player){
+void ServerThread::setupPlayerInfo(Player player, QString gameVersion){
+	player.pseudoToHTMLEscaped();
 	this->player = new Player(player);
+	this->gameVersion = gameVersion;
 
-	//
-	emit pseudoReceived(this);
+	emit wantToEnterTheGame();
+
+//	qInfo() << "wantToEnterTheGame" << player.getPseudo() << gameVersion;
 }
 
-//
-void ServerThread::pseudoAlreadyUsed(){
-	dataBlockWriter->sendPseudoAlreadyUsed();
+void ServerThread::hasEnteredTheGame(){
+	connection->getDBW()->sendHasEnteredTheGame();
+	QObject::disconnect(timeout, SIGNAL(timeout()),
+						this, SLOT(deleteLater()));
+	timeout->stop();
 }
 
+void ServerThread::cantEnterTheGame(ErrorCode errorCode){
+	connection->getDBW()->sendGameError(errorCode);
+}
 
 
 // Operators
 bool ServerThread::operator!=(ServerThread serverThread){
-	return this->socket != serverThread.socket;
+	return this->getSocket() != serverThread.getSocket();
 }

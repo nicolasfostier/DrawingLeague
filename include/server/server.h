@@ -12,17 +12,16 @@
 #include <QThread>
 #include <QColor>
 #include <QFile>
-
 #include <QDebug>
 #include <QDateTime>
+#include <QApplication>
 
 
-//
 #include "include/server/serverthread.h"
-//
 #include "include/gameinfo/room.h"
-//
 #include "include/gameinfo/drawingtooltype.h"
+#include "include/gameinfo/errorcode.h"
+#include "include/server/wordtools.h"
 
 
 
@@ -33,45 +32,29 @@ class Server : public QTcpServer
 
 	// Variables
 	private :
-		//
-		int port;        
-		//
-		QHash<QString, ServerThread*> serverThreads;
+		int port;
+		QHash<QString, ServerThread*> players;
 
-		//
 		Room room;
 
-		//
 		QList<ServerThread*> artistsQueue;
-		//
 		ServerThread* artist;
 
 		QString dictionaryPath;
-		//
 		QList<QString> words;
-		//
 		QList<QString> wordsQueue;
-		//
 		QString word;
 
-		//
 		int playerFoundAnswer;
-		//
+		bool oneHasFound;
 		int hintGiven;
 
-		//
 		DrawingToolType drawingToolType;
-		//
 		QColor drawingToolColor;
-		//
 		int drawingToolWidth;
 
-		//
-		QTimer* timerBetweenRound;
-		//
 		QTimer* timerRound;
-		//
-		QTimer* timerRoundAfterFirstAnswer;
+		QTimer* timerBetweenRound;
 
 
 	// Constructor
@@ -84,63 +67,50 @@ class Server : public QTcpServer
 
 	// Methods
 	public :
-		//
 		void loadDictionary(QString dictionaryPath);
 
-		//
 		int playerReady();
-		//
-		int howManyMoreReadyNeeded();
+		int nbReadyNeeded();
 
-		//
 		void nextArtist();
-		//
 		void nextWord();
 
 	// Qt slots
 	public slots :
-		//
 		void launch();
 
-		//
-		void startGame();
-		//
-		void startRound();
-		//
-		void endRound();
-		//
+		void handleNewConnection();
+			void verifyNewPlayer();
+			void setupNewPlayer();
+		void removePlayer(QString pseudo, ServerThread* player, bool hasFound);
+
+		void processAnswer(Message msg);
+		void processChatCommand(Message msg);
+
+		void hint();
 		void skipWord();
-		//
+
+		void setPlayerReady();
+
+		void changeDrawingToolType(DrawingToolType drawingToolType);
+		void changeDrawingToolColor(QColor color);
+		void changeDrawingToolWidth(int width);
+
+		void canvasReset();
+
+		void canvasMousePressEvent(QPoint pos);
+		void canvasMouseMoveEvent(QPoint pos);
+		void canvasMouseReleaseEvent(QPoint pos);
+
+		void startGame();
+		void startRound();
+		void endRound();
 		void endGame();
 
-		//
-		void addPlayer();
-			//
-			void setupPlayer(ServerThread* newServerThread);
-		//
-		void removePlayer(QString pseudo, ServerThread* serverThread);
-
-		//
-		void checkAnswer(Message msg);
-		//
-		void checkChatCommand(Message msg);
-
-		//
-		void hint();
-
-		//
-		void updateDrawingToolType(DrawingToolType drawingToolType);
-		//
-		void updateDrawingToolColor(QColor color);
-		//
-		void updateDrawingToolWidth(int width);
-
-		//
-		void sendGameNotStarted();
+		void sendReadyNeeded();
 
 	// Signals
 	signals :
-		//
 		void isReady();
 };
 

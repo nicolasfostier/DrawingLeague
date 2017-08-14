@@ -4,23 +4,32 @@
 #include <QTranslator>
 #include <QMessageBox>
 #include <QSettings>
+#include <QDir>
 
 
 
-//
 #include "include/server/server.h"
+#include "include/loghandler.h"
 
 
 
 //
 int main(int argc, char* argv[])
 {
+	QDir logDir(".");
+	logDir.mkdir("log");
+	QFile logFile("log/log-" + QDate::currentDate().toString(Qt::ISODate) + ".txt");
+	logFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append);
+	logStream.setDevice(&logFile);
+
+	qInstallMessageHandler(logHandler);
+
 	// Creation and configuration of the Qt application
 	QCoreApplication app(argc, argv);
 	app.setApplicationName("Drawing League Dedicated Server");
 	app.setOrganizationName("Nicolas Fostier");
 	app.setOrganizationDomain("nicolasfostier.free.fr");
-	app.setApplicationVersion("1.0.1");
+	app.setApplicationVersion("1.1");
 
 	// Force the app to use the same language as the system
 	QString locale = QLocale::system().name().section('_', 0, 0);
@@ -33,73 +42,63 @@ int main(int argc, char* argv[])
 	qRegisterMetaType<Message>();
 	qRegisterMetaType<Player>();
 	qRegisterMetaType<DrawingToolType>();
+	qRegisterMetaType<ErrorCode>();
 
 	// Create the command line parser
 	QCommandLineParser cmdLineParser;
 
-		//
 		cmdLineParser.addHelpOption();
 
-		//
 		cmdLineParser.addVersionOption();
 
-		//
 		QCommandLineOption configFileCL("config-file",
 									QCoreApplication::translate("main", "Configuration file"),
 									QCoreApplication::translate("main", "path"),
 									"");
 		cmdLineParser.addOption(configFileCL);
 
-		// Name of the room
 		QCommandLineOption nameCL(  "name",
 									QCoreApplication::translate("main", "Room's name."),
 									QCoreApplication::translate("main", "name"),
 									"Drawing League");
 		cmdLineParser.addOption(nameCL);
 
-		// Port of the server
 		QCommandLineOption portCL(  "port",
 									QCoreApplication::translate("main", "Server's port."),
 									QCoreApplication::translate("main", "port"),
 									"23232");
 		cmdLineParser.addOption(portCL);
 
-		// Maximum number of players
 		QCommandLineOption maxPlayersCL("max-players",
 										QCoreApplication::translate("main", "Maximum number of players."),
 										QCoreApplication::translate("main", "number of players"),
 										"10");
 		cmdLineParser.addOption(maxPlayersCL);
 
-		// Standard dictionary
 		QCommandLineOption standardDictCL(  "std-dict",
 											QCoreApplication::translate("main", "Standard dictionary."),
 											"easy_french|easy_english",
 											"easy_french");
 		cmdLineParser.addOption(standardDictCL);
 
-		// Custom dictionary
 		QCommandLineOption customDictCL("cst-dict",
 										QCoreApplication::translate("main", "Custom dictionary."),
 										QCoreApplication::translate("main", "dictionnary's path"),
 										"");
 		cmdLineParser.addOption(customDictCL);
 
-		// Number of rounds
 		QCommandLineOption numberOfRoundsCL( QStringList() << "max-rounds",
 										QCoreApplication::translate("main", "Maximum number of rounds."),
 										QCoreApplication::translate("main", "number of round"),
 										"10");
 		cmdLineParser.addOption(numberOfRoundsCL);
 
-		// Time by rounds
 		QCommandLineOption timeByRoundCL(   QStringList() << "time-round",
 											QCoreApplication::translate("main", "Time by round."),
 											QCoreApplication::translate("main", "time in second"),
 											"180");
 		cmdLineParser.addOption(timeByRoundCL);
 
-		// Time remaining after the first player found the word
 		QCommandLineOption timeAfterFirstGoodAnswerCL(  QStringList() << "time-after-first-good-answer",
 														QCoreApplication::translate("main", "Time remaining after the first player found the word."),
 														QCoreApplication::translate("main", "time in second"),
@@ -138,12 +137,10 @@ int main(int argc, char* argv[])
 			dictionaryStd = settingsIni->value("std-dict", "easy_french").toString();
 		}
 
-		//
 
 		settingsIni->sync();
 		delete settingsIni;
 
-		//
 		if(cmdLineParser.isSet(portCL)){
 			port = cmdLineParser.value(portCL).toInt();
 		}
@@ -163,7 +160,6 @@ int main(int argc, char* argv[])
 			room.setTimeAfterFirstGoodAnswer(cmdLineParser.value(timeAfterFirstGoodAnswerCL).toInt());
 		}
 
-		//
 		if(cmdLineParser.isSet(customDictCL)){
 			dictionaryPath = cmdLineParser.value(customDictCL);
 		}
@@ -171,7 +167,6 @@ int main(int argc, char* argv[])
 			dictionaryStd = cmdLineParser.value(standardDictCL);
 		}
 
-		//
 		if(dictionaryPath.isEmpty()){
 			if(dictionaryStd == "easy_french"){
 				dictionaryPath = ":/dictionaries/easy_french.txt";
@@ -186,14 +181,13 @@ int main(int argc, char* argv[])
 
 		// Create and launch the server
 		Server server(port, room, dictionaryPath);
-		QMetaObject::invokeMethod(&server, "launch");
+		server.thread()->start();
 
 		// Execute the Qt application : enter the event loop
 		return app.exec();
 	}
 	// Catch unexpected throw of exception
 	catch(std::exception exception){
-		//
 		app.quit();
 		exit(1);
 	}

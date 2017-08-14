@@ -3,13 +3,15 @@
 
 
 // Constructor
-DataBlockReader::DataBlockReader(QTcpSocket *socket){
+DataBlockReader::DataBlockReader(QTcpSocket *socket, QObject* parent) : QObject(parent){
 	this->socket = socket;
 	this->socketStream = new QDataStream(socket);
-	QObject::connect(socket, SIGNAL(readyRead()), this, SLOT(read()));
 
 	this->nextSizeToRead = 0;
 	this->nextDataBlockType = DataBlockType::NOTYPE;
+
+	QObject::connect(socket, SIGNAL(readyRead()),
+					 this, SLOT(read()));
 }
 
 
@@ -23,20 +25,16 @@ DataBlockReader::~DataBlockReader(){
 
 // Qt slots
 
-//
 void DataBlockReader::read(){
-	//
+//	qInfo() << "read" << this->parent();
 	while(1){
-		//
 		if(nextSizeToRead == 0){
-			//
 			if(socket->bytesAvailable() < sizeof(quint32)){
 				break;
 			}
 			*socketStream >> nextSizeToRead;
 		}
 
-		//
 		if(nextDataBlockType == DataBlockType::NOTYPE){
 			//
 			if(socket->bytesAvailable() < sizeof(quint16)){
@@ -54,7 +52,10 @@ void DataBlockReader::read(){
 			break;
 			}
 
+
 			case DataBlockType::READY_TO_RECEIVE : {
+				qInfo() << "DBR ready to receive";
+
 				quint32 useless;
 				*socketStream >> blockReceived;
 				blockReceivedStream >> useless;
@@ -63,32 +64,43 @@ void DataBlockReader::read(){
 			break;
 			}
 
-
-			case DataBlockType::PSEUDO_OK : {
-				quint32 useless;
+			case DataBlockType::ENTER_THE_GAME : {
+				Player player;
+				QString gameVersion;
 				*socketStream >> blockReceived;
-				blockReceivedStream >> useless;
+				blockReceivedStream >> player >> gameVersion;
 
-				emit pseudoOk();
+				qInfo() << "DBR enter the game";
+
+				emit enterTheGameReceived(player, gameVersion);
 			break;
 			}
 
-			case DataBlockType::PSEUDO_ALREADY_USED : {
+			case DataBlockType::HAS_ENTERED_THE_GAME : {
 				quint32 useless;
 				*socketStream >> blockReceived;
 				blockReceivedStream >> useless;
 
-				emit pseudoAlreadyUsed();
+				emit hasEnteredTheGame();
+			break;
+			}
+
+			case DataBlockType::GAME_ERROR : {
+				ErrorCode errorCode;
+				*socketStream >> blockReceived;
+				blockReceivedStream >> errorCode;
+
+				emit gameErrorReceived(errorCode);
 			break;
 			}
 
 
 			case DataBlockType::PLAYER_ENTERING : {
-				Player player;
+				QString pseudo;
 				*socketStream >> blockReceived;
-				blockReceivedStream >> player;
+				blockReceivedStream >> pseudo;
 
-				emit playerEnteringReceived(player);
+				emit playerEnteringReceived(pseudo);
 			break;
 			}
 
@@ -151,15 +163,6 @@ void DataBlockReader::read(){
 			break;
 			}
 
-			case DataBlockType::SKIP_WORD : {
-				quint32 useless;
-				*socketStream >> blockReceived;
-				blockReceivedStream >> useless;
-
-				emit skipWordReceived();
-			break;
-			}
-
 			case DataBlockType::GAME_ENDING : {
 				QString winner;
 				*socketStream >> blockReceived;
@@ -198,6 +201,15 @@ void DataBlockReader::read(){
 			break;
 			}
 
+			case DataBlockType::ANSWER_CLOSE : {
+				quint32 useless;
+				*socketStream >> blockReceived;
+				blockReceivedStream >> useless;
+
+				emit answerCloseReceived();
+			break;
+			}
+
 
 			case DataBlockType::HINT : {
 				QString hint;
@@ -205,6 +217,25 @@ void DataBlockReader::read(){
 				blockReceivedStream >> hint;
 
 				emit hintReceived(hint);
+			break;
+			}
+
+			case DataBlockType::SKIP_WORD : {
+				quint32 useless;
+				*socketStream >> blockReceived;
+				blockReceivedStream >> useless;
+
+				emit skipWordReceived();
+			break;
+			}
+
+
+			case DataBlockType::READY : {
+				quint32 useless;
+				*socketStream >> blockReceived;
+				blockReceivedStream >> useless;
+
+				emit readyReceived();
 			break;
 			}
 
@@ -275,12 +306,12 @@ void DataBlockReader::read(){
 			}
 
 
-			case DataBlockType::SERVER_MSG_READY_NEEDED : {
-				quint32 howManyMoreReadyNeeded;
+			case DataBlockType::READY_NEEDED : {
+				quint32 nbReadyNeeded;
 				*socketStream >> blockReceived;
-				blockReceivedStream >> howManyMoreReadyNeeded;
+				blockReceivedStream >> nbReadyNeeded;
 
-				emit serverMsgReadyNeededReceived(howManyMoreReadyNeeded);
+				emit readyNeededReceived(nbReadyNeeded);
 			break;
 			}
 		}

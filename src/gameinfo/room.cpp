@@ -31,8 +31,8 @@ QString Room::getWord(){
 int Room::getPointToWin(){
 	return pointToWin;
 }
-int Room::getTimeRemaining(){
-	return timeRemaining;
+int Room::getTimeRemainingMs(){
+	return timeRemainingMs;
 }
 
 
@@ -40,8 +40,7 @@ int Room::getTimeRemaining(){
 // Setter
 void Room::setRoomName(QString roomName){
 	if(roomName.size() < 3){
-		qCritical() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
-					<< "The name's room must be at least 3 characters long."
+		qCritical()	<< "The name's room must be at least 3 characters long."
 					<< roomName;
 		throw std::invalid_argument(tr("The name's room must be at least 3 characters long.").toUtf8());
 	}
@@ -51,8 +50,7 @@ void Room::setRoomName(QString roomName){
 }
 void Room::setNumberOfRounds(int numberofRounds){
 	if(numberofRounds < 1){
-		qCritical() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
-					<< "The number of rounds must be at least 1."
+		qCritical()	<< "The number of rounds must be at least 1."
 					<< numberofRounds;
 		throw std::invalid_argument(tr("The number of rounds must be at least 1.").toUtf8());
 	}
@@ -62,8 +60,7 @@ void Room::setNumberOfRounds(int numberofRounds){
 }
 void Room::setMaxPlayers(int maxPlayers){
 	if(maxPlayers < 2){
-		qCritical() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
-					<< "The maximum number of players must be at least 2."
+		qCritical()	<< "The maximum number of players must be at least 2."
 					<< maxPlayers;
 		throw std::invalid_argument("The maximum number of players must be at least 2.");
 	}
@@ -73,8 +70,7 @@ void Room::setMaxPlayers(int maxPlayers){
 }
 void Room::setTimeByRound(int timeByRound){
 	if(timeByRound < 5){
-		qCritical() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
-					<< "The duration of a round must be at least 5 seconds."
+		qCritical() << "The duration of a round must be at least 5 seconds."
 					<< timeByRound;
 		throw std::invalid_argument("The duration of a round must be at least 5 seconds.");
 	}
@@ -84,8 +80,7 @@ void Room::setTimeByRound(int timeByRound){
 }
 void Room::setTimeAfterFirstGoodAnswer(int timeAfterFirstGoodAnswer){
 	if(timeAfterFirstGoodAnswer < 0){
-		qCritical() << QString("[" + QDateTime::currentDateTime().toString(Qt::RFC2822Date) + "]").toUtf8().data()
-					<< "The time remaining after the first good answer can't be negative."
+		qCritical()	<< "The time remaining after the first good answer can't be negative."
 					<< timeAfterFirstGoodAnswer;
 		throw std::invalid_argument("The time remaining after the first good answer can't be negative.");
 	}
@@ -106,14 +101,15 @@ void Room::setWord(QString word){
 void Room::setPointToWin(int pointToWin){
 	this->pointToWin = pointToWin;
 }
-void Room::setTimeRemaining(int timeRemaining){
-	this->timeRemaining = timeRemaining;
+void Room::setTimeRemainingMs(int timeRemainingMs){
+	this->timeRemainingMs = timeRemainingMs;
 }
 
 
 
 // Constructor
-Room::Room(QString roomName, int numberofRounds, int maxPlayers, int timeByRound, int timeAfterFirstGoodAnswer) : QObject(){
+Room::Room(QString roomName, int numberofRounds, int maxPlayers,
+		   int timeByRound, int timeAfterFirstGoodAnswer) : QObject(){
 	this->setRoomName(roomName);
 	this->setNumberOfRounds(numberofRounds);
 	this->setMaxPlayers(maxPlayers);
@@ -124,7 +120,7 @@ Room::Room(QString roomName, int numberofRounds, int maxPlayers, int timeByRound
 	this->artist = " ";
 	this->word = " ";
 	this->pointToWin = 0;
-	this->timeRemaining = 0;
+	this->timeRemainingMs = 0;
 }
 Room::Room(const Room& room) : QObject(){
 	this->roomName = room.roomName;
@@ -137,7 +133,7 @@ Room::Room(const Room& room) : QObject(){
 	this->artist = room.artist;
 	this->word = room.word;
 	this->pointToWin = room.pointToWin;
-	this->timeRemaining = room.timeRemaining;
+	this->timeRemainingMs = room.timeRemainingMs;
 }
 
 
@@ -161,7 +157,7 @@ Room& Room::operator=(const Room & room){
 	this->artist = room.artist;
 	this->word = room.word;
 	this->pointToWin = room.pointToWin;
-	this->timeRemaining = room.timeRemaining;
+	this->timeRemainingMs = room.timeRemainingMs;
 
 	return *this;
 }
@@ -177,7 +173,7 @@ QDataStream& operator<<(QDataStream& dataStream, Room room){
 	dataStream << room.artist;
 	dataStream << room.word;
 	dataStream << room.pointToWin;
-	dataStream << room.timeRemaining;
+	dataStream << room.timeRemainingMs;
 
 	return dataStream;
 }
@@ -193,7 +189,7 @@ QDataStream& operator>>(QDataStream& dataStream, Room& room){
 	dataStream >> room.artist;
 	dataStream >> room.word;
 	dataStream >> room.pointToWin;
-	dataStream >> room.timeRemaining;
+	dataStream >> room.timeRemainingMs;
 
 	return dataStream;
 }

@@ -5,21 +5,28 @@
 #include <QMessageBox>
 #include <QObject>
 
-// Check if there is an update available on github
 #include "include/updatechecker.h"
-// Main window of the program
 #include "include/windows/mainwindow.h"
+#include "include/loghandler.h"
 
 
 
 int main(int argc, char *argv[])
 {
+	QDir logDir(".");
+	logDir.mkdir("log");
+	QFile logFile("log/log-" + QDate::currentDate().toString(Qt::ISODate) + ".txt");
+	logFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append);
+	logStream.setDevice(&logFile);
+
+	qInstallMessageHandler(logHandler);
+
 	// Creation and configuration of the Qt application
 	QApplication app(argc, argv);
 	app.setApplicationName("Drawing League");
 	app.setOrganizationName("Nicolas Fostier");
 	app.setOrganizationDomain("nicolasfostier.free.fr");
-	app.setApplicationVersion("1.0.2");
+	app.setApplicationVersion("1.1");
 	app.setWindowIcon(QIcon(":/images/logo.ico"));
 
 	// Force the app to use the same language as the system
@@ -33,12 +40,11 @@ int main(int argc, char *argv[])
 	qRegisterMetaType<Message>();
 	qRegisterMetaType<Player>();
 	qRegisterMetaType<DrawingToolType>();
+	qRegisterMetaType<ErrorCode>();
 
 	// Serious things begin...
 	try{
-		// Create the main window of the program and open it
 		MainWindow mainWindow;
-		mainWindow.show();
 
 		// Check if there is an update available on github
 		// (It's executed on its own thread and will delete himself when its task is over)
@@ -50,11 +56,11 @@ int main(int argc, char *argv[])
 	}
 	// Catch unexpected throw of exception
 	catch(std::exception exception){
-		//
+		logFile.close();
+
 		QMessageBox::critical(0, app.translate("main", "Unexpected error"),
 							  app.translate("main", "The application has encountered an unexpected error :") + "\n"
 							  + exception.what());
-		//
 		app.quit();
 		exit(1);
 	}

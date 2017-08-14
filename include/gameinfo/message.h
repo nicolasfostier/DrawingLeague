@@ -8,7 +8,7 @@
 
 
 
-//
+// Handle a chat message or an answer
 class Message
 {
 	// Variables
@@ -33,8 +33,8 @@ class Message
 
 	// Methods
 	public :
-		//
 		QString toString(bool includeDate);
+		void escapeHTML();
 
 	// Operators
 	public :
@@ -44,9 +44,7 @@ class Message
 
 Q_DECLARE_METATYPE(Message)
 
-//
 QDataStream& operator<<(QDataStream& dataStream, Message chatMessage);
-//
 QDataStream& operator>>(QDataStream& dataStream, Message& chatMessage);
 
 

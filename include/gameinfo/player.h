@@ -6,33 +6,21 @@
 #include <QTableWidgetItem>
 
 
-//
 #include "include/gameinfo/playerscore.h"
 
 
 
-//
+// Handle informations about a player
 class Player
 {
 	// Variables
 	private :
-		//
 		QTableWidgetItem* pseudo;
-		//
-		PlayerScoreTWI* score;
-		//
-		bool isReady;
-		//
-		bool answerFound;
-		//
-		bool isArtist;
+		PlayerScore* score;
 
-		//
-		QFont hasntFoundFont;
-		//
-		QFont hasFoundFont;
-		//
-		QFont isArtistFont;
+		bool isReady;
+		bool isArtist;
+		bool answerFound;
 
 	// Getter
 	public :
@@ -60,9 +48,8 @@ class Player
 
 	// Methods
 	public :
-		//
+		void pseudoToHTMLEscaped();
 		void addToTableWidget(QTableWidget* playersTable);
-		//
 		void updateColor();
 
 
@@ -74,9 +61,7 @@ class Player
 
 Q_DECLARE_METATYPE(Player)
 
-//
 QDataStream& operator<<(QDataStream& dataStream, Player player);
-//
 QDataStream& operator>>(QDataStream& dataStream, Player& player);
 
 

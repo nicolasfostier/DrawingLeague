@@ -9,35 +9,28 @@
 #include <QApplication>
 
 
-//
 #include "include/gameinfo/room.h"
-//
 #include "include/widgets/roominfopart.h"
+#include "include/widgets/timer.h"
 
 
 
-//
+// Display all the information about the current room
 class RoomInfo : public QWidget
 {
 	// Variable
 	private :
-
-		//
 		QGridLayout* layout;
-			//
 			RoomInfoPart* name;
-			//
 			RoomInfoPart* round;
-			//
 			RoomInfoPart* artist;
-			//
 			RoomInfoPart* word;
-			//
 			RoomInfoPart* pointToWin;
-			//
 			RoomInfoPart* time;
-				//
 				QFont timeFont;
+			Timer* timer;
+				int timeByRound;
+				int timeAfterFirstGoodAnswer;
 
 	// Setter
 	public :
@@ -46,7 +39,13 @@ class RoomInfo : public QWidget
 		void setArtist(QString artist);
 		void setWord(QString word);
 		void setPointToWin(int pointToWin);
-		void setTime(int timeRemaining, bool oneHasFound = false);
+
+	// Getter
+	public :
+		QString getArtist();
+		int getPointToWin();
+		int getTimeByRound();
+		int getTimeAfterFirstGoodAnswer();
 
 	// Constructor
 	public :
@@ -54,7 +53,8 @@ class RoomInfo : public QWidget
 
 	// Methods
 	public :
-		void updateTimeRemaining();
+		void timerStart(bool oneHasFound, int timeMs = -2);
+		void timerStop();
 };
 
 

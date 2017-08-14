@@ -42,22 +42,19 @@ Player::Player(QString pseudo, int score){
 	this->pseudo = new QTableWidgetItem(pseudo);
 	this->pseudo->setFlags(Qt::ItemIsEnabled);
 
-	this->score = new PlayerScoreTWI(QString::number(score));
+	this->score = new PlayerScore(QString::number(score));
 	this->score->setFlags(Qt::ItemIsEnabled);
 
 	this->isReady = false;
 
 	this->answerFound = false;
 	this->isArtist = false;
-
-	hasFoundFont.setBold(true);
-	isArtistFont.setBold(true);
 }
 Player::Player(const Player &player){
 	this->pseudo = new QTableWidgetItem(*player.pseudo);
 	this->pseudo->setFlags(Qt::ItemIsEnabled);
 
-	this->score = new PlayerScoreTWI(*player.score);
+	this->score = new PlayerScore(*player.score);
 	this->score->setFlags(Qt::ItemIsEnabled);
 
 	this->isReady = player.isReady;
@@ -78,7 +75,10 @@ Player::~Player(){
 
 // Methods
 
-//
+void Player::pseudoToHTMLEscaped(){
+	this->pseudo->setText(this->pseudo->text().toHtmlEscaped());
+}
+
 void Player::addToTableWidget(QTableWidget *playersTable){
 	playersTable->setRowCount(playersTable->rowCount() + 1);
 	playersTable->setItem(playersTable->rowCount()-1, 0, this->pseudo);
@@ -87,22 +87,25 @@ void Player::addToTableWidget(QTableWidget *playersTable){
 	playersTable->sortItems(1, Qt::DescendingOrder);
 }
 
-//
 void Player::updateColor(){
+	QFont font;
 	if(isArtist){
 		this->pseudo->setBackgroundColor(QColor("#87d687"));
 		this->score->setBackgroundColor(QColor("#87d687"));
-		this->pseudo->setFont(isArtistFont);
+		font.setBold(true);
+		this->pseudo->setFont(font);
 	}
 	else if(answerFound){
 		this->pseudo->setBackgroundColor(QColor("#de4d4d"));
 		this->score->setBackgroundColor(QColor("#de4d4d"));
-		this->pseudo->setFont(hasFoundFont);
+		font.setBold(true);
+		this->pseudo->setFont(font);
 	}
 	else{
 		this->pseudo->setBackgroundColor(QColor(Qt::white));
 		this->score->setBackgroundColor(QColor(Qt::white));
-		this->pseudo->setFont(hasntFoundFont);
+		font.setBold(false);
+		this->pseudo->setFont(font);
 	}
 }
 

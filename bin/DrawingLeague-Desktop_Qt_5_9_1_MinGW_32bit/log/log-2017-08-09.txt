@@ -1,0 +1,348 @@
+[09 Aug 2017 23:15:29 +0200] QObject::connect: No such slot TimerCircle::draw() in ../../src/widgets/timercircle.cpp:25
+[09 Aug 2017 23:15:29 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:15:29 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:15:29 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:15:29 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:15:29 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:17:06 +0200] QObject::connect: No such slot TimerCircle::draw() in ../../src/widgets/timercircle.cpp:25
+[09 Aug 2017 23:17:06 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:17:06 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:17:06 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:17:06 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:17:06 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:17:01 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[09 Aug 2017 23:17:01 +0200] "::ffff:127.0.0.1" 61288 : New connection attempt
+[09 Aug 2017 23:17:01 +0200] "::ffff:127.0.0.1" 61288 : Player entering : "Test"
+[09 Aug 2017 23:17:13 +0200] "::ffff:192.168.0.51" 61294 : New connection attempt
+[09 Aug 2017 23:17:13 +0200] "::ffff:192.168.0.51" 61294 : Connection attempt failed : The pseudo "Test" is already used
+[09 Aug 2017 23:17:15 +0200] QSocketNotifier: Multiple socket notifiers for same socket 2716 and type Read
+[09 Aug 2017 23:17:15 +0200] "::ffff:192.168.0.51" 61296 : New connection attempt
+[09 Aug 2017 23:17:15 +0200] "::ffff:192.168.0.51" 61296 : Player entering : "Test2"
+[09 Aug 2017 23:17:17 +0200] "::ffff:192.168.0.51" 61296 : Chat : "[23:17:17] <b>Test2 :</b> !ready"
+[09 Aug 2017 23:17:17 +0200] "::ffff:192.168.0.51" 61296 "Test2" is now ready.
+[09 Aug 2017 23:17:22 +0200] "::ffff:127.0.0.1" 61288 : Chat : "[23:17:22] <b>Test :</b> !ready"
+[09 Aug 2017 23:17:22 +0200] "::ffff:127.0.0.1" 61288 "Test" is now ready.
+[09 Aug 2017 23:17:22 +0200] Round n° 1 starting : Artist : "Test" Word : "fil"
+[09 Aug 2017 23:17:22 +0200] New game started
+[09 Aug 2017 23:18:06 +0200] The server is closing
+[09 Aug 2017 23:19:45 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:19:45 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:19:45 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:19:45 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:19:45 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:20:34 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:20:34 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:20:34 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:20:34 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:20:34 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:21:32 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:21:32 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:21:32 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:21:32 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:21:32 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:21:54 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:21:54 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:21:54 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:21:54 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:21:54 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:21:59 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:21:59 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:21:59 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:21:59 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:21:59 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:23:03 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:23:03 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:23:03 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:23:03 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:23:03 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:24:45 +0200] -1
+[09 Aug 2017 23:24:45 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:24:45 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:24:45 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:24:45 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:24:45 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:24:50 +0200] -1
+[09 Aug 2017 23:24:50 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:24:50 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:24:50 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:24:50 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:24:50 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:25:09 +0200] -1
+[09 Aug 2017 23:25:09 +0200] 180
+[09 Aug 2017 23:25:09 +0200] 30
+[09 Aug 2017 23:25:10 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:25:10 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:25:10 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:25:10 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:25:10 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:25:15 +0200] -1
+[09 Aug 2017 23:25:15 +0200] 180
+[09 Aug 2017 23:25:15 +0200] 30
+[09 Aug 2017 23:25:15 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:25:15 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:25:15 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:25:15 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:25:15 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:25:21 +0200] -1
+[09 Aug 2017 23:25:21 +0200] 180
+[09 Aug 2017 23:25:21 +0200] 30
+[09 Aug 2017 23:25:21 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:25:21 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:25:21 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:25:21 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:25:21 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:26:07 +0200] -1 180 30 -32
+[09 Aug 2017 23:26:07 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:26:07 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:26:07 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:26:07 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:26:07 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:26:13 +0200] -1 180 30 -192
+[09 Aug 2017 23:26:14 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:26:14 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:26:14 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:26:14 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:26:14 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:27:08 +0200] -1 180 30 -32
+[09 Aug 2017 23:27:08 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:27:08 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:27:08 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:27:08 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:27:08 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:31:20 +0200] -1 180 30 0
+[09 Aug 2017 23:31:20 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:31:20 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:31:20 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:31:20 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:31:20 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:31:27 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[09 Aug 2017 23:31:27 +0200] "::ffff:127.0.0.1" 61839 : New connection attempt
+[09 Aug 2017 23:31:27 +0200] "::ffff:127.0.0.1" 61839 : Player entering : "Test"
+[09 Aug 2017 23:31:38 +0200] "::ffff:192.168.0.51" 61847 : New connection attempt
+[09 Aug 2017 23:31:38 +0200] "::ffff:192.168.0.51" 61847 : Player entering : "Test2"
+[09 Aug 2017 23:31:41 +0200] "::ffff:192.168.0.51" 61847 : Chat : "[23:31:41] <b>Test2 :</b> !ready"
+[09 Aug 2017 23:31:41 +0200] "::ffff:192.168.0.51" 61847 "Test2" is now ready.
+[09 Aug 2017 23:31:44 +0200] "::ffff:127.0.0.1" 61839 : Chat : "[23:31:44] <b>Test :</b> !ready"
+[09 Aug 2017 23:31:44 +0200] "::ffff:127.0.0.1" 61839 "Test" is now ready.
+[09 Aug 2017 23:31:44 +0200] Round n° 1 starting : Artist : "Test" Word : "démarrer"
+[09 Aug 2017 23:31:44 +0200] New game started
+[09 Aug 2017 23:32:05 +0200] Player leaving : "Test2"
+[09 Aug 2017 23:32:06 +0200] The server is closing
+[09 Aug 2017 23:33:50 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:33:50 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:33:50 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:33:50 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:33:50 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:33:33 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[09 Aug 2017 23:33:33 +0200] "::ffff:127.0.0.1" 61895 : New connection attempt
+[09 Aug 2017 23:33:33 +0200] "::ffff:127.0.0.1" 61895 : Player entering : "Test"
+[09 Aug 2017 23:33:54 +0200] "::ffff:192.168.0.51" 61912 : New connection attempt
+[09 Aug 2017 23:33:54 +0200] "::ffff:192.168.0.51" 61912 : Player entering : "Test2"
+[09 Aug 2017 23:33:57 +0200] "::ffff:192.168.0.51" 61912 : Chat : "[23:33:57] <b>Test2 :</b> !ready"
+[09 Aug 2017 23:33:57 +0200] "::ffff:192.168.0.51" 61912 "Test2" is now ready.
+[09 Aug 2017 23:34:02 +0200] "::ffff:127.0.0.1" 61895 : Chat : "[23:34:02] <b>Test :</b> !ready"
+[09 Aug 2017 23:34:02 +0200] "::ffff:127.0.0.1" 61895 "Test" is now ready.
+[09 Aug 2017 23:34:02 +0200] Round n° 1 starting : Artist : "Test" Word : "rat"
+[09 Aug 2017 23:34:02 +0200] New game started
+[09 Aug 2017 23:34:12 +0200] The server is closing
+[09 Aug 2017 23:37:37 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:37:37 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:37:37 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:37:37 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:37:37 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:38:23 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:38:23 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:38:23 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:38:23 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:38:23 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:38:41 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[09 Aug 2017 23:38:41 +0200] "::ffff:127.0.0.1" 62037 : New connection attempt
+[09 Aug 2017 23:38:41 +0200] "::ffff:127.0.0.1" 62037 : Player entering : "Test"
+[09 Aug 2017 23:38:48 +0200] "::ffff:127.0.0.1" 62043 : New connection attempt
+[09 Aug 2017 23:38:48 +0200] "::ffff:127.0.0.1" 62043 : Connection attempt failed : The pseudo "Test" is already used
+[09 Aug 2017 23:38:59 +0200] "::ffff:192.168.0.51" 62049 : New connection attempt
+[09 Aug 2017 23:38:59 +0200] "::ffff:192.168.0.51" 62049 : Player entering : "Test2"
+[09 Aug 2017 23:39:01 +0200] "::ffff:192.168.0.51" 62049 : Chat : "[23:39:01] <b>Test2 :</b> !ready"
+[09 Aug 2017 23:39:01 +0200] "::ffff:192.168.0.51" 62049 "Test2" is now ready.
+[09 Aug 2017 23:39:04 +0200] "::ffff:127.0.0.1" 62037 : Chat : "[23:39:04] <b>Test :</b> !ready"
+[09 Aug 2017 23:39:04 +0200] "::ffff:127.0.0.1" 62037 "Test" is now ready.
+[09 Aug 2017 23:39:04 +0200] Round n° 1 starting : Artist : "Test" Word : "carburant"
+[09 Aug 2017 23:39:04 +0200] New game started
+[09 Aug 2017 23:39:44 +0200] Player leaving : "Test2"
+[09 Aug 2017 23:39:46 +0200] The server is closing
+[09 Aug 2017 23:41:00 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:41:00 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:41:00 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:41:00 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:41:00 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:41:22 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:41:22 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:41:22 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:41:22 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:41:22 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:41:42 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:41:42 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:41:42 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:41:42 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:41:42 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:42:59 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:42:59 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:42:59 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:42:59 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:42:59 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:43:43 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:43:43 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:43:43 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:43:43 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:43:43 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:43:51 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:43:51 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:43:51 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:43:51 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:43:51 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:43:59 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:43:59 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:43:59 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:43:59 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:43:59 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:44:45 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:44:45 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:44:45 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:44:45 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:44:45 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:44:50 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:44:50 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:44:50 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:44:50 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:44:50 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:45:29 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:45:29 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:45:29 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:45:29 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:45:29 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:45:39 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:45:39 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:45:39 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:45:39 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:45:39 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:46:37 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:46:37 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:46:37 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:46:37 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:46:37 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:47:20 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:47:20 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:47:20 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:47:20 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:47:20 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:47:30 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:47:30 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:47:30 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:47:30 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:47:30 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:48:05 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:48:05 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:48:05 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:48:05 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:48:05 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:48:19 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:48:19 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:48:19 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:48:19 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:48:19 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:53:26 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:53:26 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:53:26 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:53:26 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:53:26 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:53:41 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:53:41 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:53:41 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:53:41 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:53:41 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:54:07 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:54:07 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:54:07 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:54:07 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:54:07 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:54:15 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[09 Aug 2017 23:54:15 +0200] "::ffff:127.0.0.1" 62498 : New connection attempt
+[09 Aug 2017 23:54:15 +0200] "::ffff:127.0.0.1" 62498 : Player entering : "Test"
+[09 Aug 2017 23:54:35 +0200] "::ffff:192.168.0.51" 62507 : New connection attempt
+[09 Aug 2017 23:54:35 +0200] "::ffff:192.168.0.51" 62507 : Player entering : "Test2"
+[09 Aug 2017 23:54:41 +0200] "::ffff:192.168.0.51" 62507 : Chat : "[23:54:41] <b>Test2 :</b> !ready"
+[09 Aug 2017 23:54:41 +0200] "::ffff:192.168.0.51" 62507 "Test2" is now ready.
+[09 Aug 2017 23:54:44 +0200] "::ffff:127.0.0.1" 62498 : Chat : "[23:54:44] <b>Test :</b> !ready"
+[09 Aug 2017 23:54:44 +0200] "::ffff:127.0.0.1" 62498 "Test" is now ready.
+[09 Aug 2017 23:54:44 +0200] Round n° 1 starting : Artist : "Test" Word : "cerveau"
+[09 Aug 2017 23:54:44 +0200] New game started
+[09 Aug 2017 23:54:59 +0200] Player leaving : "Test2"
+[09 Aug 2017 23:55:01 +0200] The server is closing
+[09 Aug 2017 23:56:02 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:56:02 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:56:02 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:56:02 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:56:02 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:55:58 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[09 Aug 2017 23:55:58 +0200] "::ffff:127.0.0.1" 62545 : New connection attempt
+[09 Aug 2017 23:55:58 +0200] "::ffff:127.0.0.1" 62545 : Player entering : "Test"
+[09 Aug 2017 23:56:08 +0200] "::ffff:192.168.0.51" 62551 : New connection attempt
+[09 Aug 2017 23:56:08 +0200] "::ffff:192.168.0.51" 62551 : Player entering : "Test2"
+[09 Aug 2017 23:56:13 +0200] "::ffff:192.168.0.51" 62551 : Chat : "[23:56:13] <b>Test2 :</b> !ready"
+[09 Aug 2017 23:56:13 +0200] "::ffff:192.168.0.51" 62551 "Test2" is now ready.
+[09 Aug 2017 23:56:17 +0200] "::ffff:127.0.0.1" 62545 : Chat : "[23:56:17] <b>Test :</b> !ready"
+[09 Aug 2017 23:56:17 +0200] "::ffff:127.0.0.1" 62545 "Test" is now ready.
+[09 Aug 2017 23:56:17 +0200] Round n° 1 starting : Artist : "Test" Word : "opération"
+[09 Aug 2017 23:56:17 +0200] New game started
+[09 Aug 2017 23:56:41 +0200] The server is closing
+[09 Aug 2017 23:56:53 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:56:53 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:56:53 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:56:53 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:56:53 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:57:23 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:57:23 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:57:23 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:57:23 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:57:23 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:57:31 +0200] QSslSocket: cannot call unresolved function SSLv23_client_method
+[09 Aug 2017 23:57:31 +0200] QSslSocket: cannot call unresolved function SSL_CTX_new
+[09 Aug 2017 23:57:31 +0200] QSslSocket: cannot call unresolved function SSL_library_init
+[09 Aug 2017 23:57:31 +0200] QSslSocket: cannot call unresolved function ERR_get_error
+[09 Aug 2017 23:57:31 +0200] QSslSocket: cannot call unresolved function ERR_get_error
