@@ -29,7 +29,7 @@ void DataBlockReader::read(){
 //	qInfo() << "read" << this->parent();
 	while(1){
 		if(nextSizeToRead == 0){
-			if(socket->bytesAvailable() < sizeof(quint32)){
+			if(socket->bytesAvailable() < qint64(sizeof(quint32))){
 				break;
 			}
 			*socketStream >> nextSizeToRead;
@@ -37,7 +37,7 @@ void DataBlockReader::read(){
 
 		if(nextDataBlockType == DataBlockType::NOTYPE){
 			//
-			if(socket->bytesAvailable() < sizeof(quint16)){
+			if(socket->bytesAvailable() < qint64(sizeof(quint16))){
 				break;
 			}
 			*socketStream >> nextDataBlockType;
