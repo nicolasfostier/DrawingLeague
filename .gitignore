@@ -89,6 +89,8 @@ CMakeLists.txt.user*
 
 *.rc
 *.res
+*.ilk
+*.pdb
 
 
 
