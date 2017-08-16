@@ -1,5 +1,5 @@
 Bugs :
-	[ ] Connection to a server sometime doesn't work
+	[X Dirty way to fix it, but maybe it's enough ?] Connection to a server sometime doesn't work 
 
 Improvements :
 	[ ] Players who enter the room after the beginning of the round, need to see the beginning of the drawing
@@ -7,6 +7,8 @@ Improvements :
 	[ ] Better end game screen
 
 New functionnalities :
+	[ ] Possibility to set the % of ready players needed
+	[ ] Skip afk artist if he doesn't draw anything during the first 30 sec of the round
 	[ ] Server browser
 	[ ] System of centralized account in a database :
 		[ ] Avatar

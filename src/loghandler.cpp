@@ -13,4 +13,5 @@ void logHandler(QtMsgType type, const QMessageLogContext &context, const QString
 
 	QByteArray localMsg = msgDateTime.toLocal8Bit();
 	logStream << localMsg.constData() << "\n";
+	logStream.flush();
 }

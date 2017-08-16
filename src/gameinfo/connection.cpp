@@ -93,7 +93,6 @@ void Connection::connectToTheServer(){
 
 // Qt slots
 void Connection::initDataBlock(){
-//	qInfo() << "InitDataBlock Deb";
 	dataBlockReader = new DataBlockReader(socket, this);
 	QObject::connect(dataBlockReader, SIGNAL(readyToReceive()),
 					 this, SLOT(enterTheGame()));
@@ -104,15 +103,10 @@ void Connection::initDataBlock(){
 	dataBlockReader->read();
 
 	dataBlockWriter = new DataBlockWriter(socket, this);
-
-//	qInfo() << "InitDataBlock Fin";
 }
 
 void Connection::enterTheGame(){
-//	qInfo() << "enterTheGame Deb";
-	qInfo() << this->socket->state();
 	dataBlockWriter->sendEnterTheGame(this->pseudo, qApp->applicationVersion());
-//	qInfo() << "enterTheGame Fin";
 }
 
 void Connection::socketError(){

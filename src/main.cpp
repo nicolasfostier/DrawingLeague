@@ -13,21 +13,20 @@
 
 int main(int argc, char *argv[])
 {
-	QDir logDir(".");
-	logDir.mkdir("log");
-	QFile logFile("log/log-" + QDate::currentDate().toString(Qt::ISODate) + ".txt");
-	logFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append);
-	logStream.setDevice(&logFile);
-
-	qInstallMessageHandler(logHandler);
-
 	// Creation and configuration of the Qt application
 	QApplication app(argc, argv);
 	app.setApplicationName("Drawing League");
 	app.setOrganizationName("Nicolas Fostier");
 	app.setOrganizationDomain("nicolasfostier.free.fr");
-	app.setApplicationVersion("1.1");
+	app.setApplicationVersion("1.1.1");
 	app.setWindowIcon(QIcon(":/images/logo.ico"));
+
+	QDir logDir(qApp->applicationDirPath());
+	logDir.mkdir("log");
+	QFile logFile(qApp->applicationDirPath() + "/log/log-" + QDate::currentDate().toString(Qt::ISODate) + ".txt");
+	logFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append);
+	logStream.setDevice(&logFile);
+	qInstallMessageHandler(logHandler);
 
 	// Force the app to use the same language as the system
 	QString locale = QLocale::system().name().section('_', 0, 0);
@@ -56,8 +55,6 @@ int main(int argc, char *argv[])
 	}
 	// Catch unexpected throw of exception
 	catch(std::exception exception){
-		logFile.close();
-
 		QMessageBox::critical(0, app.translate("main", "Unexpected error"),
 							  app.translate("main", "The application has encountered an unexpected error :") + "\n"
 							  + exception.what());

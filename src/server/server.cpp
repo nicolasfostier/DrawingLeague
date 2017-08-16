@@ -74,7 +74,7 @@ int Server::playerReady(){
 	int totalReady = 0;
 	foreach(serverThread, players){
 		if(serverThread->getPlayer()->getIsReady()){
-			totalReady++;
+			++totalReady;
 		}
 	}
 
@@ -82,15 +82,25 @@ int Server::playerReady(){
 }
 
 int Server::nbReadyNeeded(){
-	int result;
-	if(players.size() < 2){
-		result = 2 - playerReady();
+	/* Temporary force 100% of the players to be ready.
+	 * But when after i implement a feature to skip afk player in the futur,
+	 * it will be more than 50 % of ready players needed.
+	 *
+	 * And i will maybe add the possibility to custom this % in the server settings
+	 * to overwrite the result of this function.
+	*/
+	if(players.size() == 1){
+		return 2 - playerReady();
 	}
 	else{
-		result = (players.size() / 2) + 1 - playerReady();
+		return players.size() - playerReady();
 	}
-
-	return result;
+//	if(players.size() < 2){
+//		result = 2 - playerReady();
+//	}
+//	else{
+//		result = (players.size() / 2) + 1 - playerReady();
+//	}
 }
 
 
@@ -158,10 +168,7 @@ void Server::handleNewConnection(){
 			<< ": New connection attempt";
 }
 	void Server::verifyNewPlayer(){
-//		qInfo() << "Avant le cast";
 		ServerThread* newPlayer = static_cast<ServerThread*>(sender());
-//		qInfo() << "Après le cast";
-		qInfo() << newPlayer->getPlayer()->getPseudo();
 
 		if(players.contains(newPlayer->getPlayer()->getPseudo())){
 			qWarning() << newPlayer->getSocket()->peerAddress().toString() << newPlayer->getSocket()->peerPort()
@@ -313,14 +320,9 @@ void Server::processAnswer(Message msg){
 				<< ": Answer :"
 				<< msg.toString(false);
 
+		ServerThread* player;
 		if(!playerSender->getPlayer()->getAnswerFound() && !playerSender->getPlayer()->getIsArtist()){
 			if(removeAccents(msg.getMessage().toLower()) == removeAccents(word.toLower())){
-
-				QMetaObject::invokeMethod(playerSender->getDataBlockWriter(), "sendAnswer",
-										  Q_ARG(Message, msg));
-
-				QMetaObject::invokeMethod(artist->getDataBlockWriter(), "sendAnswer",
-										  Q_ARG(Message, msg));
 
 				int pointWonByArtist;
 				if(!oneHasFound){
@@ -348,18 +350,15 @@ void Server::processAnswer(Message msg){
 				if(artist != NULL){
 					artist->getPlayer()->setScore(artist->getPlayer()->getScore() + pointWonByArtist);
 				}
-				playerFoundAnswer++;
+				++playerFoundAnswer;
 
 				qInfo()	<< playerSender->getPlayer()->getPseudo() << "has found the word and won" << room.getPointToWin();
 
-				ServerThread* player;
-				DataBlockWriter* playerDBW;
 				foreach(player, players){
-					playerDBW = player->getDataBlockWriter();
-					QMetaObject::invokeMethod(playerDBW, "sendAnswerFound",
+					QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendAnswerFound",
 											  Q_ARG(QString, room.getArtist()),
 											  Q_ARG(quint32, pointWonByArtist));
-					QMetaObject::invokeMethod(playerDBW, "sendAnswerFound",
+					QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendAnswerFound",
 											  Q_ARG(QString, playerSender->getPlayer()->getPseudo()),
 											  Q_ARG(quint32, room.getPointToWin()));
 				}
@@ -372,19 +371,19 @@ void Server::processAnswer(Message msg){
 					this->endRound();
 				}
 			}
-			else if(removeAccents(msg.getMessage().toLower()).mid(0,4) == removeAccents(word.toLower().mid(0,4))){
+			else if(isClose(word, msg.getMessage())){
 				QMetaObject::invokeMethod(playerSender->getDataBlockWriter(), "sendAnswerClose");
-				QMetaObject::invokeMethod(playerSender->getDataBlockWriter(), "sendAnswer",
-										  Q_ARG(Message, msg));
-				QMetaObject::invokeMethod(artist->getDataBlockWriter(), "sendAnswer",
-										  Q_ARG(Message, msg));
+
+				foreach(player, players){
+					if(player->getPlayer()->getAnswerFound() || player == playerSender || player == artist){
+						QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendAnswer",
+												  Q_ARG(Message, msg));
+					}
+				}
 			}
 			else{
-				ServerThread* player;
-				DataBlockWriter* playerDBW;
 				foreach(player, players){
-						playerDBW = player->getDataBlockWriter();
-						QMetaObject::invokeMethod(playerDBW, "sendAnswer",
+						QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendAnswer",
 												  Q_ARG(Message, msg));
 				}
 			}
@@ -412,7 +411,7 @@ void Server::hint(){
 	ServerThread* playerSender = static_cast<ServerThread*>(sender()->parent()->parent());
 	QStringList words = word.split(QRegExp("(\\s+|-)"), QString::SkipEmptyParts);
 	if(playerSender == artist &&
-	   playerFoundAnswer == 0 && room.getPointToWin() > 5 && hintGiven * words.size() <= (word.size() / 2)){
+	   !oneHasFound && room.getPointToWin() > 5 && hintGiven * words.size() <= (word.size() / 2)){
 
 		QString hint = QString();
 
@@ -420,7 +419,8 @@ void Server::hint(){
 		int iTot = 0;
 		foreach(QString word, words){
 			hint.append(word.mid(0, hintGiven));
-			for(i = 0; i < word.size() - hintGiven; i++){
+			int charRemaining = word.size() - hintGiven;
+			for(i = 0; i < charRemaining; ++i){
 				if(i == 0 && hintGiven == 0){
 					hint.append("_");
 				}
@@ -432,25 +432,22 @@ void Server::hint(){
 			iTot += word.mid(0, hintGiven).size() + i;
 			if(iTot != this->word.size()){
 				hint.append(" " + this->word.mid(iTot, 1) + " ");
-				iTot++;
+				++iTot;
 			}
 		}
 
-		DataBlockWriter* playerDBW;
 		ServerThread* player;
 		foreach(player, players){
 			if(player != artist){
-				playerDBW = player->getDataBlockWriter();
-				QMetaObject::invokeMethod(playerDBW, "sendHint",
+				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendHint",
 										  Q_ARG(QString, hint));
 			}
 		}
 
-		playerDBW = artist->getDataBlockWriter();
-		QMetaObject::invokeMethod(playerDBW, "sendHint",
+		QMetaObject::invokeMethod(artist->getDataBlockWriter(), "sendHint",
 								  Q_ARG(QString, word + " " + hint));
 
-		hintGiven++;
+		++hintGiven;
 		room.setPointToWin(room.getPointToWin() - 1);
 
 		qInfo() << room.getArtist() << "has given a hint";
@@ -459,12 +456,10 @@ void Server::hint(){
 
 void Server::skipWord(){
 	ServerThread* playerSender = static_cast<ServerThread*>(sender()->parent()->parent());
-	if(playerSender == artist && playerFoundAnswer == 0){
-		DataBlockWriter* playerDBW;
+	if(playerSender == artist && !oneHasFound){
 		ServerThread* player;
 		foreach(player, players){
-			playerDBW = player->getDataBlockWriter();
-			QMetaObject::invokeMethod(playerDBW, "sendSkipWord");
+			QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendSkipWord");
 		}
 
 		artist->getPlayer()->setScore(artist->getPlayer()->getScore() - 1);
@@ -501,11 +496,9 @@ void Server::changeDrawingToolType(DrawingToolType drawingToolType){
 		this->drawingToolType = drawingToolType;
 
 		ServerThread* player;
-		DataBlockWriter* playerDBW;
 		foreach(player, players){
 			if(player != artist){
-				playerDBW = player->getDataBlockWriter();
-				QMetaObject::invokeMethod(playerDBW, "sendDrawingToolType",
+				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendDrawingToolType",
 										  Q_ARG(DrawingToolType, drawingToolType));
 			}
 		}
@@ -518,11 +511,9 @@ void Server::changeDrawingToolColor(QColor color){
 		this->drawingToolColor = color;
 
 		ServerThread* player;
-		DataBlockWriter* playerDBW;
 		foreach(player, players){
 			if(player != artist){
-				playerDBW = player->getDataBlockWriter();
-				QMetaObject::invokeMethod(playerDBW, "sendDrawingToolColor",
+				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendDrawingToolColor",
 										  Q_ARG(QColor, color));
 			}
 		}
@@ -535,11 +526,9 @@ void Server::changeDrawingToolWidth(int width){
 		this->drawingToolWidth = width;
 
 		ServerThread* player;
-		DataBlockWriter* playerDBW;
 		foreach(player, players){
 			if(player != artist){
-				playerDBW = player->getDataBlockWriter();
-				QMetaObject::invokeMethod(playerDBW, "sendDrawingToolWidth",
+				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendDrawingToolWidth",
 										  Q_ARG(int, width));
 			}
 		}
@@ -548,13 +537,11 @@ void Server::changeDrawingToolWidth(int width){
 
 void Server::canvasReset(){
 	ServerThread* playerSender = static_cast<ServerThread*>(sender()->parent()->parent());
-	if(playerSender == artist && playerFoundAnswer == 0){
+	if(playerSender == artist && !oneHasFound){
 		ServerThread* player;
-		DataBlockWriter* playerDBW;
 		foreach(player, players){
 			if(player != artist){
-				playerDBW = player->getDataBlockWriter();
-				QMetaObject::invokeMethod(playerDBW, "sendCanvasReset");
+				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendCanvasReset");
 			}
 		}
 		qInfo() << room.getArtist() << "has reset the canvas" ;
@@ -566,11 +553,9 @@ void Server::canvasMousePressEvent(QPoint pos){
 	ServerThread* playerSender = static_cast<ServerThread*>(sender()->parent()->parent());
 	if(playerSender == artist){
 		ServerThread* player;
-		DataBlockWriter* playerDBW;
 		foreach(player, players){
 			if(player != artist){
-				playerDBW = player->getDataBlockWriter();
-				QMetaObject::invokeMethod(playerDBW, "sendCanvasMousePressEvent",
+				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendCanvasMousePressEvent",
 										  Q_ARG(QPoint, pos));
 			}
 		}
@@ -581,11 +566,9 @@ void Server::canvasMouseMoveEvent(QPoint pos){
 	ServerThread* playerSender = static_cast<ServerThread*>(sender()->parent()->parent());
 	if(playerSender == artist){
 		ServerThread* player;
-		DataBlockWriter* playerDBW;
 		foreach(player, players){
 			if(player != artist){
-				playerDBW = player->getDataBlockWriter();
-				QMetaObject::invokeMethod(playerDBW, "sendCanvasMouseMoveEvent",
+				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendCanvasMouseMoveEvent",
 										  Q_ARG(QPoint, pos));
 			}
 		}
@@ -596,11 +579,9 @@ void Server::canvasMouseReleaseEvent(QPoint pos){
 	ServerThread* playerSender = static_cast<ServerThread*>(sender()->parent()->parent());
 	if(playerSender == artist){
 		ServerThread* player;
-		DataBlockWriter* playerDBW;
 		foreach(player, players){
 			if(player != artist){
-				playerDBW = player->getDataBlockWriter();
-				QMetaObject::invokeMethod(playerDBW, "sendCanvasMouseReleaseEvent",
+				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendCanvasMouseReleaseEvent",
 										  Q_ARG(QPoint, pos));
 			}
 		}
@@ -615,18 +596,12 @@ void Server::startGame(){
 	QObject::connect(this->timerBetweenRound, SIGNAL(timeout()),
 						this, SLOT(startRound()));
 
-	ServerThread* serverThread;
-	foreach(serverThread, players){
-		serverThread->getPlayer()->setScore(0);
+	ServerThread* player;
+	foreach(player, players){
+		player->getPlayer()->setScore(0);
+		QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendGameStarting");
 	}
 
-	DataBlockWriter* svThDBW;
-	foreach(serverThread, players){
-		svThDBW = serverThread->getDataBlockWriter();
-		QMetaObject::invokeMethod(svThDBW, "sendGameStarting");
-	}
-
-	//
 	startRound();
 
 	qInfo() << "New game started";
@@ -636,7 +611,7 @@ void Server::startRound(){
 	nextWord();
 	nextArtist();
 
-	if(playerFoundAnswer != 0 || room.getCurrentRound() == 0){
+	if(oneHasFound || room.getCurrentRound() == 0){
 		room.setCurrentRound(room.getCurrentRound() + 1);
 	}
 	room.setPointToWin(10);
@@ -647,19 +622,17 @@ void Server::startRound(){
 	timerRound->setInterval(this->room.getTimeByRound() * 1000);
 	timerRound->start();
 
-	ServerThread* serverThread;
-	DataBlockWriter* svThDBW;
-	foreach(serverThread, players){
-		svThDBW = serverThread->getDataBlockWriter();
-		if(serverThread == artist){
-			QMetaObject::invokeMethod(svThDBW, "sendRoundStarting",
+	ServerThread* player;
+	foreach(player, players){
+		if(player == artist){
+			QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendRoundStarting",
 									  Q_ARG(quint32, quint32(room.getCurrentRound())),
 									  Q_ARG(QString, room.getArtist()),
 									  Q_ARG(QString, word),
 									  Q_ARG(quint32, quint32(10)));
 		}
 		else{
-			QMetaObject::invokeMethod(svThDBW, "sendRoundStarting",
+			QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendRoundStarting",
 									  Q_ARG(quint32, quint32(room.getCurrentRound())),
 									  Q_ARG(QString, room.getArtist()),
 									  Q_ARG(QString, room.getWord()),
@@ -681,22 +654,19 @@ void Server::endRound(){
 	drawingToolColor = QColor(Qt::black);
 	drawingToolWidth = 3;
 
-	ServerThread* serverThread;
-	DataBlockWriter* svThDBW;
-	foreach(serverThread, players){
-		svThDBW = serverThread->getDataBlockWriter();
-		QMetaObject::invokeMethod(svThDBW, "sendRoundEnding",
+	ServerThread* player;
+	foreach(player, players){
+		QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendRoundEnding",
 								  Q_ARG(QString, word));
 
-		serverThread->getPlayer()->setAnswerFound(false);
+		player->getPlayer()->setAnswerFound(false);
 	}
 
 	QObject::disconnect(this->timerRound, SIGNAL(timeout()),
 						this, SLOT(endRound()));
 	this->timerRound->stop();
 
-	if(playerFoundAnswer == 0){
-		room.setCurrentRound(room.getCurrentRound() - 1);
+	if(!oneHasFound){
 		if(room.getPointToWin() != -1 && artist != NULL){
 			artist->getPlayer()->setScore(artist->getPlayer()->getScore() - 1);
 
@@ -712,7 +682,7 @@ void Server::endRound(){
 		artist = NULL;
 	}
 
-	if(room.getCurrentRound() == room.getNumberOfRounds()){
+	if(room.getCurrentRound() == room.getNumberOfRounds() && oneHasFound){
 		this->endGame();
 	}
 	else{
@@ -721,26 +691,25 @@ void Server::endRound(){
 }
 
 void Server::endGame(){
-	ServerThread* serverThread;
-	DataBlockWriter* svThDBW;
+	ServerThread* playerThread;
 	Player* player;
-	QString winner;
+	QString winner = "?";
 	int winnerScore = -999999;
-	foreach(serverThread, players){
-		svThDBW = serverThread->getDataBlockWriter();
-		player = serverThread->getPlayer();
+	foreach(playerThread, players){
+		player = playerThread->getPlayer();
 		player->setIsReady(false);
 		if(player->getScore() > winnerScore){
+			qInfo() << player->getPseudo() << player->getScore();
 			winner = player->getPseudo();
 			winnerScore = player->getScore();
 		}
 	}
 
-	foreach(serverThread, players){
-		svThDBW = serverThread->getDataBlockWriter();
-		QMetaObject::invokeMethod(svThDBW, "sendGameEnding",
+	foreach(playerThread, players){
+		QMetaObject::invokeMethod(playerThread->getDataBlockWriter(), "sendGameEnding",
 								  Q_ARG(QString, winner));
 	}
+
 
 	QObject::disconnect(this->timerBetweenRound, SIGNAL(timeout()),
 						this, SLOT(startRound()));

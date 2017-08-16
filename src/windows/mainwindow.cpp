@@ -64,11 +64,10 @@ MainWindow::MainWindow() : QMainWindow()
 		mainLayout->setRowStretch(1, 1);
 		mainLayout->setColumnStretch(0, 0);
 		mainLayout->setColumnStretch(1, 1);
-		mainLayout->setColumnStretch(2, 1);
 		mainLayout->setSpacing(8);
 
 			roomInfo = new RoomInfo(Room(), this);
-			mainLayout->addWidget(roomInfo, 0, 0, 1, 3);
+			mainLayout->addWidget(roomInfo, 0, 0, 1, 2);
 
 			drawingToolsBar = new QToolBar(mainWidget);
 			drawingToolsBar->setOrientation(Qt::Vertical);
@@ -153,115 +152,114 @@ MainWindow::MainWindow() : QMainWindow()
 				skipWordAction = drawingToolsBar->addAction(QIcon(":/images/drawingtools/skip.ico"), tr("Skip the word\n(you will lose 1 point)"));
 				skipWordAction->setCheckable(false);
 
-			drawingToolsBar->setFixedSize(drawingToolsBar->sizeHint());
-
 			QLayout* layoutDrawingToolsBar = drawingToolsBar->layout();
-			for(int i = 0; i < layoutDrawingToolsBar->count(); i++){
+			int nbTools = layoutDrawingToolsBar->count();
+			for(int i = 0; i < nbTools; ++i){
 				if(i != 1 && i != 5 && i != 9 && i != 11 && i != 13){
 					layoutDrawingToolsBar->itemAt(i)->setAlignment(Qt::AlignCenter);
 				}
 			}
 
-			canvasView = new CanvasView(QRectF(0,0,1000,1000), this);
-			canvasView->setSceneRect(0,0,1000,1000);
-			mainLayout->addWidget(canvasView, 1, 1, 1, 1, Qt::AlignCenter);
+			mainBlockSplitter = new QSplitter(Qt::Horizontal, mainWidget);
+			mainLayout->addWidget(mainBlockSplitter, 1, 1, 1, 1);
 
-			QObject::connect(resetAction, SIGNAL(triggered(bool)),
-							 this, SLOT(resetCanvas()));
+				canvasView = new CanvasView(QRectF(0,0,1000,1000), mainBlockSplitter);
+				canvasView->setSceneRect(0,0,1000,1000);
+				QObject::connect(resetAction, SIGNAL(triggered(bool)),
+								 this, SLOT(resetCanvas()));
+				this->updateDrawingTools();
 
+				answersPlayersChatSplitter = new QSplitter(Qt::Vertical, mainBlockSplitter);
 
-			this->updateDrawingTools();
+					answersPlayersSplitter = new QSplitter(Qt::Horizontal, answersPlayersChatSplitter);
 
+						answersWidget = new QWidget(answersPlayersSplitter);
 
-			answersPlayersChatSplitter = new QSplitter(Qt::Vertical, mainWidget);
-			mainLayout->addWidget(answersPlayersChatSplitter, 1, 2, 1, 1);
+							answersLayout = new QVBoxLayout(answersWidget);
+							answersLayout->setContentsMargins(0,0,0,0);
 
-				answersPlayersSplitter = new QSplitter(Qt::Horizontal, answersPlayersChatSplitter);
+								answersTitle = new QLabel("<center><b>" + tr("Answers :") + "</b></center>", answersWidget);
+								answersLayout->addWidget(answersTitle);
 
-					answersWidget = new QWidget(answersPlayersSplitter);
+								answersTextEdit = new QTextEdit(answersWidget);
+								answersTextEdit->setReadOnly(true);
+								answersLayout->addWidget(answersTextEdit);
 
-						answersLayout = new QVBoxLayout(answersWidget);
-						answersLayout->setContentsMargins(0,0,0,0);
+								answerLineEdit = new QLineEdit(answersWidget);
+								QObject::connect(answerLineEdit, SIGNAL(returnPressed()),
+												 this, SLOT(sendAnswer()));
+								answersLayout->addWidget(answerLineEdit);
 
-							answersTitle = new QLabel("<center><b>" + tr("Answers :") + "</b></center>", answersWidget);
-							answersLayout->addWidget(answersTitle);
+						playersWidget = new QWidget(answersPlayersSplitter);
 
-							answersTextEdit = new QTextEdit(answersWidget);
-							answersTextEdit->setReadOnly(true);
-							answersLayout->addWidget(answersTextEdit);
+							playersLayout = new QVBoxLayout(playersWidget);
+							playersLayout->setContentsMargins(0,0,0,0);
 
-							answerLineEdit = new QLineEdit(answersWidget);
-							QObject::connect(answerLineEdit, SIGNAL(returnPressed()),
-											 this, SLOT(sendAnswer()));
-							answersLayout->addWidget(answerLineEdit);
+								playersTitle = new QLabel("<center><b>" + tr("Players :") + "</b></center>", playersWidget);
+								playersLayout->addWidget(playersTitle);
 
-					playersWidget = new QWidget(answersPlayersSplitter);
+								playersTable = new QTableWidget(answersPlayersSplitter);
+								playersTable->setColumnCount(2);
+								QStringList horizontalHeaderLabels;
+								horizontalHeaderLabels.append(tr("Pseudo"));
+								horizontalHeaderLabels.append(tr("Score"));
+								playersTable->setHorizontalHeaderLabels(horizontalHeaderLabels);
+								playersTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+								playersTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+								playersTable->verticalHeader()->hide();
+								playersLayout->addWidget(playersTable);
 
-						playersLayout = new QVBoxLayout(playersWidget);
-						playersLayout->setContentsMargins(0,0,0,0);
-
-							playersTitle = new QLabel("<center><b>" + tr("Players :") + "</b></center>", playersWidget);
-							playersLayout->addWidget(playersTitle);
-
-							playersTable = new QTableWidget(answersPlayersSplitter);
-							playersTable->setColumnCount(2);
-							QStringList horizontalHeaderLabels;
-							horizontalHeaderLabels.append(tr("Pseudo"));
-							horizontalHeaderLabels.append(tr("Score"));
-							playersTable->setHorizontalHeaderLabels(horizontalHeaderLabels);
-							playersTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-							playersTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
-							playersTable->verticalHeader()->hide();
-							playersLayout->addWidget(playersTable);
-
-				answersPlayersSplitter->setCollapsible(0, false);
-				answersPlayersSplitter->setCollapsible(1, false);
-				answersPlayersSplitter->setHandleWidth(8);
-				QSplitterHandle *handleSplitter = answersPlayersSplitter->handle(1);
-				QHBoxLayout *layoutHandleSplitter = new QHBoxLayout(handleSplitter);
-				layoutHandleSplitter->setContentsMargins(0,0,0,0);
-				QFrame *lineHandleSplitter = new QFrame(answersPlayersSplitter);
-				lineHandleSplitter->setFrameShape(QFrame::VLine);
-				lineHandleSplitter->setFrameShadow(QFrame::Raised);
-				lineHandleSplitter->setFixedHeight(50);
-				layoutHandleSplitter->addWidget(lineHandleSplitter);
+					answersPlayersSplitter->setCollapsible(0, false);
+					answersPlayersSplitter->setCollapsible(1, false);
+					answersPlayersSplitter->setHandleWidth(10);
 
 
-				chatWidget = new QWidget(answersPlayersChatSplitter);
+					chatWidget = new QWidget(answersPlayersChatSplitter);
 
-					chatLayout = new QVBoxLayout(chatWidget);
-					chatLayout->setContentsMargins(0,0,0,0);
+						chatLayout = new QVBoxLayout(chatWidget);
+						chatLayout->setContentsMargins(0,0,0,0);
 
-						chatTitle = new QLabel("<center><b>" + tr("Chat :") + "</b></center>", playersWidget);
-						chatLayout->addWidget(chatTitle);
+							chatTitle = new QLabel("<center><b>" + tr("Chat :") + "</b></center>", playersWidget);
+							chatLayout->addWidget(chatTitle);
 
-						chatTextEdit = new QTextEdit(answersPlayersChatSplitter);
-						chatTextEdit->setReadOnly(true);
-						chatLayout->addWidget(chatTextEdit);
+							chatTextEdit = new QTextEdit(chatWidget);
+							chatTextEdit->setReadOnly(true);
+							chatLayout->addWidget(chatTextEdit);
 
-						chatLineEdit = new QLineEdit(answersPlayersChatSplitter);
-						QObject::connect(chatLineEdit, SIGNAL(returnPressed()),
-										 this, SLOT(sendChat()));
-						chatLayout->addWidget(chatLineEdit);
+							chatLineEdit = new QLineEdit(chatWidget);
+							QObject::connect(chatLineEdit, SIGNAL(returnPressed()),
+											 this, SLOT(sendChat()));
+							chatLayout->addWidget(chatLineEdit);
 
-			answersPlayersChatSplitter->setCollapsible(0, false);
-			answersPlayersChatSplitter->setCollapsible(1, false);
-			answersPlayersChatSplitter->setHandleWidth(8);
-			handleSplitter = answersPlayersChatSplitter->handle(1);
-			layoutHandleSplitter = new QHBoxLayout(handleSplitter);
-			layoutHandleSplitter->setContentsMargins(0,0,0,0);
-			lineHandleSplitter = new QFrame(answersPlayersChatSplitter);
-			lineHandleSplitter->setFrameShape(QFrame::HLine);
-			lineHandleSplitter->setFrameShadow(QFrame::Raised);
-			lineHandleSplitter->setFixedWidth(200);
-			layoutHandleSplitter->addWidget(lineHandleSplitter);
+				answersPlayersChatSplitter->setCollapsible(0, false);
+				answersPlayersChatSplitter->setCollapsible(1, false);
+				answersPlayersChatSplitter->setHandleWidth(2);
 
-			this->updateArtistMode();
-			this->resetAll();
+			mainBlockSplitter->setCollapsible(0, false);
+			mainBlockSplitter->setCollapsible(1, false);
+			mainBlockSplitter->setHandleWidth(10);
 
-			this->show();
+	this->setStyleSheet(
+		"QSplitter::handle:horizontal {"
+			"margin-left: 4px;"
+			"margin-right: 4px;"
+			"background: qlineargradient(x1:0, y1:0, x2:0.75, y2:0, stop:0 #808080, stop:1 #ffffff);"
+		"}"
+		"QSplitter::handle:vertical {"
+			"margin-top: 6px;"
+			"margin-bottom: 4px;"
+			"background: qlineargradient(x1:0, y1:0, x2:0, y2:0.75, stop:0 #808080, stop:1 #ffffff);"
+		"}"
+	);
 
-			canvasView->fit();
+	this->updateArtistMode();
+	this->resetAll();
+
+	this->show();
+
+	drawingToolsBar->setFixedSize(drawingToolsBar->sizeHint());
+
+	canvasView->fit();
 }
 
 
@@ -720,7 +718,7 @@ void MainWindow::roundEnding(QString word){
 		}
 
 		Message msg(QString(),
-					"<b><span style='color: #cf3030'><i>" + roomInfo->getArtist() + "</i> " + tr("has failed to draw the word in time and lose 1 point.") + "</span></b>");
+					"<b><span style='color: #df2020'><i>" + roomInfo->getArtist() + "</i> " + tr("has failed to draw the word in time and lose 1 point.") + "</span></b>");
 		addAnswer(msg);
 
 		mpStartEndSkip->setMedia(QUrl("qrc:/sound/artist_has_failed_skipped.mp3"));
@@ -749,7 +747,7 @@ void MainWindow::roundEnding(QString word){
 	}
 
 	Message msg(QString(),
-				"<b><span style='color: #cf3030'>" +tr("The word was") + " <i>" + word + ".</i></span></b>");
+				"<b><span style='color: #df2020'>" +tr("The word was") + " <i>" + word + ".</i></span></b>");
 	addAnswer(msg);
 }
 
@@ -776,19 +774,24 @@ void MainWindow::answerFound(QString pseudo, int pointWon){
 
 	if((!isArtist() && connection->getPseudo() == pseudo) || (isArtist() && playerFoundAnswer == 0)){
 		mpAnswer->setMedia(QUrl("qrc:/sound/answer_found_you.mp3"));
-		Message msg = Message(QString(),
-							  "<b><span style='color: #cf3030'>" + tr("You found the word !") + "</span></b>");
-		addAnswer(msg);
-		answerLineEdit->clear();
-		answerLineEdit->setDisabled(true);
-		answersTextEdit->setDisabled(true);
 	}
 	else{
 		mpAnswer->setMedia(QUrl("qrc:/sound/answer_found_other.mp3"));
 	}
 
 	if(!player->getIsArtist()){
-		playerFoundAnswer++;
+		Message msg;
+		if(connection->getPseudo() == pseudo){
+			msg = Message(QString(), "<b><span style='color: #df2020'>" + tr("You found the word !") + "</span></b>");
+			answerLineEdit->clear();
+			answerLineEdit->setDisabled(true);
+		}
+		else{
+			msg = Message(QString(), "<b><span style='color: #df2020'><i>" + pseudo + "</i> " + tr("has found the word !") + "</span></b>");
+		}
+		addAnswer(msg);
+
+		++playerFoundAnswer;
 
 		if(roomInfo->getPointToWin() > 5){
 			roomInfo->setPointToWin(roomInfo->getPointToWin() - 1);
@@ -811,7 +814,7 @@ void MainWindow::answerFound(QString pseudo, int pointWon){
 
 void MainWindow::answerClose(){
 	Message msg = Message(QString(),
-						  "<b><span style='color: #cf3030'>" + tr("You are close !") + "</span></b>");
+						  "<b><span style='color: #df2020'>" + tr("You are close !") + "</span></b>");
 	addAnswer(msg);
 }
 
@@ -819,7 +822,7 @@ void MainWindow::answerClose(){
 void MainWindow::displayHint(QString hint){
 	roomInfo->setWord(hint);
 
-	hintGiven++;
+	++hintGiven;
 	roomInfo->setPointToWin(roomInfo->getPointToWin() - 1);
 
 	if(isArtist() && (roomInfo->getPointToWin() <= 5 || hintGiven > (word.size() / 2))){
@@ -827,7 +830,7 @@ void MainWindow::displayHint(QString hint){
 	}
 
 	Message msg = Message(QString(),
-						  "<b><span style='color: #cf3030'>" + tr("A hint has been given. The number of point to win for this round has been decreased by 1.") + "</span></b>");
+						  "<b><span style='color: #df2020'>" + tr("A hint has been given. The number of point to win for this round has been decreased by 1.") + "</span></b>");
 	addAnswer(msg);
 
 	mpHint->play();
@@ -842,7 +845,7 @@ void MainWindow::skipWord(){
 	}
 
 	Message msg(QString(),
-				"<b><span style='color: #cf3030'><i>" + roomInfo->getArtist() + "</i> " + tr("has skip the word by losing 1 point.") + "</span></b>");
+				"<b><span style='color: #df2020'><i>" + roomInfo->getArtist() + "</i> " + tr("has skip the word by losing 1 point.") + "</span></b>");
 	addAnswer(msg);
 
 	roomInfo->setPointToWin(-1);
@@ -940,6 +943,9 @@ void MainWindow::sendAnswer(){
 		}
 
 		this->answerLineEdit->clear();
+
+		QScrollBar* sb = answersTextEdit->verticalScrollBar();
+		sb->setValue(sb->maximum());
 	}
 }
 
@@ -951,6 +957,9 @@ void MainWindow::sendChat(){
 		}
 
 		this->chatLineEdit->clear();
+
+		QScrollBar* sb = chatTextEdit->verticalScrollBar();
+		sb->setValue(sb->maximum());
 	}
 }
 

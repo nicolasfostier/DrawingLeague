@@ -26,7 +26,6 @@ DataBlockReader::~DataBlockReader(){
 // Qt slots
 
 void DataBlockReader::read(){
-//	qInfo() << "read" << this->parent();
 	while(1){
 		if(nextSizeToRead == 0){
 			if(socket->bytesAvailable() < qint64(sizeof(quint32))){
@@ -54,8 +53,6 @@ void DataBlockReader::read(){
 
 
 			case DataBlockType::READY_TO_RECEIVE : {
-				qInfo() << "DBR ready to receive";
-
 				quint32 useless;
 				*socketStream >> blockReceived;
 				blockReceivedStream >> useless;
@@ -69,8 +66,6 @@ void DataBlockReader::read(){
 				QString gameVersion;
 				*socketStream >> blockReceived;
 				blockReceivedStream >> player >> gameVersion;
-
-				qInfo() << "DBR enter the game";
 
 				emit enterTheGameReceived(player, gameVersion);
 			break;

@@ -16,20 +16,19 @@
 //
 int main(int argc, char* argv[])
 {
-	QDir logDir(".");
-	logDir.mkdir("log");
-	QFile logFile("log/log-" + QDate::currentDate().toString(Qt::ISODate) + ".txt");
-	logFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append);
-	logStream.setDevice(&logFile);
-
-	qInstallMessageHandler(logHandler);
-
 	// Creation and configuration of the Qt application
 	QCoreApplication app(argc, argv);
 	app.setApplicationName("Drawing League Dedicated Server");
 	app.setOrganizationName("Nicolas Fostier");
 	app.setOrganizationDomain("nicolasfostier.free.fr");
-	app.setApplicationVersion("1.1");
+	app.setApplicationVersion("1.1.1");
+
+	QDir logDir(qApp->applicationDirPath());
+	logDir.mkdir("log");
+	QFile logFile(qApp->applicationDirPath() + "/log/log-" + QDate::currentDate().toString(Qt::ISODate) + ".txt");
+	logFile.open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append);
+	logStream.setDevice(&logFile);
+	qInstallMessageHandler(logHandler);
 
 	// Force the app to use the same language as the system
 	QString locale = QLocale::system().name().section('_', 0, 0);

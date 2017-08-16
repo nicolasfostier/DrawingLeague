@@ -18,7 +18,8 @@ QString removeAccents(QString s) {
 	}
 
 	QString output = "";
-	for (int i = 0; i < s.length(); i++) {
+	int sLength = s.length();
+	for(int i = 0; i < sLength; ++i) {
 		QChar c = s[i];
 		int dIndex = diacriticLetters.indexOf(c);
 		if (dIndex < 0){
@@ -31,4 +32,33 @@ QString removeAccents(QString s) {
 	}
 
 	return output;
+}
+
+
+// Use the Levenshtein distance
+bool isClose(QString word, QString answer){
+	if(word.size() > 3){
+		int wordSize = word.size();
+		int answerSize = answer.size();
+		QVector<QVector<int>> matrix(wordSize + 1, QVector<int>(answerSize + 1));
+
+		matrix[0][0] = 0;
+		for(int i = 1; i <= wordSize; ++i){
+			matrix[i][0] = i;
+		}
+		for(int j = 1; j <= answerSize; ++j){
+			matrix[0][j] = j;
+		}
+
+		for(int i = 1; i <= wordSize; ++i){
+			for(int j = 1; j <= answerSize; ++j){
+				matrix[i][j] = qMin(qMin(matrix[i-1][j] + 1, matrix[i][j-1] + 1), matrix[i-1][j-1] + (word[i-1] == answer[j-1] ? 0 : 1));
+			}
+		}
+
+		return (static_cast<float>(matrix[wordSize][answerSize]) / qMax(wordSize, answerSize) < 0.34);
+	}
+	else{
+		return false;
+	}
 }

@@ -5,10 +5,13 @@
 
 #include <QString>
 #include <QStringList>
+#include <QVector>
 
 
 
 QString removeAccents(QString s);
+
+bool isClose(QString word, QString answer);
 
 
 

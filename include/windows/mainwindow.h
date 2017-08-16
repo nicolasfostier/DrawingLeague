@@ -25,6 +25,7 @@
 #include <QMediaPlayer>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QScrollBar>
 
 
 
@@ -94,24 +95,24 @@ class MainWindow : public QMainWindow
 					QAction* resetAction;
 					QAction* hintAction;
 					QAction* skipWordAction;
-				CanvasView* canvasView;
-				QSplitter* answersPlayersChatSplitter;
-					QSplitter* answersPlayersSplitter;
-						QWidget* answersWidget;
-							QVBoxLayout* answersLayout;
-								QLabel* answersTitle;
-								QTextEdit* answersTextEdit;
-								QLineEdit* answerLineEdit;
-						QWidget* playersWidget;
-							QVBoxLayout* playersLayout;
-								QLabel* playersTitle;
-								QTableWidget* playersTable;
-
-					QWidget* chatWidget;
-						QVBoxLayout* chatLayout;
-							QLabel* chatTitle;
-							QTextEdit* chatTextEdit;
-							QLineEdit* chatLineEdit;
+				QSplitter* mainBlockSplitter;
+					CanvasView* canvasView;
+					QSplitter* answersPlayersChatSplitter;
+						QSplitter* answersPlayersSplitter;
+							QWidget* answersWidget;
+								QVBoxLayout* answersLayout;
+									QLabel* answersTitle;
+									QTextEdit* answersTextEdit;
+									QLineEdit* answerLineEdit;
+							QWidget* playersWidget;
+								QVBoxLayout* playersLayout;
+									QLabel* playersTitle;
+									QTableWidget* playersTable;
+						QWidget* chatWidget;
+							QVBoxLayout* chatLayout;
+								QLabel* chatTitle;
+								QTextEdit* chatTextEdit;
+								QLineEdit* chatLineEdit;
 
 	// Constructor
 	public :

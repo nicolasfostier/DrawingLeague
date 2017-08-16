@@ -74,9 +74,9 @@ void ServerThread::launch(){
 	QObject::connect(connection->getDBR(), SIGNAL(readyToReceive()),
 					 this, SIGNAL(readyToReceive()));
 
-//	thread()->msleep(100);
-
 	connection->getDBW()->sendReadyToReceive();
+
+	thread()->msleep(100);
 }
 
 
@@ -86,8 +86,6 @@ void ServerThread::setupPlayerInfo(Player player, QString gameVersion){
 	this->gameVersion = gameVersion;
 
 	emit wantToEnterTheGame();
-
-//	qInfo() << "wantToEnterTheGame" << player.getPseudo() << gameVersion;
 }
 
 void ServerThread::hasEnteredTheGame(){
