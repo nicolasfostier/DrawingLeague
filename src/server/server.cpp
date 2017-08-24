@@ -289,21 +289,32 @@ void Server::handleNewConnection(){
 
 void Server::removePlayer(QString pseudo, ServerThread* player, bool hasFound){
 	players.remove(pseudo);
-	if(pseudo == room.getArtist()){
-		artist = NULL;
-		this->endRound();
-	}
-	if(hasFound){
-		playerFoundAnswer--;
-	}
-
 	artistsQueue.removeOne(player);
 
 	qInfo()	<< "Player leaving :"
 			<< pseudo;
 
-	if(players.size() < 2){
-		endGame();
+	if(room.getCurrentRound() == 0){
+		if(nbReadyNeeded() < 1){
+			startGame();
+		}
+		else{
+			this->sendReadyNeeded();
+		}
+	}
+	else{
+		if(pseudo == room.getArtist()){
+			artist = NULL;
+			this->endRound();
+		}
+		else{
+			if(players.size() < 2){
+				endGame();
+			}
+			else if(hasFound){
+				playerFoundAnswer--;
+			}
+		}
 	}
 }
 
