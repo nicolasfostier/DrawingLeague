@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 		QCommandLineOption configFileCL("config-file",
 									QCoreApplication::translate("main", "Configuration file"),
 									QCoreApplication::translate("main", "path"),
-									"");
+									"DrawingLeagueDedicatedServer.ini");
 		cmdLineParser.addOption(configFileCL);
 
 		QCommandLineOption nameCL(  "name",
@@ -115,15 +115,8 @@ int main(int argc, char* argv[])
 		QString dictionaryStd;
 		QString dictionaryPath;
 
-		// Try first by looking for a config file at the path defined in the command line
-		QSettings* settingsIni;
-		if(cmdLineParser.isSet(configFileCL)){
-			settingsIni = new QSettings(cmdLineParser.value(configFileCL));
-		}
-		// If there is no path defined in the command line, check at the default path
-		else{
-			settingsIni = new QSettings("DrawingLeagueDedicatedServer.ini", QSettings::IniFormat);
-		}
+		QSettings* settingsIni = new QSettings(cmdLineParser.value(configFileCL), QSettings::IniFormat);
+
 		// Load the value defined in the config file
 		port = settingsIni->value("port", 23232).toInt();
 		room.setRoomName(settingsIni->value("name", "Drawing League").toString());
@@ -135,7 +128,6 @@ int main(int argc, char* argv[])
 		if(dictionaryPath.isEmpty()){
 			dictionaryStd = settingsIni->value("std-dict", "easy_french").toString();
 		}
-
 
 		settingsIni->sync();
 		delete settingsIni;
