@@ -1,25 +1,32 @@
+~ : Planned to be shipped in the next version
+X : Ready to be shipped in the next version
+
+
 Bugs :
-	[X Dirty way to fix it, but maybe it's enough ?] Connection to a server sometime doesn't work 
+	[~] Better location for the log files with the macOS and Linux version
+	[X] --config-file launch option of the server don't work
+	[X] Number of ready players isn't refresh when a player leave the room
 
 Improvements :
+	[~] Disconnected players get their score back if they reconnect to the server before the end of the game
 	[ ] Players who enter the room after the beginning of the round, need to see the beginning of the drawing
 	[ ] Better sound to differentiate easier when the player start the round as an artist or not
 	[ ] Better end game screen
 
 New functionnalities :
-	[ ] Possibility to set the % of ready players needed
-	[ ] Skip afk artist if he doesn't draw anything during the first 30 sec of the round
-	[ ] Server browser
+	[~] Possibility to set the % of ready players needed
+	[~] Skip afk artist if he doesn't draw anything during the first 45 sec of the round
+	[~] Server browser
 	[ ] System of centralized account in a database :
 		[ ] Avatar
 		[ ] XP system
 		[ ] Achievement system
-	[ ] New tools to draw :
-		[ ] Line
-		[ ] Frame
+	[~] New tools to draw :
+		[~] Line
+		[~] Frame
 	[ ] Display the ping of player
 	[ ] Window to manage the server, change the parameter, restart the game, kick players, etc...
-	[ ] Save the drawing of the last round
+	[~] Save the drawing of the last round
 	[ ] New dictionnaries :
 		[ ] English (just translate the french dictionnary)
 	[ ] Add some command :
