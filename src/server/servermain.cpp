@@ -23,6 +23,18 @@ int main(int argc, char* argv[])
 	app.setOrganizationDomain("nicolasfostier.free.fr");
 	app.setApplicationVersion("1.1.2");
 
+	#ifdef Q_OS_WIN
+		QDir logDir(qApp->applicationDirPath());
+		logDir.mkdir("log");
+		logDir.setPath(logDir.path() + "/log");
+	#endif
+
+	#if defined(Q_OS_MACOS) || defined(Q_OS_LINUX)
+		QDir logDir(QDir::homePath());
+		logDir.mkdir(".DrawingLeague");
+		logDir.setPath(logDir.path() + "/.DrawingLeague");
+	#endif
+
 	QDir logDir(qApp->applicationDirPath());
 	logDir.mkdir("log");
 	QFile logFile(qApp->applicationDirPath() + "/log/log-" + QDate::currentDate().toString(Qt::ISODate) + ".txt");

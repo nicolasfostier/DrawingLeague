@@ -27,16 +27,10 @@ int main(int argc, char *argv[])
 		logDir.setPath(logDir.path() + "/log");
 	#endif
 
-	#ifdef Q_OS_MACOS
+	#if defined(Q_OS_MACOS) || defined(Q_OS_LINUX)
 		QDir logDir(QDir::homePath());
 		logDir.mkdir(".DrawingLeague");
 		logDir.setPath(logDir.path() + "/.DrawingLeague");
-	#endif
-
-	#ifdef Q_OS_LINUX
-		QDir logDir("/var/log");
-		logDir.mkdir("DrawingLeague");
-		logDir.setPath(logDir.path() + "/DrawingLeague");
 	#endif
 
 	QFile logFile(logDir.path() + "/log-" + QDate::currentDate().toString(Qt::ISODate) + ".txt");
