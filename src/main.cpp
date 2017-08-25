@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
 	QFile logFile(logDir.path() + "/log-" + QDate::currentDate().toString(Qt::ISODate) + ".txt");
 	logFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append);
 	logStream.setDevice(&logFile);
+	logStream.setCodec("UTF-8");
 	qInstallMessageHandler(logHandler);
 
 	// Force the app to use the same language as the system

@@ -35,11 +35,10 @@ int main(int argc, char* argv[])
 		logDir.setPath(logDir.path() + "/.DrawingLeague");
 	#endif
 
-	QDir logDir(qApp->applicationDirPath());
-	logDir.mkdir("log");
-	QFile logFile(qApp->applicationDirPath() + "/log/log-" + QDate::currentDate().toString(Qt::ISODate) + ".txt");
+	QFile logFile(qApp->applicationDirPath() + "/log-" + QDate::currentDate().toString(Qt::ISODate) + ".txt");
 	logFile.open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append);
 	logStream.setDevice(&logFile);
+	logStream.setCodec("UTF-8");
 	qInstallMessageHandler(logHandler);
 
 	// Force the app to use the same language as the system
