@@ -6,7 +6,7 @@
 installer
 
 # Log generate by the app
-*/log/*
+log-*.txt
 
 
 
