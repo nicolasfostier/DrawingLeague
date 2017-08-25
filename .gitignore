@@ -5,6 +5,9 @@
 # Contain installers of the app
 installer
 
+# Log generate by the app
+*/log/*
+
 
 
 #######
@@ -31,7 +34,7 @@ installer
 
 # Fortran module files
 *.mod
-*.smod
+*.sm
 
 # Compiled Static libraries
 *.lai
