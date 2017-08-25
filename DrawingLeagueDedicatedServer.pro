@@ -27,11 +27,7 @@ QT +=   core \
 		network \
 		widgets \
 
-SOURCES +=  src/datablock/datablockreader.cpp \
-			src/datablock/datablocktype.cpp \
-			src/datablock/datablockwriter.cpp \
-			src/gameinfo/connection.cpp \
-			src/gameinfo/drawingtooltype.cpp \
+SOURCES +=	src/gameinfo/drawingtooltype.cpp \
 			src/gameinfo/errorcode.cpp \
 			src/gameinfo/message.cpp \
 			src/gameinfo/player.cpp \
@@ -42,12 +38,14 @@ SOURCES +=  src/datablock/datablockreader.cpp \
 			src/server/servermain.cpp \
 			src/server/serverthread.cpp \
 			src/server/wordtools.cpp \
+			src/socket/blockreader.cpp \
+			src/socket/blockwriter.cpp \
+			src/socket/blocktype.cpp \
+			src/socket/connection.cpp \
+			src/socket/socketreader.cpp \
+			src/socket/socketwriter.cpp \
 
-HEADERS +=  include/datablock/datablockreader.h \
-			include/datablock/datablocktype.h \
-			include/datablock/datablockwriter.h \
-			include/gameinfo/connection.h \
-			include/gameinfo/drawingtooltype.h \
+HEADERS +=  include/gameinfo/drawingtooltype.h \
 			include/gameinfo/errorcode.h \
 			include/gameinfo/message.h \
 			include/gameinfo/player.h \
@@ -57,6 +55,12 @@ HEADERS +=  include/datablock/datablockreader.h \
 			include/server/server.h \
 			include/server/serverthread.h \
 			include/server/wordtools.h \
+			include/socket/blockreader.h \
+			include/socket/blockwriter.h \
+			include/socket/blocktype.h \
+			include/socket/connection.h \
+			include/socket/socketreader.h \
+			include/socket/socketwriter.h \
 
 RESOURCES +=    res/dictionaries.qrc \
 				res/lang.qrc
