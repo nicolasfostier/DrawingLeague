@@ -1,4 +1,5 @@
-~ : Planned to be shipped in the next version
+~ : Planned to be shipped in the next major version
+O : Planned to be shipped in the next minor version
 X : Ready to be shipped in the next version
 
 
@@ -6,6 +7,7 @@ Bugs :
 	[~] Better location for the log files with the macOS and Linux version
 	[X] --config-file launch option of the server don't work
 	[X] Number of ready players isn't refresh when a player leave the room
+	[O] The Server is completely bugged in Linux. Need to completly rework DBW and maybe DBR
 
 Improvements :
 	[~] Disconnected players get their score back if they reconnect to the server before the end of the game

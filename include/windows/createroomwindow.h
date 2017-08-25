@@ -17,9 +17,9 @@
 
 
 #include "include/server/server.h"
-#include "include/datablock/datablockreader.h"
-#include "include/datablock/datablockwriter.h"
-#include "include/gameinfo/connection.h"
+#include "include/socket/socketreader.h"
+#include "include/socket/socketwriter.h"
+#include "include/socket/connection.h"
 
 
 

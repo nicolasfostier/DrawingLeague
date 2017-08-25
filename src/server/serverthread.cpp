@@ -14,11 +14,11 @@ QString ServerThread::getGameVersion(){
 	return gameVersion;
 }
 
-DataBlockReader* ServerThread::getDataBlockReader(){
-	return connection->getDBR();
+SocketReader* ServerThread::getSocketReader(){
+	return connection->getSocketReader();
 }
-DataBlockWriter* ServerThread::getDataBlockWriter(){
-	return connection->getDBW();
+SocketWriter* ServerThread::getSocketWriter(){
+	return connection->getSocketWriter();
 }
 
 
@@ -69,14 +69,12 @@ void ServerThread::launch(){
 	QObject::connect(connection->getSocket(), SIGNAL(disconnected()),
 					 this, SLOT(deleteLater()));
 
-	QObject::connect(connection->getDBR(), SIGNAL(enterTheGameReceived(Player,QString)),
+	QObject::connect(connection->getSocketReader(), SIGNAL(enterTheGameReceived(Player,QString)),
 					 this, SLOT(setupPlayerInfo(Player, QString)));
-	QObject::connect(connection->getDBR(), SIGNAL(readyToReceive()),
+	QObject::connect(connection->getSocketReader(), SIGNAL(readyToReceive()),
 					 this, SIGNAL(readyToReceive()));
 
-	connection->getDBW()->sendReadyToReceive();
-
-	thread()->msleep(100);
+	connection->getSocketWriter()->sendReadyToReceive();
 }
 
 
@@ -89,14 +87,14 @@ void ServerThread::setupPlayerInfo(Player player, QString gameVersion){
 }
 
 void ServerThread::hasEnteredTheGame(){
-	connection->getDBW()->sendHasEnteredTheGame();
+	connection->getSocketWriter()->sendHasEnteredTheGame();
 	QObject::disconnect(timeout, SIGNAL(timeout()),
 						this, SLOT(deleteLater()));
 	timeout->stop();
 }
 
 void ServerThread::cantEnterTheGame(ErrorCode errorCode){
-	connection->getDBW()->sendGameError(errorCode);
+	connection->getSocketWriter()->sendGameError(errorCode);
 }
 
 

@@ -1,14 +1,16 @@
-#ifndef DATABLOCKWRITER_H
-#define DATABLOCKWRITER_H
+#ifndef SOCKETWRITER_H
+#define SOCKETWRITER_H
 
 
 
 #include <QTcpSocket>
 #include <QDataStream>
 #include <QByteArray>
+#include <QBuffer>
 
 
-#include "include/datablock/datablocktype.h"
+#include "include/socket/blocktype.h"
+#include "include/socket/blockwriter.h"
 #include "include/gameinfo/message.h"
 #include "include/gameinfo/room.h"
 #include "include/gameinfo/player.h"
@@ -18,22 +20,21 @@
 
 
 // Send information to a client or a server through a TCP socket
-class DataBlockWriter : public QObject
+class SocketWriter : public QObject
 {
 	Q_OBJECT
 
 	// Variables
 	private :
 		QTcpSocket* socket;
-		QDataStream* socketStream;
 
 	// Constructor
 	public :
-		DataBlockWriter(QTcpSocket* socket, QObject* parent = NULL);
+		SocketWriter(QTcpSocket* socket, QObject* parent = NULL);
 
 	// Destructor
 	public :
-		~DataBlockWriter();
+		~SocketWriter();
 
 	// Qt slots
 	public slots :
@@ -78,4 +79,4 @@ class DataBlockWriter : public QObject
 
 
 
-#endif // DATABLOCKWRITER_H
+#endif // SOCKETWRITER_H

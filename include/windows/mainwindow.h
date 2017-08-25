@@ -31,13 +31,13 @@
 
 #include "include/windows/joinroomwindow.h"
 #include "include/windows/createroomwindow.h"
-#include "include/datablock/datablockreader.h"
-#include "include/datablock/datablockwriter.h"
 #include "include/gameinfo/room.h"
 #include "include/gameinfo/message.h"
-#include "include/widgets/roominfo.h"
 #include "include/gameinfo/player.h"
+#include "include/widgets/roominfo.h"
 #include "include/widgets/canvasview.h"
+#include "include/socket/socketreader.h"
+#include "include/socket/socketwriter.h"
 
 
 

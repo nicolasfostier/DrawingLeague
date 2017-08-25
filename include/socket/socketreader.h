@@ -1,5 +1,5 @@
-#ifndef DATABLOCK_H
-#define DATABLOCK_H
+#ifndef SOCKETREADER_H
+#define SOCKETREADER_H
 
 
 
@@ -8,7 +8,8 @@
 #include <QByteArray>
 
 
-#include "include/datablock/datablocktype.h"
+#include "include/socket/blocktype.h"
+#include "include/socket/blockreader.h"
 #include "include/gameinfo/message.h"
 #include "include/gameinfo/room.h"
 #include "include/gameinfo/player.h"
@@ -18,29 +19,26 @@
 
 
 // Receive information from a client or a server through a TCP socket
-class DataBlockReader : public QObject
+class SocketReader : public QObject
 {
 	Q_OBJECT
 
 	// Variables
 	private :
 		QTcpSocket* socket;
-		QDataStream* socketStream;
 
-		int nextSizeToRead;
-		DataBlockType nextDataBlockType;
+		BlockType newBlockType;
 
 	// Constructor
 	public :
-		DataBlockReader(QTcpSocket* socket, QObject* parent = NULL);
+		SocketReader(QTcpSocket* socket, QObject* parent = NULL);
 
 	// Destructor
 	public :
-		~DataBlockReader();
+		~SocketReader();
 
 	// Qt slots
 	public slots :
-		//
 		void read();
 
 	// Signals
@@ -86,4 +84,4 @@ class DataBlockReader : public QObject
 
 
 
-#endif // DATABLOCK_H
+#endif // SOCKETREADER_H

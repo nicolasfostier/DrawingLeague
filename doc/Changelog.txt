@@ -1,0 +1,5 @@
+Version 1.1.2 :
+	
+	Bugs :
+		- Number of ready players wasn't refresh when a player leave the room
+		- The launch option "--config-file" of the dedicated server didn't work

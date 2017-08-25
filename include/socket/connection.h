@@ -7,9 +7,9 @@
 #include <QApplication>
 
 
-#include "include/datablock/datablockreader.h"
-#include "include/datablock/datablockwriter.h"
-#include "include/datablock/datablocktype.h"
+#include "include/socket/socketreader.h"
+#include "include/socket/socketwriter.h"
+#include "include/socket/blocktype.h"
 
 
 
@@ -28,16 +28,16 @@ class Connection : public QObject{
 
 		QTcpSocket* socket;
 
-		DataBlockReader* dataBlockReader;
-		DataBlockWriter* dataBlockWriter;
+		SocketReader* socketReader;
+		SocketWriter* socketWriter;
 
 	// Getter
 	public :
 		bool getIsConnected();
 		QString getPseudo();
 		QTcpSocket* getSocket();
-		DataBlockReader* getDBR();
-		DataBlockWriter* getDBW();
+		SocketReader* getSocketReader();
+		SocketWriter* getSocketWriter();
 
 	// Setter
 	public :

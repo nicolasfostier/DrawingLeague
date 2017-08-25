@@ -407,7 +407,7 @@ void MainWindow::joinRoom(){
 
 
 
-		DataBlockReader* dataBlockReader = connection->getDBR();
+		SocketReader* dataBlockReader = connection->getSocketReader();
 
 		QObject::connect(dataBlockReader, SIGNAL(roomReceived(Room)),
 						 this, SLOT(newRoom(Room)));
@@ -464,7 +464,7 @@ void MainWindow::joinRoom(){
 
 
 
-		DataBlockWriter* dataBlockWriter = connection->getDBW();
+		SocketWriter* dataBlockWriter = connection->getSocketWriter();
 
 		QObject::connect(penWidthSlider, SIGNAL(valueChanged(int)),
 						 dataBlockWriter, SLOT(sendDrawingToolWidth(int)));
@@ -491,7 +491,7 @@ void MainWindow::joinRoom(){
 
 		this->resetCanvas(false);
 
-		this->connection->getDBW()->sendReadyToReceive();
+		this->connection->getSocketWriter()->sendReadyToReceive();
 	}
 
 void MainWindow::createRoom(){
@@ -564,7 +564,7 @@ void MainWindow::changeColor(){
 	this->updateDrawingTools();
 
 	if(this->isConnected()){
-		connection->getDBW()->sendDrawingToolColor(selectedColor);
+		connection->getSocketWriter()->sendDrawingToolColor(selectedColor);
 	}
 }
 
@@ -928,10 +928,10 @@ void MainWindow::changeDrawingToolColor(QColor color){
 
 void MainWindow::changeDrawingToolWidth(int width){
 	QObject::disconnect(penWidthSlider, SIGNAL(valueChanged(int)),
-						connection->getDBW(), SLOT(sendDrawingToolWidth(int)));
+						connection->getSocketWriter(), SLOT(sendDrawingToolWidth(int)));
 	this->penWidthSlider->setValue(width);
 	QObject::connect(penWidthSlider, SIGNAL(valueChanged(int)),
-					 connection->getDBW(), SLOT(sendDrawingToolWidth(int)));
+					 connection->getSocketWriter(), SLOT(sendDrawingToolWidth(int)));
 }
 
 
@@ -939,7 +939,7 @@ void MainWindow::sendAnswer(){
 	if(!this->answerLineEdit->text().isEmpty()){
 		if(this->isConnected()){
 			Message msg(connection->getPseudo(), this->answerLineEdit->text());
-			connection->getDBW()->sendAnswer(msg);
+			connection->getSocketWriter()->sendAnswer(msg);
 		}
 
 		this->answerLineEdit->clear();
@@ -953,7 +953,7 @@ void MainWindow::sendChat(){
 	if(!this->chatLineEdit->text().isEmpty()){
 		if(this->isConnected()){
 			Message msg(connection->getPseudo(), this->chatLineEdit->text());
-			connection->getDBW()->sendChat(msg);
+			connection->getSocketWriter()->sendChat(msg);
 		}
 
 		this->chatLineEdit->clear();
@@ -966,6 +966,6 @@ void MainWindow::sendChat(){
 
 void MainWindow::sendDrawingToolType(){
 	if(this->isConnected()){
-		connection->getDBW()->sendDrawingToolType(selectedDrawingToolType());
+		connection->getSocketWriter()->sendDrawingToolType(selectedDrawingToolType());
 	}
 }

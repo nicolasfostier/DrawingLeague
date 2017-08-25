@@ -1,4 +1,4 @@
-#include "include/gameinfo/connection.h"
+#include "include/socket/connection.h"
 
 
 
@@ -13,11 +13,11 @@ QString Connection::getPseudo(){
 QTcpSocket* Connection::getSocket(){
 	return socket;
 }
-DataBlockReader* Connection::getDBR(){
-	return dataBlockReader;
+SocketReader* Connection::getSocketReader(){
+	return socketReader;
 }
-DataBlockWriter* Connection::getDBW(){
-	return dataBlockWriter;
+SocketWriter* Connection::getSocketWriter(){
+	return socketWriter;
 }
 
 
@@ -35,25 +35,23 @@ void Connection::setShowError(bool showError){
 
 // Constructeurs
 
-Connection::Connection(QString ip, QString port, QString pseudo, QObject* parent) : QObject(parent)
-{
+Connection::Connection(QString ip, QString port, QString pseudo, QObject* parent) : QObject(parent){
 	this->ip = ip;
 	this->port = port;
 	this->pseudo = pseudo;
 
 	this->socket = NULL;
-	this->dataBlockReader = NULL;
-	this->dataBlockWriter = NULL;
+	this->socketReader = NULL;
+	this->socketWriter = NULL;
 
 	this->showError = true;
 }
-Connection::Connection(qintptr socketDescriptor, QObject* parent) : QObject(parent)
-{
+Connection::Connection(qintptr socketDescriptor, QObject* parent) : QObject(parent){
 	this->socket = new QTcpSocket(this);
 	this->socket->setSocketDescriptor(socketDescriptor);
 
-	this->dataBlockReader = new DataBlockReader(socket, this);
-	this->dataBlockWriter = new DataBlockWriter(socket, this);
+	this->socketReader = new SocketReader(socket, this);
+	this->socketWriter = new SocketWriter(socket, this);
 
 	this->showError = true;
 }
@@ -71,8 +69,7 @@ Connection::~Connection(){
 // Methods
 
 void Connection::connectToTheServer(){
-	if(pseudo.size() < 3)
-	{
+	if(pseudo.size() < 3){
 		QMessageBox::critical(NULL, tr("Forbidden pseudo"), tr("Your pseudo must be at least 3 characters long."));
 	}
 	else{
@@ -93,20 +90,20 @@ void Connection::connectToTheServer(){
 
 // Qt slots
 void Connection::initDataBlock(){
-	dataBlockReader = new DataBlockReader(socket, this);
-	QObject::connect(dataBlockReader, SIGNAL(readyToReceive()),
-					 this, SLOT(enterTheGame()));
-	QObject::connect(dataBlockReader, SIGNAL(gameErrorReceived(ErrorCode)),
-					 this, SLOT(gameError(ErrorCode)));
-	QObject::connect(dataBlockReader, SIGNAL(hasEnteredTheGame()),
-					 this, SIGNAL(hasEnteredTheGame()));
-	dataBlockReader->read();
+	socketReader = new SocketReader(socket, this);
+	socketWriter = new SocketWriter(socket, this);
 
-	dataBlockWriter = new DataBlockWriter(socket, this);
+	QObject::connect(socketReader, SIGNAL(readyToReceive()),
+					 this, SLOT(enterTheGame()));
+	QObject::connect(socketReader, SIGNAL(gameErrorReceived(ErrorCode)),
+					 this, SLOT(gameError(ErrorCode)));
+	QObject::connect(socketReader, SIGNAL(hasEnteredTheGame()),
+					 this, SIGNAL(hasEnteredTheGame()));
+	socketReader->read();
 }
 
 void Connection::enterTheGame(){
-	dataBlockWriter->sendEnterTheGame(this->pseudo, qApp->applicationVersion());
+	socketWriter->sendEnterTheGame(this->pseudo, qApp->applicationVersion());
 }
 
 void Connection::socketError(){

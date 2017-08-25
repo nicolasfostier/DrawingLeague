@@ -13,7 +13,7 @@ macx{
 	ICON = res/images/logo.icns
 }
 
-VERSION = 1.2
+VERSION = 1.1.2
 
 
 
@@ -26,10 +26,6 @@ QT  +=  core \
 		widgets \
 
 SOURCES +=  src/main.cpp \
-			src/datablock/datablockreader.cpp \
-			src/datablock/datablocktype.cpp \
-			src/datablock/datablockwriter.cpp \
-			src/gameinfo/connection.cpp \
 			src/gameinfo/drawingtooltype.cpp \
 			src/gameinfo/errorcode.cpp \
 			src/gameinfo/message.cpp \
@@ -44,6 +40,12 @@ SOURCES +=  src/main.cpp \
 			src/server/wordtools.cpp \
 			src/shapes/polyline.cpp \
 			src/shapes/shape.cpp \
+			src/socket/blockreader.cpp \
+			src/socket/blockwriter.cpp \
+			src/socket/blocktype.cpp \
+			src/socket/connection.cpp \
+			src/socket/socketreader.cpp \
+			src/socket/socketwriter.cpp \
 			src/updatechecker.cpp \
 			src/widgets/canvasview.cpp \
 			src/widgets/roominfo.cpp \
@@ -53,11 +55,7 @@ SOURCES +=  src/main.cpp \
 			src/windows/joinroomwindow.cpp \
 			src/windows/mainwindow.cpp \
 
-HEADERS +=  include/datablock/datablockreader.h \
-			include/datablock/datablocktype.h \
-			include/datablock/datablockwriter.h \
-			include/gameinfo/connection.h \
-			include/gameinfo/drawingtooltype.h \
+HEADERS +=	include/gameinfo/drawingtooltype.h \
 			include/gameinfo/errorcode.h \
 			include/gameinfo/message.h \
 			include/gameinfo/player.h \
@@ -71,6 +69,12 @@ HEADERS +=  include/datablock/datablockreader.h \
 			include/server/wordtools.h \
 			include/shapes/polyline.h \
 			include/shapes/shape.h \
+			include/socket/blockreader.h \
+			include/socket/blockwriter.h \
+			include/socket/blocktype.h \
+			include/socket/connection.h \
+			include/socket/socketreader.h \
+			include/socket/socketwriter.h \
 			include/updatechecker.h \
 			include/widgets/canvasview.h \
 			include/widgets/roominfo.h \

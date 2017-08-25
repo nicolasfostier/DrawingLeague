@@ -9,12 +9,12 @@
 #include <QHostAddress>
 
 
+#include "include/socket/socketreader.h"
+#include "include/socket/socketwriter.h"
+#include "include/socket/connection.h"
 #include "include/gameinfo/room.h"
-#include "include/datablock/datablockreader.h"
-#include "include/datablock/datablockwriter.h"
 #include "include/gameinfo/message.h"
 #include "include/gameinfo/player.h"
-#include "include/gameinfo/connection.h"
 
 
 
@@ -38,8 +38,8 @@ class ServerThread : public QObject
 		QTcpSocket* getSocket();
 		Player* getPlayer();
 		QString getGameVersion();
-		DataBlockReader* getDataBlockReader();
-		DataBlockWriter* getDataBlockWriter();
+		SocketReader* getSocketReader();
+		SocketWriter* getSocketWriter();
 
 	// Constructeur
 	public :

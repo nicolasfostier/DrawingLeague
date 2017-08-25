@@ -1,0 +1,11 @@
+[24 Aug 2017 15:14:38 +0200] The server is up and ready with these settings :
+ Room name : "Drawing League" 
+ Port : 23232 
+ Max players : 10 
+ Dictionary : ":/dictionaries/easy_french.txt" 
+ Time by round : 180 
+ Time after the first good answer : 30
+[24 Aug 2017 15:14:38 +0200] "::ffff:127.0.0.1" 61494 : New connection attempt
+[24 Aug 2017 15:14:38 +0200] "::ffff:127.0.0.1" 61494 : Player entering : "Terst"
+[24 Aug 2017 15:14:39 +0200] "::ffff:127.0.0.1" 61494 "Terst" is now ready.
+[24 Aug 2017 15:14:41 +0200] The server is closing

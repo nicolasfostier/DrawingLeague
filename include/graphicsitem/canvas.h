@@ -19,8 +19,8 @@
 
 #include "include/shapes/polyline.h"
 #include "include/gameinfo/drawingtooltype.h"
-#include "include/datablock/datablockreader.h"
-#include "include/datablock/datablockwriter.h"
+#include "include/socket/socketreader.h"
+#include "include/socket/socketwriter.h"
 
 
 

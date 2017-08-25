@@ -16,10 +16,10 @@
 #include <QApplication>
 
 
-#include "include/datablock/datablockreader.h"
-#include "include/datablock/datablockwriter.h"
+#include "include/socket/socketreader.h"
+#include "include/socket/socketwriter.h"
+#include "include/socket/connection.h"
 #include "include/gameinfo/errorcode.h"
-#include "include/gameinfo/connection.h"
 
 
 

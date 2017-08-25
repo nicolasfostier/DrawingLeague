@@ -204,37 +204,37 @@ void Server::handleNewConnection(){
 	void Server::setupNewPlayer(){
 		ServerThread* newPlayer = static_cast<ServerThread*>(sender());
 
-		DataBlockReader* newPlayerDBR = newPlayer->getDataBlockReader();
-		DataBlockWriter* newPlayerDBW = newPlayer->getDataBlockWriter();
+		SocketReader* newPlayerSReader = newPlayer->getSocketReader();
+		SocketWriter* newPlayerSWriter = newPlayer->getSocketWriter();
 
-		QObject::connect(newPlayerDBR, SIGNAL(chatReceived(Message)),
+		QObject::connect(newPlayerSReader, SIGNAL(chatReceived(Message)),
 						 this, SLOT(processChatCommand(Message)));
-		QObject::connect(newPlayerDBR, SIGNAL(answerReceived(Message)),
+		QObject::connect(newPlayerSReader, SIGNAL(answerReceived(Message)),
 						 this, SLOT(processAnswer(Message)));
 
-		QObject::connect(newPlayerDBR, SIGNAL(hintReceived(QString)),
+		QObject::connect(newPlayerSReader, SIGNAL(hintReceived(QString)),
 						 this, SLOT(hint()));
-		QObject::connect(newPlayerDBR, SIGNAL(skipWordReceived()),
+		QObject::connect(newPlayerSReader, SIGNAL(skipWordReceived()),
 						 this, SLOT(skipWord()));
 
-		QObject::connect(newPlayerDBR, SIGNAL(readyReceived()),
+		QObject::connect(newPlayerSReader, SIGNAL(readyReceived()),
 						 this, SLOT(setPlayerReady()));
 
-		QObject::connect(newPlayerDBR, SIGNAL(drawingToolTypeReceived(DrawingToolType)),
+		QObject::connect(newPlayerSReader, SIGNAL(drawingToolTypeReceived(DrawingToolType)),
 						 this, SLOT(changeDrawingToolType(DrawingToolType)));
-		QObject::connect(newPlayerDBR, SIGNAL(drawingToolColorReceived(QColor)),
+		QObject::connect(newPlayerSReader, SIGNAL(drawingToolColorReceived(QColor)),
 						 this, SLOT(changeDrawingToolColor(QColor)));
-		QObject::connect(newPlayerDBR, SIGNAL(drawingToolWidthReceived(int)),
+		QObject::connect(newPlayerSReader, SIGNAL(drawingToolWidthReceived(int)),
 						 this, SLOT(changeDrawingToolWidth(int)));
 
-		QObject::connect(newPlayerDBR, SIGNAL(canvasResetReceived()),
+		QObject::connect(newPlayerSReader, SIGNAL(canvasResetReceived()),
 						 this, SLOT(canvasReset()));
 
-		QObject::connect(newPlayerDBR, SIGNAL(canvasMousePressEventReceived(QPoint)),
+		QObject::connect(newPlayerSReader, SIGNAL(canvasMousePressEventReceived(QPoint)),
 						 this, SLOT(canvasMousePressEvent(QPoint)));
-		QObject::connect(newPlayerDBR, SIGNAL(canvasMouseMoveEventReceived(QPoint)),
+		QObject::connect(newPlayerSReader, SIGNAL(canvasMouseMoveEventReceived(QPoint)),
 						 this, SLOT(canvasMouseMoveEvent(QPoint)));
-		QObject::connect(newPlayerDBR, SIGNAL(canvasMouseReleaseEventReceived(QPoint)),
+		QObject::connect(newPlayerSReader, SIGNAL(canvasMouseReleaseEventReceived(QPoint)),
 						 this, SLOT(canvasMouseReleaseEvent(QPoint)));
 
 		QObject::connect(newPlayer, SIGNAL(playerLeaving(QString,ServerThread*,bool)),
@@ -242,31 +242,31 @@ void Server::handleNewConnection(){
 
 
 		ServerThread* player;
-		DataBlockWriter* playerDBW;
+		SocketWriter* playerSWriter;
 		foreach(player, players){
-			playerDBW = player->getDataBlockWriter();
+			playerSWriter = player->getSocketWriter();
 
 			QObject::connect(player, SIGNAL(playerLeaving(QString,ServerThread*,bool)),
-							 newPlayerDBW, SLOT(sendPlayerLeaving(QString)));
+							 newPlayerSWriter, SLOT(sendPlayerLeaving(QString)));
 			QObject::connect(newPlayer, SIGNAL(playerLeaving(QString,ServerThread*,bool)),
-							 playerDBW, SLOT(sendPlayerLeaving(QString)));
+							 playerSWriter, SLOT(sendPlayerLeaving(QString)));
 
 			if(player != newPlayer){
-				QMetaObject::invokeMethod(playerDBW, "sendPlayerEntering",
+				QMetaObject::invokeMethod(playerSWriter, "sendPlayerEntering",
 										  Q_ARG(QString, newPlayer->getPlayer()->getPseudo()));
-				QMetaObject::invokeMethod(newPlayerDBW, "sendPlayerOnline",
+				QMetaObject::invokeMethod(newPlayerSWriter, "sendPlayerOnline",
 										  Q_ARG(Player, *player->getPlayer()));
 			}
 		}
 
-		QMetaObject::invokeMethod(newPlayerDBW, "sendPlayerEntering",
+		QMetaObject::invokeMethod(newPlayerSWriter, "sendPlayerEntering",
 								  Q_ARG(QString, newPlayer->getPlayer()->getPseudo()));
 
-		QMetaObject::invokeMethod(newPlayerDBW, "sendDrawingToolType",
+		QMetaObject::invokeMethod(newPlayerSWriter, "sendDrawingToolType",
 								  Q_ARG(DrawingToolType, drawingToolType));
-		QMetaObject::invokeMethod(newPlayerDBW, "sendDrawingToolColor",
+		QMetaObject::invokeMethod(newPlayerSWriter, "sendDrawingToolColor",
 								  Q_ARG(QColor, drawingToolColor));
-		QMetaObject::invokeMethod(newPlayerDBW, "sendDrawingToolWidth",
+		QMetaObject::invokeMethod(newPlayerSWriter, "sendDrawingToolWidth",
 								  Q_ARG(int, drawingToolWidth));
 
 		if(timerRound->remainingTime() != -1){
@@ -275,7 +275,7 @@ void Server::handleNewConnection(){
 		else{
 			room.setTimeRemainingMs(0);
 		}
-		QMetaObject::invokeMethod(newPlayerDBW, "sendRoom",
+		QMetaObject::invokeMethod(newPlayerSWriter, "sendRoom",
 								  Q_ARG(Room, room));
 
 		artistsQueue.append(newPlayer);
@@ -366,10 +366,10 @@ void Server::processAnswer(Message msg){
 				qInfo()	<< playerSender->getPlayer()->getPseudo() << "has found the word and won" << room.getPointToWin();
 
 				foreach(player, players){
-					QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendAnswerFound",
+					QMetaObject::invokeMethod(player->getSocketWriter(), "sendAnswerFound",
 											  Q_ARG(QString, room.getArtist()),
 											  Q_ARG(quint32, pointWonByArtist));
-					QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendAnswerFound",
+					QMetaObject::invokeMethod(player->getSocketWriter(), "sendAnswerFound",
 											  Q_ARG(QString, playerSender->getPlayer()->getPseudo()),
 											  Q_ARG(quint32, room.getPointToWin()));
 				}
@@ -383,18 +383,18 @@ void Server::processAnswer(Message msg){
 				}
 			}
 			else if(isClose(word, msg.getMessage())){
-				QMetaObject::invokeMethod(playerSender->getDataBlockWriter(), "sendAnswerClose");
+				QMetaObject::invokeMethod(playerSender->getSocketWriter(), "sendAnswerClose");
 
 				foreach(player, players){
 					if(player->getPlayer()->getAnswerFound() || player == playerSender || player == artist){
-						QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendAnswer",
+						QMetaObject::invokeMethod(player->getSocketWriter(), "sendAnswer",
 												  Q_ARG(Message, msg));
 					}
 				}
 			}
 			else{
 				foreach(player, players){
-						QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendAnswer",
+						QMetaObject::invokeMethod(player->getSocketWriter(), "sendAnswer",
 												  Q_ARG(Message, msg));
 				}
 			}
@@ -406,7 +406,7 @@ void Server::processChatCommand(Message msg){
 	msg.escapeHTML();
 	ServerThread* player;
 	foreach(player, players){
-		QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendChat",
+		QMetaObject::invokeMethod(player->getSocketWriter(), "sendChat",
 								  Q_ARG(Message, msg));
 	}
 
@@ -450,12 +450,12 @@ void Server::hint(){
 		ServerThread* player;
 		foreach(player, players){
 			if(player != artist){
-				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendHint",
+				QMetaObject::invokeMethod(player->getSocketWriter(), "sendHint",
 										  Q_ARG(QString, hint));
 			}
 		}
 
-		QMetaObject::invokeMethod(artist->getDataBlockWriter(), "sendHint",
+		QMetaObject::invokeMethod(artist->getSocketWriter(), "sendHint",
 								  Q_ARG(QString, word + " " + hint));
 
 		++hintGiven;
@@ -470,7 +470,7 @@ void Server::skipWord(){
 	if(playerSender == artist && !oneHasFound){
 		ServerThread* player;
 		foreach(player, players){
-			QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendSkipWord");
+			QMetaObject::invokeMethod(player->getSocketWriter(), "sendSkipWord");
 		}
 
 		artist->getPlayer()->setScore(artist->getPlayer()->getScore() - 1);
@@ -509,7 +509,7 @@ void Server::changeDrawingToolType(DrawingToolType drawingToolType){
 		ServerThread* player;
 		foreach(player, players){
 			if(player != artist){
-				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendDrawingToolType",
+				QMetaObject::invokeMethod(player->getSocketWriter(), "sendDrawingToolType",
 										  Q_ARG(DrawingToolType, drawingToolType));
 			}
 		}
@@ -524,7 +524,7 @@ void Server::changeDrawingToolColor(QColor color){
 		ServerThread* player;
 		foreach(player, players){
 			if(player != artist){
-				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendDrawingToolColor",
+				QMetaObject::invokeMethod(player->getSocketWriter(), "sendDrawingToolColor",
 										  Q_ARG(QColor, color));
 			}
 		}
@@ -539,7 +539,7 @@ void Server::changeDrawingToolWidth(int width){
 		ServerThread* player;
 		foreach(player, players){
 			if(player != artist){
-				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendDrawingToolWidth",
+				QMetaObject::invokeMethod(player->getSocketWriter(), "sendDrawingToolWidth",
 										  Q_ARG(int, width));
 			}
 		}
@@ -552,7 +552,7 @@ void Server::canvasReset(){
 		ServerThread* player;
 		foreach(player, players){
 			if(player != artist){
-				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendCanvasReset");
+				QMetaObject::invokeMethod(player->getSocketWriter(), "sendCanvasReset");
 			}
 		}
 		qInfo() << room.getArtist() << "has reset the canvas" ;
@@ -566,7 +566,7 @@ void Server::canvasMousePressEvent(QPoint pos){
 		ServerThread* player;
 		foreach(player, players){
 			if(player != artist){
-				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendCanvasMousePressEvent",
+				QMetaObject::invokeMethod(player->getSocketWriter(), "sendCanvasMousePressEvent",
 										  Q_ARG(QPoint, pos));
 			}
 		}
@@ -579,7 +579,7 @@ void Server::canvasMouseMoveEvent(QPoint pos){
 		ServerThread* player;
 		foreach(player, players){
 			if(player != artist){
-				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendCanvasMouseMoveEvent",
+				QMetaObject::invokeMethod(player->getSocketWriter(), "sendCanvasMouseMoveEvent",
 										  Q_ARG(QPoint, pos));
 			}
 		}
@@ -592,7 +592,7 @@ void Server::canvasMouseReleaseEvent(QPoint pos){
 		ServerThread* player;
 		foreach(player, players){
 			if(player != artist){
-				QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendCanvasMouseReleaseEvent",
+				QMetaObject::invokeMethod(player->getSocketWriter(), "sendCanvasMouseReleaseEvent",
 										  Q_ARG(QPoint, pos));
 			}
 		}
@@ -610,7 +610,7 @@ void Server::startGame(){
 	ServerThread* player;
 	foreach(player, players){
 		player->getPlayer()->setScore(0);
-		QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendGameStarting");
+		QMetaObject::invokeMethod(player->getSocketWriter(), "sendGameStarting");
 	}
 
 	startRound();
@@ -636,14 +636,14 @@ void Server::startRound(){
 	ServerThread* player;
 	foreach(player, players){
 		if(player == artist){
-			QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendRoundStarting",
+			QMetaObject::invokeMethod(player->getSocketWriter(), "sendRoundStarting",
 									  Q_ARG(quint32, quint32(room.getCurrentRound())),
 									  Q_ARG(QString, room.getArtist()),
 									  Q_ARG(QString, word),
 									  Q_ARG(quint32, quint32(10)));
 		}
 		else{
-			QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendRoundStarting",
+			QMetaObject::invokeMethod(player->getSocketWriter(), "sendRoundStarting",
 									  Q_ARG(quint32, quint32(room.getCurrentRound())),
 									  Q_ARG(QString, room.getArtist()),
 									  Q_ARG(QString, room.getWord()),
@@ -667,7 +667,7 @@ void Server::endRound(){
 
 	ServerThread* player;
 	foreach(player, players){
-		QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendRoundEnding",
+		QMetaObject::invokeMethod(player->getSocketWriter(), "sendRoundEnding",
 								  Q_ARG(QString, word));
 
 		player->getPlayer()->setAnswerFound(false);
@@ -717,7 +717,7 @@ void Server::endGame(){
 	}
 
 	foreach(playerThread, players){
-		QMetaObject::invokeMethod(playerThread->getDataBlockWriter(), "sendGameEnding",
+		QMetaObject::invokeMethod(playerThread->getSocketWriter(), "sendGameEnding",
 								  Q_ARG(QString, winner));
 	}
 
@@ -745,7 +745,7 @@ void Server::sendReadyNeeded(){
 		ServerThread* player;
 		foreach(player, players){
 			int nbReadyNeededResult = nbReadyNeeded();
-			QMetaObject::invokeMethod(player->getDataBlockWriter(), "sendReadyNeeded",
+			QMetaObject::invokeMethod(player->getSocketWriter(), "sendReadyNeeded",
 									  Q_ARG(int, nbReadyNeededResult));
 		}
 	}

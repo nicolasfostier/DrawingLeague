@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 	app.setApplicationName("Drawing League");
 	app.setOrganizationName("Nicolas Fostier");
 	app.setOrganizationDomain("nicolasfostier.free.fr");
-	app.setApplicationVersion("1.2");
+	app.setApplicationVersion("1.1.2");
 	app.setWindowIcon(QIcon(":/images/logo.ico"));
 
 	QDir logDir(qApp->applicationDirPath());
