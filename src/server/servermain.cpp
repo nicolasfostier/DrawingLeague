@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 	app.setApplicationName("Drawing League Dedicated Server");
 	app.setOrganizationName("Nicolas Fostier");
 	app.setOrganizationDomain("nicolasfostier.free.fr");
-	app.setApplicationVersion("1.1.1");
+	app.setApplicationVersion("1.1.2");
 
 	QDir logDir(qApp->applicationDirPath());
 	logDir.mkdir("log");
