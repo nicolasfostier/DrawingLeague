@@ -167,9 +167,9 @@ class MainWindow : public QMainWindow
 		void displayHint(QString hint);
 		void skipWord();
 
-		void addEnteringPlayer(QString pseudo);
+		void addEnteringPlayer(Player player);
 		void addOnlinePlayer(Player player);
-		void removePlayer(QString pseudo);
+		void removePlayer(Player player);
 
 		void addAnswer(Message msg);
 		void addChat(Message msg);

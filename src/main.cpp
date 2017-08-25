@@ -21,9 +21,25 @@ int main(int argc, char *argv[])
 	app.setApplicationVersion("1.1.2");
 	app.setWindowIcon(QIcon(":/images/logo.ico"));
 
-	QDir logDir(qApp->applicationDirPath());
-	logDir.mkdir("log");
-	QFile logFile(qApp->applicationDirPath() + "/log/log-" + QDate::currentDate().toString(Qt::ISODate) + ".txt");
+	#ifdef Q_OS_WIN
+		QDir logDir(qApp->applicationDirPath());
+		logDir.mkdir("log");
+		logDir.setPath(logDir.path() + "/log");
+	#endif
+
+	#ifdef Q_OS_MACOS
+		QDir logDir(QDir::homePath());
+		logDir.mkdir(".DrawingLeague");
+		logDir.setPath(logDir.path() + "/.DrawingLeague");
+	#endif
+
+	#ifdef Q_OS_LINUX
+		QDir logDir("/var/log");
+		logDir.mkdir("DrawingLeague");
+		logDir.setPath(logDir.path() + "/DrawingLeague");
+	#endif
+
+	QFile logFile(logDir.path() + "/log-" + QDate::currentDate().toString(Qt::ISODate) + ".txt");
 	logFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append);
 	logStream.setDevice(&logFile);
 	qInstallMessageHandler(logHandler);

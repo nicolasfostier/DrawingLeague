@@ -163,7 +163,9 @@ void Server::incomingConnection(qintptr socketDescriptor){
 	void Server::verifyNewPlayer(){
 		ServerThread* newPlayer = static_cast<ServerThread*>(sender());
 
-		if(players.contains(newPlayer->getPlayer()->getPseudo())){
+		QString newPlayerPseudo = newPlayer->getPlayer()->getPseudo();
+
+		if(players.contains(newPlayerPseudo)){
 			qWarning() << newPlayer->getSocket()->peerAddress().toString() << newPlayer->getSocket()->peerPort()
 					   << ": Connection attempt failed : The pseudo"
 					   << newPlayer->getPlayer()->getPseudo()
@@ -187,11 +189,16 @@ void Server::incomingConnection(qintptr socketDescriptor){
 									  Q_ARG(ErrorCode, ErrorCode::SERVER_FULL));
 		}
 		else{
-			players.insert(newPlayer->getPlayer()->getPseudo(), newPlayer);
+			players.insert(newPlayerPseudo, newPlayer);
 
 			QObject::connect(newPlayer, SIGNAL(readyToReceive()),
 							 this, SLOT(setupNewPlayer()));
 			QMetaObject::invokeMethod(newPlayer, "hasEnteredTheGame");
+
+			if(discPlayersScore.contains(newPlayerPseudo)){
+				newPlayer->getPlayer()->setScore(discPlayersScore.value(newPlayerPseudo));
+				discPlayersScore.remove(newPlayerPseudo);
+			}
 		}
 	}
 	void Server::setupNewPlayer(){
@@ -230,8 +237,8 @@ void Server::incomingConnection(qintptr socketDescriptor){
 		QObject::connect(newPlayerSReader, SIGNAL(canvasMouseReleaseEventReceived(QPoint)),
 						 this, SLOT(canvasMouseReleaseEvent(QPoint)));
 
-		QObject::connect(newPlayer, SIGNAL(playerLeaving(QString,ServerThread*,bool)),
-						 this, SLOT(removePlayer(QString,ServerThread*,bool)));
+		QObject::connect(newPlayer, SIGNAL(playerLeaving(Player, ServerThread*)),
+						 this, SLOT(removePlayer(Player, ServerThread*)));
 
 
 		ServerThread* player;
@@ -239,21 +246,21 @@ void Server::incomingConnection(qintptr socketDescriptor){
 		foreach(player, players){
 			playerSWriter = player->getSocketWriter();
 
-			QObject::connect(player, SIGNAL(playerLeaving(QString,ServerThread*,bool)),
-							 newPlayerSWriter, SLOT(sendPlayerLeaving(QString)));
-			QObject::connect(newPlayer, SIGNAL(playerLeaving(QString,ServerThread*,bool)),
-							 playerSWriter, SLOT(sendPlayerLeaving(QString)));
+			QObject::connect(player, SIGNAL(playerLeaving(Player, ServerThread*)),
+							 newPlayerSWriter, SLOT(sendPlayerLeaving(Player)));
+			QObject::connect(newPlayer, SIGNAL(playerLeaving(Player, ServerThread*)),
+							 playerSWriter, SLOT(sendPlayerLeaving(Player)));
 
 			if(player != newPlayer){
 				QMetaObject::invokeMethod(playerSWriter, "sendPlayerEntering",
-										  Q_ARG(QString, newPlayer->getPlayer()->getPseudo()));
+										  Q_ARG(Player, *newPlayer->getPlayer()));
 				QMetaObject::invokeMethod(newPlayerSWriter, "sendPlayerOnline",
 										  Q_ARG(Player, *player->getPlayer()));
 			}
 		}
 
 		QMetaObject::invokeMethod(newPlayerSWriter, "sendPlayerEntering",
-								  Q_ARG(QString, newPlayer->getPlayer()->getPseudo()));
+								  Q_ARG(Player, *newPlayer->getPlayer()));
 
 		QMetaObject::invokeMethod(newPlayerSWriter, "sendDrawingToolType",
 								  Q_ARG(DrawingToolType, drawingToolType));
@@ -280,12 +287,12 @@ void Server::incomingConnection(qintptr socketDescriptor){
 				<< newPlayer->getPlayer()->getPseudo();
 	}
 
-void Server::removePlayer(QString pseudo, ServerThread* player, bool hasFound){
-	players.remove(pseudo);
-	artistsQueue.removeOne(player);
+void Server::removePlayer(Player player, ServerThread* playerTh){
+	players.remove(player.getPseudo());
+	artistsQueue.removeOne(playerTh);
 
 	qInfo()	<< "Player leaving :"
-			<< pseudo;
+			<< player.getPseudo();
 
 	if(room.getCurrentRound() == 0){
 		if(nbReadyNeeded() < 1){
@@ -296,15 +303,21 @@ void Server::removePlayer(QString pseudo, ServerThread* player, bool hasFound){
 		}
 	}
 	else{
-		if(pseudo == room.getArtist()){
+
+
+		if(player.getPseudo() == room.getArtist()){
 			artist = NULL;
 			this->endRound();
+
+			discPlayersScore.insert(player.getPseudo(), player.getScore() - 1);
 		}
 		else{
+			discPlayersScore.insert(player.getPseudo(), player.getScore());
+
 			if(players.size() < 2){
 				endGame();
 			}
-			else if(hasFound){
+			else if(player.getAnswerFound()){
 				playerFoundAnswer--;
 			}
 		}
@@ -605,6 +618,7 @@ void Server::startGame(){
 		player->getPlayer()->setScore(0);
 		QMetaObject::invokeMethod(player->getSocketWriter(), "sendGameStarting");
 	}
+	discPlayersScore.clear();
 
 	startRound();
 
@@ -713,7 +727,6 @@ void Server::endGame(){
 		QMetaObject::invokeMethod(playerThread->getSocketWriter(), "sendGameEnding",
 								  Q_ARG(QString, winner));
 	}
-
 
 	QObject::disconnect(this->timerBetweenRound, SIGNAL(timeout()),
 						this, SLOT(startRound()));

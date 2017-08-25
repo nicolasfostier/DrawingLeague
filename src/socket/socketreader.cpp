@@ -70,10 +70,10 @@ void SocketReader::read(){
 
 
 			case BlockType::PLAYER_ENTERING : {
-				QString pseudo;
-				socketStream >> pseudo;
+				Player player;
+				socketStream >> player;
 
-				emit playerEnteringReceived(pseudo);
+				emit playerEnteringReceived(player);
 			break;
 			}
 
@@ -86,10 +86,10 @@ void SocketReader::read(){
 			}
 
 			case BlockType::PLAYER_LEAVING : {
-				QString pseudo;
-				socketStream >> pseudo;
+				Player player;
+				socketStream >> player;
 
-				emit playerLeavingReceived(pseudo);
+				emit playerLeavingReceived(player);
 			break;
 			}
 

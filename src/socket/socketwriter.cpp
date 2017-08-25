@@ -40,9 +40,9 @@ void SocketWriter::sendGameError(ErrorCode errorCode){
 }
 
 
-void SocketWriter::sendPlayerEntering(QString pseudo){
+void SocketWriter::sendPlayerEntering(Player player){
 	BlockWriter(socket).getStream() << BlockType::PLAYER_ENTERING
-									<< pseudo;
+									<< player;
 }
 
 void SocketWriter::sendPlayerOnline(Player player){
@@ -50,9 +50,9 @@ void SocketWriter::sendPlayerOnline(Player player){
 									<< player;
 }
 
-void SocketWriter::sendPlayerLeaving(QString pseudo){
+void SocketWriter::sendPlayerLeaving(Player player){
 	BlockWriter(socket).getStream() << BlockType::PLAYER_LEAVING
-									<< pseudo;
+									<< player;
 }
 
 

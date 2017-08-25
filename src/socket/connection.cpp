@@ -134,6 +134,4 @@ void Connection::gameError(ErrorCode errorCode){
 			break;
 		}
 	}
-
-	socket->deleteLater();
 }

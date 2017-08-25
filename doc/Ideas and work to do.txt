@@ -4,13 +4,13 @@ X : Ready to be shipped in the next version
 
 
 Bugs :
-	[~] Better location for the log files with the macOS and Linux version
+	[O] Better location for the log files with the macOS and Linux version
 	[X] --config-file launch option of the server don't work
 	[X] Number of ready players isn't refresh when a player leave the room
-	[O] The Server is completely bugged in Linux. Need to completly rework DBW and maybe DBR
+	[X] The Server is completely bugged in Linux. Need to completly rework DBW and maybe DBR
 
 Improvements :
-	[~] Disconnected players get their score back if they reconnect to the server before the end of the game
+	[X] Disconnected players get their score back if they reconnect to the server before the end of the game
 	[ ] Players who enter the room after the beginning of the round, need to see the beginning of the drawing
 	[ ] Better sound to differentiate easier when the player start the round as an artist or not
 	[ ] Better end game screen

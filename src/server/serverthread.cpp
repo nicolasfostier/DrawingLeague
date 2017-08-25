@@ -43,7 +43,7 @@ ServerThread::ServerThread(qintptr socketDescriptor)
 // Destructor
 ServerThread::~ServerThread(){
 	if(player != NULL){
-		emit playerLeaving(player->getPseudo(), this, this->getPlayer()->getAnswerFound());
+		emit playerLeaving(*this->getPlayer(), this);
 		delete player;
 	}
 

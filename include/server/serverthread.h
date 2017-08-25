@@ -60,7 +60,7 @@ class ServerThread : public QObject
 	signals :
 		void wantToEnterTheGame();
 		void readyToReceive();
-		void playerLeaving(QString pseudo, ServerThread* serverThread, bool hasFound);
+		void playerLeaving(Player player, ServerThread* playerTh);
 
 	// Operators
 	public :

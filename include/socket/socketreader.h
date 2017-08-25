@@ -48,9 +48,9 @@ class SocketReader : public QObject
 		void hasEnteredTheGame();
 		void gameErrorReceived(ErrorCode);
 
-		void playerEnteringReceived(QString pseudo);
-		void playerOnlineReceived(Player pseudo);
-		void playerLeavingReceived(QString pseudo);
+		void playerEnteringReceived(Player player);
+		void playerOnlineReceived(Player player);
+		void playerLeavingReceived(Player player);
 
 		void roomReceived(Room room);
 

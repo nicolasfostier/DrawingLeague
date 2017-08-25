@@ -43,9 +43,9 @@ class SocketWriter : public QObject
 		void sendHasEnteredTheGame();
 		void sendGameError(ErrorCode errorCode);
 
-		void sendPlayerEntering(QString pseudo);
+		void sendPlayerEntering(Player player);
 		void sendPlayerOnline(Player player);
-		void sendPlayerLeaving(QString pseudo);
+		void sendPlayerLeaving(Player player);
 
 		void sendRoom(Room room);
 

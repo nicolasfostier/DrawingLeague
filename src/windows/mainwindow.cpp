@@ -412,12 +412,12 @@ void MainWindow::joinRoom(){
 		QObject::connect(dataBlockReader, SIGNAL(roomReceived(Room)),
 						 this, SLOT(newRoom(Room)));
 
-		QObject::connect(dataBlockReader, SIGNAL(playerEnteringReceived(QString)),
-						 this, SLOT(addEnteringPlayer(QString)));
+		QObject::connect(dataBlockReader, SIGNAL(playerEnteringReceived(Player)),
+						 this, SLOT(addEnteringPlayer(Player)));
 		QObject::connect(dataBlockReader, SIGNAL(playerOnlineReceived(Player)),
 						 this, SLOT(addOnlinePlayer(Player)));
-		QObject::connect(dataBlockReader, SIGNAL(playerLeavingReceived(QString)),
-						 this, SLOT(removePlayer(QString)));
+		QObject::connect(dataBlockReader, SIGNAL(playerLeavingReceived(Player)),
+						 this, SLOT(removePlayer(Player)));
 
 		QObject::connect(dataBlockReader, SIGNAL(gameStartingReceived()),
 						 this, SLOT(gameStarting()));
@@ -852,11 +852,11 @@ void MainWindow::skipWord(){
 }
 
 
-void MainWindow::addEnteringPlayer(QString pseudo){
-   addOnlinePlayer(Player(pseudo));
+void MainWindow::addEnteringPlayer(Player player){
+   addOnlinePlayer(player);
 
    Message msg = Message(QString(),
-						 "<b><span style='color: #309dcf'><i>" + pseudo + "</i> " + tr("has joined the room.") + "</span></b>");
+						 "<b><span style='color: #309dcf'><i>" + player.getPseudo() + "</i> " + tr("has joined the room.") + "</span></b>");
    addChat(msg);
 
    mpEnteringLeaving->setMedia(QUrl("qrc:/sound/player_entering.mp3"));
@@ -872,9 +872,9 @@ void MainWindow::addOnlinePlayer(Player player){
    newPlayer->addToTableWidget(this->playersTable);
 }
 
-void MainWindow::removePlayer(QString pseudo){
-	Player* removedPlayer = players.find(pseudo).value();
-	players.remove(pseudo);
+void MainWindow::removePlayer(Player player){
+	Player* removedPlayer = players.find(player.getPseudo()).value();
+	players.remove(player.getPseudo());
 	delete removedPlayer;
 	if (removedPlayer == artist){
 		artist = NULL;
@@ -885,7 +885,7 @@ void MainWindow::removePlayer(QString pseudo){
 	playersTable->setRowCount(playersTable->rowCount() - 1);
 
 	Message msg = Message(QString(),
-						  "<b><span style='color: #309dcf'><i>" + pseudo + "</i> " + tr("has left the room.") + "</span></b>");
+						  "<b><span style='color: #309dcf'><i>" + player.getPseudo() + "</i> " + tr("has left the room.") + "</span></b>");
 	addChat(msg);
 
 	mpEnteringLeaving->setMedia(QUrl("qrc:/sound/player_leaving.mp3"));

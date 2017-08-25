@@ -34,6 +34,7 @@ class Server : public QTcpServer
 	private :
 		int port;
 		QHash<QString, ServerThread*> players;
+		QHash<QString, int> discPlayersScore;
 
 		Room room;
 
@@ -82,7 +83,7 @@ class Server : public QTcpServer
 		void incomingConnection(qintptr socketDescriptor);
 			void verifyNewPlayer();
 			void setupNewPlayer();
-		void removePlayer(QString pseudo, ServerThread* player, bool hasFound);
+		void removePlayer(Player player, ServerThread* playerTh);
 
 		void processAnswer(Message msg);
 		void processChatCommand(Message msg);
