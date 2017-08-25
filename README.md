@@ -12,4 +12,4 @@
 <img src="http://i.imgur.com/O7xOi7L.png"/>
 
 <br/><br/><h3>Credits :</h3>
-<img src="http://i.imgur.com/ZEbQzxA.png"/>
+<img src="http://i.imgur.com/TdI23gU.png"/>
