@@ -89,7 +89,7 @@ int Server::nbReadyNeeded(){
 	 * And i will maybe add the possibility to custom this % in the server settings
 	 * to overwrite the result of this function.
 	*/
-	if(players.size() == 1){
+	if(players.size() < 2){
 		return 2 - playerReady();
 	}
 	else{

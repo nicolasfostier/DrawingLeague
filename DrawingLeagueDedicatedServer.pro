@@ -13,7 +13,7 @@ macx{
 	ICON = res/images/logo.icns
 }
 
-VERSION = 1.1.1
+VERSION = 1.1.2
 
 
 
