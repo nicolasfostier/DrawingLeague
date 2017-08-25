@@ -43,7 +43,7 @@ class ServerThread : public QObject
 
 	// Constructeur
 	public :
-		ServerThread(QTcpSocket* socket);
+		ServerThread(qintptr socketDescriptor);
 
 	// Destructor
 	public :

@@ -130,9 +130,6 @@ void Server::launch(){
 
 	this->listen(QHostAddress::Any, port);
 
-	QObject::connect(this, SIGNAL(newConnection()),
-					 this, SLOT(handleNewConnection()));
-
 	timerBetweenRound = new QTimer();
 	timerBetweenRound->setSingleShot(true);
 	timerBetweenRound->setInterval(2000);
@@ -152,9 +149,8 @@ void Server::launch(){
 }
 
 
-void Server::handleNewConnection(){
-	QTcpSocket* newCon = nextPendingConnection();
-	ServerThread* newPlayer = new ServerThread(newCon);
+void Server::incomingConnection(qintptr socketDescriptor){
+	ServerThread* newPlayer = new ServerThread(socketDescriptor);
 
 	QObject::connect(newPlayer, SIGNAL(wantToEnterTheGame()),
 					 this, SLOT(verifyNewPlayer()));
@@ -163,9 +159,6 @@ void Server::handleNewConnection(){
 					 newPlayer, SLOT(deleteLater()));
 
 	newPlayer->thread()->start();
-
-	qInfo()	<< newCon->peerAddress().toString() << newCon->peerPort()
-			<< ": New connection attempt";
 }
 	void Server::verifyNewPlayer(){
 		ServerThread* newPlayer = static_cast<ServerThread*>(sender());

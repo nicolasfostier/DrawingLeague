@@ -79,7 +79,7 @@ class Server : public QTcpServer
 	public slots :
 		void launch();
 
-		void handleNewConnection();
+		void incomingConnection(qintptr socketDescriptor);
 			void verifyNewPlayer();
 			void setupNewPlayer();
 		void removePlayer(QString pseudo, ServerThread* player, bool hasFound);

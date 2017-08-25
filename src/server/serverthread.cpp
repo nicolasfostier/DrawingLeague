@@ -24,10 +24,10 @@ SocketWriter* ServerThread::getSocketWriter(){
 
 
 // Constructeur
-ServerThread::ServerThread(QTcpSocket* socket)
+ServerThread::ServerThread(qintptr socketDescriptor)
 {
 	this->player = NULL;
-	this->socketDescriptor = socket->socketDescriptor();
+	this->socketDescriptor = socketDescriptor;
 
 	// Move the object to another thread and start its execution
 	QThread* threadCFU = new QThread();
@@ -75,6 +75,10 @@ void ServerThread::launch(){
 					 this, SIGNAL(readyToReceive()));
 
 	connection->getSocketWriter()->sendReadyToReceive();
+
+	qInfo()	<< connection->getSocket()->peerAddress().toString()
+			<< connection->getSocket()->peerPort()
+			<< ": New connection attempt";
 }
 
 
