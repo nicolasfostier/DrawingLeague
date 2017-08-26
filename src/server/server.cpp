@@ -328,8 +328,6 @@ void Server::removePlayer(Player player, ServerThread* playerTh){
 void Server::processAnswer(Message msg){
 	msg.escapeHTML();
 
-	qInfo() << msg.toString(false);
-
 	if(room.getCurrentRound() > 0 && timerRound->remainingTime() > 0){
 		ServerThread* playerSender = static_cast<ServerThread*>(sender()->parent()->parent());
 

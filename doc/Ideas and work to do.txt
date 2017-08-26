@@ -1,8 +1,10 @@
 ~ : Planned to be shipped in the next major version
-O : Planned to be shipped in the next minor version
+O : Planned to be shipped in the next version
 X : Ready to be shipped in the next version
 
-
+Bugs :
+	[O] Log files is misplaced in Windows...
+	[X] Two log lines for each single answer
 
 Improvements :
 	[ ] Players who enter the room after the beginning of the round, need to see the beginning of the drawing
